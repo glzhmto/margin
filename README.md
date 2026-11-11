@@ -52,7 +52,7 @@ For the demo: Settings › Demo mode loads two weeks of sample history.
 - `docs/`: plan, research and [technical docs](docs/TECHNICAL.md) (architecture, config and how to extend).
 
 ## Links
-- Figma: https://www.figma.com/design/xRbcsTimzkKMhNWUL2aVYl (page "Flujo principal" › Present)
+- Figma: https://www.figma.com/design/xRbcsTimzkKMhNWUL2aVYl (page "Main flow" › Present)
 - Build: PENDING
 - Commercial: PENDING
 
