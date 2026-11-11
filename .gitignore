@@ -1,0 +1,30 @@
+# Unity
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+*.csproj
+*.sln
+*.pidb
+*.userprefs
+.vs/
+.idea/
+.DS_Store
+# dotnet tests (outside Unity) — the .csproj is versioned
+!/tests-dotnet/*.csproj
+/tests-dotnet/bin/
+/tests-dotnet/obj/
+# Builds iOS
+/iOSBuild/
+
+# Course material (not published)
+UP_HCI_FinalP_2026.pdf
+
+# Web preview: JS copy of the app for reviewing screens (not the deliverable; it would duplicate the logic)
+/preview/
+/tools/
+/favicon.ico
