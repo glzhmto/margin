@@ -1,0 +1,9 @@
+<!-- Keeps the data classes that Newtonsoft.Json fills by reflection when IL2CPP strips code (iOS builds). -->
+<linker>
+  <assembly fullname="Margin.Core" preserve="all" />
+  <assembly fullname="Margin.App" preserve="all" />
+  <!-- Fonts.DisableBrokenKerning reads TextHandle.m_ActiveFontFeatures by reflection (Unity bug UUM-121371). -->
+  <assembly fullname="UnityEngine.TextCoreTextEngineModule">
+    <type fullname="UnityEngine.TextCore.Text.TextHandle" preserve="fields" />
+  </assembly>
+</linker>

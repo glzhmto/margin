@@ -1,0 +1,79 @@
+{
+ "fahrenheit-451": {
+  "coverId": 12993656,
+  "work": "/works/OL103123W",
+  "source": "https://openlibrary.org/works/OL103123W"
+ },
+ "the-metamorphosis": {
+  "coverId": 6684206,
+  "edition": "/books/OL24603735M",
+  "source": "https://openlibrary.org/books/OL24603735M"
+ },
+ "animal-farm": {
+  "coverId": 15258669,
+  "edition": "/books/OL62597685M",
+  "source": "https://openlibrary.org/books/OL62597685M"
+ },
+ "the-little-prince": {
+  "coverId": 12381932,
+  "source": "https://covers.openlibrary.org/b/id/12381932-L.jpg"
+ },
+ "chronicle-of-a-death-foretold": {
+  "coverId": 8489902,
+  "edition": "/books/OL8362804M",
+  "source": "https://openlibrary.org/books/OL8362804M"
+ },
+ "aura": {
+  "coverId": 15099214,
+  "edition": "/books/OL29671583M",
+  "source": "https://openlibrary.org/books/OL29671583M"
+ },
+ "lazarillo-de-tormes": {
+  "coverId": 3325986,
+  "work": "/works/OL7985084W",
+  "source": "https://openlibrary.org/works/OL7985084W"
+ },
+ "hamlet": {
+  "coverId": 8281954,
+  "work": "/works/OL9170454W",
+  "source": "https://openlibrary.org/works/OL9170454W"
+ },
+ "the-house-of-bernarda-alba": {
+  "coverId": 905133,
+  "edition": "/books/OL8990334M",
+  "source": "https://openlibrary.org/books/OL8990334M"
+ },
+ "1984": {
+  "coverId": 15196195,
+  "source": "https://covers.openlibrary.org/b/id/15196195-L.jpg"
+ },
+ "jekyll-and-hyde": {
+  "coverId": 12514817,
+  "edition": "/books/OL36621167M",
+  "source": "https://openlibrary.org/books/OL36621167M"
+ },
+ "frankenstein": {
+  "coverId": 12356249,
+  "work": "/works/OL450063W",
+  "source": "https://openlibrary.org/works/OL450063W"
+ },
+ "the-underdogs": {
+  "coverId": 13268026,
+  "edition": "/books/OL28712841M",
+  "source": "https://openlibrary.org/books/OL28712841M"
+ },
+ "the-labyrinth-of-solitude": {
+  "coverId": 569554,
+  "edition": "/books/OL7875215M",
+  "source": "https://openlibrary.org/books/OL7875215M"
+ },
+ "the-prince": {
+  "coverId": 14850533,
+  "edition": "/books/OL58076670M",
+  "source": "https://openlibrary.org/books/OL58076670M"
+ },
+ "the-stranger": {
+  "coverId": 15270408,
+  "source": "https://covers.openlibrary.org/b/id/15270408-L.jpg"
+ }
+}

@@ -1,0 +1,4424 @@
+{
+  "shelves": [
+    {
+      "id": "classics",
+      "name": "Classics",
+      "description": "Works that keep making readers, generation after generation."
+    },
+    {
+      "id": "mexican",
+      "name": "Mexican",
+      "description": "Voices of Mexican literature."
+    },
+    {
+      "id": "latin-american",
+      "name": "Latin American",
+      "description": "Fiction from the continent: from the Boom to today."
+    },
+    {
+      "id": "dystopias",
+      "name": "Dystopias",
+      "description": "Fiction that warns about power, censorship and manipulation."
+    },
+    {
+      "id": "short-reads",
+      "name": "Short reads",
+      "description": "Short books to start or come back to reading."
+    },
+    {
+      "id": "drama",
+      "name": "Drama",
+      "description": "Works written for the stage that are also a pleasure to read."
+    },
+    {
+      "id": "spanish",
+      "name": "Spanish",
+      "description": "From the picaresque to 20th-century theater: classics of Spanish literature."
+    },
+    {
+      "id": "italian",
+      "name": "Italian",
+      "description": "Thought and letters from Italy."
+    },
+    {
+      "id": "essays",
+      "name": "Essays",
+      "description": "Books for thinking about power, history and identity."
+    }
+  ],
+  "books": [
+    {
+      "id": "fahrenheit-451",
+      "title": "Fahrenheit 451",
+      "author": "Ray Bradbury",
+      "year": 1953,
+      "pages": 208,
+      "shelves": [
+        "classics",
+        "dystopias"
+      ],
+      "tags": [
+        "dystopia",
+        "censorship",
+        "books",
+        "mass media",
+        "memory"
+      ],
+      "synopsis": "In a society where firemen burn books instead of putting out fires, fireman Guy Montag starts to wonder what is inside them.",
+      "chapters": [
+        {
+          "number": 1,
+          "title": "The Hearth and the Salamander",
+          "startPage": 1,
+          "endPage": 80,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What effect does Clarisse's question \"Are you happy?\" have on Montag?",
+                "options": [
+                  "It makes him laugh because it seems like a childish question",
+                  "It convinces him to report her to the fire department",
+                  "It confirms that his job gives his life meaning",
+                  "It forces him to admit that his life is empty, even if he denies it"
+                ],
+                "correctIndex": 3,
+                "explanation": "The question unsettles Montag: when he thinks about it, he finds he is not happy and that his life with Mildred is empty."
+              },
+              {
+                "prompt": "Why is the woman who chooses to burn with her books so important to Montag?",
+                "options": [
+                  "Because she proves to him that books are dangerous",
+                  "Because she was an old friend of Mildred's",
+                  "Because she makes him think there must be something valuable in books if someone would rather die with them",
+                  "Because Beatty uses her as an example to promote him"
+                ],
+                "correctIndex": 2,
+                "explanation": "Montag concludes that there must be something in books, things we can't imagine, to make a woman stay in a burning house."
+              },
+              {
+                "prompt": "According to Captain Beatty's explanation, how did book burning come about?",
+                "options": [
+                  "The government suddenly banned them after a war",
+                  "People slowly gave them up: content got shorter, simpler and inoffensive to everyone, until censorship felt natural",
+                  "Writers stopped publishing for lack of money",
+                  "An accidental fire destroyed every library"
+                ],
+                "correctIndex": 1,
+                "explanation": "Beatty describes a gradual process: mass media, speed and the wish not to offend any minority made society reject books before they were ever banned."
+              }
+            ]
+          }
+        },
+        {
+          "number": 2,
+          "title": "The Sieve and the Sand",
+          "startPage": 81,
+          "endPage": 140,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does Montag's childhood memory of trying to fill a sieve with sand stand for?",
+                "options": [
+                  "His frustration when reading: he feels the words slip away and he can't hold on to them",
+                  "His fear of the sea",
+                  "The pointless work of the firemen",
+                  "His wish to go back to childhood"
+                ],
+                "correctIndex": 0,
+                "explanation": "On the subway, Montag tries to memorize the Bible while an ad blares; the words run out like sand through the sieve."
+              },
+              {
+                "prompt": "According to Faber, what three things is society missing?",
+                "options": [
+                  "Money, jobs and health",
+                  "Freedom of the press, elections and courts",
+                  "More firemen, more TVs and more radios",
+                  "Quality (texture) of information, leisure to digest it, and the right to act on what we learn"
+                ],
+                "correctIndex": 3,
+                "explanation": "Faber explains that what matters is not books as objects, but the quality of information, the time to digest it, and the freedom to act on it."
+              },
+              {
+                "prompt": "What happens when Montag reads the poem \"Dover Beach\" to Mildred's friends?",
+                "options": [
+                  "They all applaud and ask him for more books",
+                  "No one listens because the parlor walls are on",
+                  "One of them cries, moved, and the others react with discomfort and rejection",
+                  "Beatty walks in at that moment and arrests him"
+                ],
+                "correctIndex": 2,
+                "explanation": "Mrs. Phelps bursts into tears and Mrs. Bowles is outraged; the poem exposes the emotional emptiness they all try to ignore."
+              }
+            ]
+          }
+        },
+        {
+          "number": 3,
+          "title": "Burning Bright",
+          "startPage": 141,
+          "endPage": 208,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does Montag discover when the alarm takes the firemen to his own house?",
+                "options": [
+                  "That Faber had turned him in",
+                  "That Mildred had reported him",
+                  "That Clarisse was still alive",
+                  "That Beatty also kept books"
+                ],
+                "correctIndex": 1,
+                "explanation": "Mildred walks out of the house with a suitcase; she was the one who turned in the alarm."
+              },
+              {
+                "prompt": "How do Granger and his group of drifters preserve books?",
+                "options": [
+                  "Each person memorizes a book or part of one to remember it and pass it on",
+                  "They hide them in caves outside the city",
+                  "They copy them by hand on loose sheets",
+                  "They secretly send them to other countries"
+                ],
+                "correctIndex": 0,
+                "explanation": "Each of them \"is\" a book: they keep it in memory until the time comes to write the books down again."
+              },
+              {
+                "prompt": "What is the meaning of the phoenix image Granger mentions at the end?",
+                "options": [
+                  "It is the symbol of the fire department",
+                  "It announces that the war will never end",
+                  "It is the name of the city they are heading to",
+                  "Humanity destroys itself again and again, but it can rise from its ashes, this time remembering its mistakes"
+                ],
+                "correctIndex": 3,
+                "explanation": "After the city is bombed, Granger compares humanity to the phoenix; the difference is that people can remember what they did."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "the-metamorphosis",
+      "title": "The Metamorphosis",
+      "author": "Franz Kafka",
+      "year": 1915,
+      "pages": 96,
+      "shelves": [
+        "classics",
+        "short-reads"
+      ],
+      "tags": [
+        "absurd",
+        "family",
+        "alienation",
+        "work",
+        "identity"
+      ],
+      "synopsis": "Gregor Samsa, a traveling salesman, wakes up one morning changed into a monstrous insect, and his family must decide what to do with him.",
+      "chapters": [
+        {
+          "number": 1,
+          "title": "Part I",
+          "startPage": 1,
+          "endPage": 34,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "When he discovers his transformation, what worries Gregor first?",
+                "options": [
+                  "Finding a cure for his body",
+                  "That his sister will be scared when she sees him",
+                  "Having missed the train and being late for work",
+                  "Escaping the house before they find him"
+                ],
+                "correctIndex": 2,
+                "explanation": "Before the horror of his new body, Gregor thinks about the train, his boss and the job he uses to support his family."
+              },
+              {
+                "prompt": "Why does Gregor stay in a job he hates?",
+                "options": [
+                  "Because he dreams of becoming a director",
+                  "Because his father owes the boss money and Gregor is paying it off",
+                  "Because he doesn't know how to do anything else",
+                  "Because his sister works at the same company"
+                ],
+                "correctIndex": 1,
+                "explanation": "Gregor puts up with the salesman job to pay off his parents' debt; he plans to quit as soon as it is paid."
+              },
+              {
+                "prompt": "How does his father react when Gregor comes out of his room?",
+                "options": [
+                  "He forces him back with a cane and a newspaper, and Gregor gets hurt squeezing through the door",
+                  "He hugs him and calls a doctor",
+                  "He faints from the shock",
+                  "He runs after the chief clerk to ask for help"
+                ],
+                "correctIndex": 0,
+                "explanation": "His father violently drives him back; Gregor is injured when he gets stuck in the doorframe."
+              }
+            ]
+          }
+        },
+        {
+          "number": 2,
+          "title": "Part II",
+          "startPage": 35,
+          "endPage": 66,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What role does Grete take on at the start of this part?",
+                "options": [
+                  "She refuses to go into Gregor's room",
+                  "She looks for a doctor to cure him",
+                  "She convinces her parents to move",
+                  "She takes charge of feeding him and cleaning his room"
+                ],
+                "correctIndex": 3,
+                "explanation": "His sister is the only one who looks after him: she tests which foods he likes and cleans his room."
+              },
+              {
+                "prompt": "Why does Gregor cling to the picture of the lady in furs when they empty his room?",
+                "options": [
+                  "Because he wants to hide behind it",
+                  "Because there is food stuck to the picture",
+                  "Because it is one of his last links to his human life and he doesn't want to lose it",
+                  "Because he wants to scare his mother"
+                ],
+                "correctIndex": 2,
+                "explanation": "Seeing his furniture taken away, Gregor feels they are erasing his human past, and he protects the picture he framed himself."
+              },
+              {
+                "prompt": "What does his father do at the end of Part II?",
+                "options": [
+                  "He locks him in and goes on a trip",
+                  "He throws apples at him and one gets lodged in his back",
+                  "He asks for his forgiveness",
+                  "He takes him to the hospital"
+                ],
+                "correctIndex": 1,
+                "explanation": "His father bombards Gregor with apples; one stays stuck in his back, and the wound stays with him until the end."
+              }
+            ]
+          }
+        },
+        {
+          "number": 3,
+          "title": "Part III",
+          "startPage": 67,
+          "endPage": 96,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What economic change happens in the Samsa family?",
+                "options": [
+                  "They all get jobs and also rent rooms to three lodgers",
+                  "They inherit a fortune",
+                  "They sell the house and move to the country",
+                  "Gregor goes back to work"
+                ],
+                "correctIndex": 0,
+                "explanation": "Without Gregor's salary, the father, the mother and Grete all work, and the family takes in three lodgers."
+              },
+              {
+                "prompt": "What draws Gregor out of his room in front of the lodgers?",
+                "options": [
+                  "The smell of food",
+                  "His mother's screams",
+                  "The light in the living room",
+                  "The music of Grete's violin"
+                ],
+                "correctIndex": 3,
+                "explanation": "Moved by his sister's violin, Gregor crawls toward the living room and the lodgers see him."
+              },
+              {
+                "prompt": "How does the family react after Gregor's death?",
+                "options": [
+                  "They fall into a deep depression",
+                  "They decide to move in with the lodgers",
+                  "They feel relief, take a trip to the country and make plans for Grete's future",
+                  "They blame the cleaning woman and report her"
+                ],
+                "correctIndex": 2,
+                "explanation": "The family takes the day off, rides the tram to the country and thinks about finding Grete a husband: Gregor's death is a relief."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "animal-farm",
+      "title": "Animal Farm",
+      "author": "George Orwell",
+      "year": 1945,
+      "pages": 144,
+      "shelves": [
+        "classics",
+        "dystopias",
+        "short-reads"
+      ],
+      "tags": [
+        "fable",
+        "politics",
+        "power",
+        "propaganda",
+        "totalitarianism"
+      ],
+      "synopsis": "The animals on a farm drive out their human owner to govern themselves, but the new order does not turn out as they dreamed.",
+      "chapters": [
+        {
+          "number": 1,
+          "title": "Chapter I",
+          "startPage": 1,
+          "endPage": 14,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What is the central message of Old Major's speech?",
+                "options": [
+                  "That the animals must work harder for Mr. Jones",
+                  "That humans exploit animals and that they must rebel to be free",
+                  "That pigs are superior to the rest",
+                  "That the farm must be sold"
+                ],
+                "correctIndex": 1,
+                "explanation": "Major explains that man consumes without producing and lives off animal labor; only rebellion will free them."
+              },
+              {
+                "prompt": "What role does the song \"Beasts of England\" play?",
+                "options": [
+                  "It is an anthem that unites the animals around the dream of rebellion",
+                  "It is Mr. Jones's favorite song",
+                  "It is used to call everyone to eat",
+                  "It mocks the pigs"
+                ],
+                "correctIndex": 0,
+                "explanation": "The song sums up the ideal of a future without humans and fills all the animals with enthusiasm."
+              },
+              {
+                "prompt": "According to Major, how should animals treat one another?",
+                "options": [
+                  "Each species should look after only itself",
+                  "The strongest should rule",
+                  "They should choose a king",
+                  "All animals are comrades and none should copy the ways of man"
+                ],
+                "correctIndex": 3,
+                "explanation": "Major declares that all animals are equal and warns them not to take on human vices."
+              }
+            ]
+          }
+        },
+        {
+          "number": 2,
+          "title": "Chapter II",
+          "startPage": 15,
+          "endPage": 28,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What finally sets off the rebellion?",
+                "options": [
+                  "A plan carefully dated by the pigs",
+                  "Old Major's death",
+                  "Jones and his men forget to feed the animals, who break into the store-shed hungry",
+                  "A fire on the farm"
+                ],
+                "correctIndex": 2,
+                "explanation": "The rebellion is almost spontaneous: hunger drives the animals to attack when the humans neglect them."
+              },
+              {
+                "prompt": "Why do the pigs take on the job of teaching and organizing?",
+                "options": [
+                  "Because they are the strongest",
+                  "Because they are considered the cleverest",
+                  "Because Jones made them foremen",
+                  "Because the other animals voted for them"
+                ],
+                "correctIndex": 1,
+                "explanation": "Snowball, Napoleon and Squealer work out \"Animalism\" because they are recognized as the cleverest."
+              },
+              {
+                "prompt": "What does the disappearance of the milk at the end of the chapter suggest?",
+                "options": [
+                  "That someone, presumably Napoleon, is already secretly taking advantage of common goods",
+                  "That a fox stole it",
+                  "That the cows stopped giving milk",
+                  "That it was sold to buy seeds"
+                ],
+                "correctIndex": 0,
+                "explanation": "While the others bring in the harvest, the milk disappears: the first sign that the pigs will keep privileges for themselves."
+              }
+            ]
+          }
+        },
+        {
+          "number": 3,
+          "title": "Chapter III",
+          "startPage": 29,
+          "endPage": 42,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does Boxer's motto, \"I will work harder\", reveal?",
+                "options": [
+                  "His ambition to lead the farm",
+                  "His distrust of the pigs",
+                  "That he plans to run away",
+                  "His loyalty and blind faith in the cause, which make him easy to exploit"
+                ],
+                "correctIndex": 3,
+                "explanation": "Boxer answers every problem with more effort of his own, without questioning those in charge."
+              },
+              {
+                "prompt": "Why are the Seven Commandments reduced to \"Four legs good, two legs bad\"?",
+                "options": [
+                  "To make fun of the hens",
+                  "Because Jones demanded it",
+                  "So that the less educated animals can remember them",
+                  "To change the rules in favor of the dogs"
+                ],
+                "correctIndex": 2,
+                "explanation": "Snowball simplifies the commandments for those who cannot learn them; the sheep repeat it without thinking."
+              },
+              {
+                "prompt": "How does Squealer justify the pigs keeping the milk and apples?",
+                "options": [
+                  "He says it is a reward for the harvest",
+                  "He claims the pigs do brainwork that requires that food and that, if they fail, Jones will come back",
+                  "He says the apples were rotten",
+                  "He admits it is unfair but temporary"
+                ],
+                "correctIndex": 1,
+                "explanation": "Squealer uses the fear of Jones's return so that no one questions the privilege."
+              }
+            ]
+          }
+        },
+        {
+          "number": 4,
+          "title": "Chapter IV",
+          "startPage": 43,
+          "endPage": 54,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Who leads the defense of the farm in the \"Battle of the Cowshed\"?",
+                "options": [
+                  "Snowball",
+                  "Napoleon",
+                  "Boxer",
+                  "Benjamin"
+                ],
+                "correctIndex": 0,
+                "explanation": "Snowball, who had studied Julius Caesar's campaigns, plans the defense and is wounded."
+              },
+              {
+                "prompt": "Why is Boxer upset after the battle?",
+                "options": [
+                  "Because they lost the battle",
+                  "Because he did not get a medal",
+                  "Because Snowball scolded him",
+                  "Because he thinks he killed a stable lad and he does not want to take anyone's life"
+                ],
+                "correctIndex": 3,
+                "explanation": "Boxer feels remorse believing the boy is dead, though he was only stunned."
+              },
+              {
+                "prompt": "What were Jones and his allies trying to do in this battle?",
+                "options": [
+                  "Buy the farm",
+                  "Negotiate a treaty",
+                  "Take back the farm by force",
+                  "Steal the grain"
+                ],
+                "correctIndex": 2,
+                "explanation": "Jones, with men from the neighboring farms, tries to retake the property and is driven off."
+              }
+            ]
+          }
+        },
+        {
+          "number": 5,
+          "title": "Chapter V",
+          "startPage": 55,
+          "endPage": 70,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "How does Napoleon get rid of Snowball?",
+                "options": [
+                  "He beats him in a vote",
+                  "He chases him off the farm with the dogs he raised in secret",
+                  "He sells him to a neighboring farmer",
+                  "He convinces him to leave of his own free will"
+                ],
+                "correctIndex": 1,
+                "explanation": "In the middle of the debate about the windmill, nine huge dogs chase Snowball until he is off the farm."
+              },
+              {
+                "prompt": "What does Napoleon decide about the Sunday meetings?",
+                "options": [
+                  "To abolish them: a committee of pigs will make the decisions",
+                  "To hold them every day",
+                  "To have Boxer chair them",
+                  "To open them to humans too"
+                ],
+                "correctIndex": 0,
+                "explanation": "The debates are gone; the animals will only receive orders."
+              },
+              {
+                "prompt": "How does Squealer explain that Napoleon now supports the windmill he used to oppose?",
+                "options": [
+                  "He says Napoleon changed his mind after studying it",
+                  "He says Jones ordered it",
+                  "He admits Snowball was right",
+                  "He claims the windmill was always Napoleon's idea and that opposing it was \"tactics\""
+                ],
+                "correctIndex": 3,
+                "explanation": "Squealer rewrites history: Snowball's project becomes Napoleon's."
+              }
+            ]
+          }
+        },
+        {
+          "number": 6,
+          "title": "Chapter VI",
+          "startPage": 71,
+          "endPage": 86,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What is misleading about the \"voluntary\" work on Sunday afternoons?",
+                "options": [
+                  "That it was never actually done",
+                  "That it was secretly paid",
+                  "That any animal who skipped it had its rations cut by half",
+                  "That only the pigs did it"
+                ],
+                "correctIndex": 2,
+                "explanation": "The work is \"voluntary\" in name only: refusing costs food."
+              },
+              {
+                "prompt": "How is the commandment about beds changed when the pigs move into the farmhouse?",
+                "options": [
+                  "It is erased completely",
+                  "\"With sheets\" is added: no animal shall sleep in a bed with sheets",
+                  "It is changed to \"only pigs shall sleep in beds\"",
+                  "It is not changed"
+                ],
+                "correctIndex": 1,
+                "explanation": "The commandments are quietly rewritten to justify the pigs' privileges."
+              },
+              {
+                "prompt": "Whom does Napoleon blame for the destruction of the windmill after the storm?",
+                "options": [
+                  "Snowball",
+                  "Jones",
+                  "Boxer",
+                  "The humans of Foxwood"
+                ],
+                "correctIndex": 0,
+                "explanation": "Napoleon turns the absent Snowball into the enemy who gets the blame for any failure."
+              }
+            ]
+          }
+        },
+        {
+          "number": 7,
+          "title": "Chapter VII",
+          "startPage": 87,
+          "endPage": 104,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Why do the hens rebel in this chapter?",
+                "options": [
+                  "Because they are not allowed to sleep",
+                  "Because Snowball convinced them",
+                  "Because they want to move into the farmhouse",
+                  "Because they are ordered to hand over their eggs to be sold"
+                ],
+                "correctIndex": 3,
+                "explanation": "Napoleon makes a deal to sell eggs; the hens resist and he crushes them by cutting off their food."
+              },
+              {
+                "prompt": "What happens at the meeting where several animals \"confess\" to dealings with Snowball?",
+                "options": [
+                  "They are forgiven",
+                  "They are expelled from the farm",
+                  "They are executed by the dogs",
+                  "They are promoted"
+                ],
+                "correctIndex": 2,
+                "explanation": "The forced confessions end in executions: the violence becomes open."
+              },
+              {
+                "prompt": "Why is singing \"Beasts of England\" banned?",
+                "options": [
+                  "Because the animals sang it badly",
+                  "Because, according to the pigs, the rebellion is complete and the song no longer has a purpose",
+                  "Because Snowball wrote it",
+                  "Because Jones could hear it"
+                ],
+                "correctIndex": 1,
+                "explanation": "The anthem of the shared dream is removed: it no longer suits the pigs for the animals to imagine a different society."
+              }
+            ]
+          }
+        },
+        {
+          "number": 8,
+          "title": "Chapter VIII",
+          "startPage": 105,
+          "endPage": 120,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What becomes of the commandment \"No animal shall kill any other animal\"?",
+                "options": [
+                  "\"Without cause\" is added",
+                  "It is erased",
+                  "\"Except sheep\" is added",
+                  "It does not change"
+                ],
+                "correctIndex": 0,
+                "explanation": "With two words added, the executions look legal."
+              },
+              {
+                "prompt": "What happens in the timber deal with Frederick?",
+                "options": [
+                  "Frederick pays twice what was agreed",
+                  "Pilkington ends up with the timber",
+                  "Napoleon gives the timber away",
+                  "Frederick pays with forged banknotes, then attacks the farm and blows up the windmill"
+                ],
+                "correctIndex": 3,
+                "explanation": "Napoleon is cheated and the farm suffers the Battle of the Windmill."
+              },
+              {
+                "prompt": "What does the scene of Squealer fallen next to a ladder and a pot of paint reveal?",
+                "options": [
+                  "That he was painting the barn",
+                  "That he was trying to escape",
+                  "That the pigs change the commandments at night",
+                  "That Snowball attacked him"
+                ],
+                "correctIndex": 2,
+                "explanation": "Soon after, the commandment about alcohol reads \"to excess\"; hardly anyone understands what they saw."
+              }
+            ]
+          }
+        },
+        {
+          "number": 9,
+          "title": "Chapter IX",
+          "startPage": 121,
+          "endPage": 134,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What is Boxer's real fate?",
+                "options": [
+                  "He dies in a veterinary hospital",
+                  "He is sold to a horse slaughterer",
+                  "He retires to a pasture",
+                  "He runs away with Benjamin"
+                ],
+                "correctIndex": 1,
+                "explanation": "Benjamin reads the sign on the van: it belongs to the horse slaughterer. Squealer denies it."
+              },
+              {
+                "prompt": "How does the farm become a \"Republic\"?",
+                "options": [
+                  "Napoleon, the only candidate, is elected president unanimously",
+                  "Through elections among several candidates",
+                  "By Pilkington's decree",
+                  "Through a rebellion of the sheep"
+                ],
+                "correctIndex": 0,
+                "explanation": "The democratic form hides absolute power."
+              },
+              {
+                "prompt": "Why do the pigs tolerate the return of Moses the raven and his Sugarcandy Mountain?",
+                "options": [
+                  "Because they believe in it",
+                  "Because Moses is the wisest",
+                  "Because Jones sent him",
+                  "Because the promise of a future paradise helps the animals bear their present misery"
+                ],
+                "correctIndex": 3,
+                "explanation": "The comforting story defuses the discontent of the hungry animals."
+              }
+            ]
+          }
+        },
+        {
+          "number": 10,
+          "title": "Chapter X",
+          "startPage": 135,
+          "endPage": 144,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What do the sheep now shout when the pigs walk on two legs?",
+                "options": [
+                  "\"Four legs good, two legs bad\"",
+                  "\"Long live Napoleon\"",
+                  "\"Four legs good, two legs better\"",
+                  "\"Beasts of England\""
+                ],
+                "correctIndex": 2,
+                "explanation": "The slogan is turned upside down and no one protests."
+              },
+              {
+                "prompt": "What do the Seven Commandments become?",
+                "options": [
+                  "A new list of ten",
+                  "A single commandment: \"All animals are equal, but some animals are more equal than others\"",
+                  "They are restored as they were at the start",
+                  "They are erased with nothing to replace them"
+                ],
+                "correctIndex": 1,
+                "explanation": "The phrase sums up the betrayal of the revolution."
+              },
+              {
+                "prompt": "What does the final scene mean, when the animals can no longer tell the pigs from the men?",
+                "options": [
+                  "That the pigs have become identical to the oppressors they rebelled against",
+                  "That the humans took back the farm",
+                  "That all the animals made peace",
+                  "That Snowball came back"
+                ],
+                "correctIndex": 0,
+                "explanation": "The cycle closes: the new elite repeats the exploitation of the old one."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "the-little-prince",
+      "title": "The Little Prince",
+      "author": "Antoine de Saint-Exupéry",
+      "year": 1943,
+      "pages": 96,
+      "shelves": [
+        "classics",
+        "short-reads"
+      ],
+      "tags": [
+        "fable",
+        "friendship",
+        "childhood",
+        "love",
+        "philosophy"
+      ],
+      "synopsis": "A pilot stranded in the Sahara Desert meets a little prince who comes from another planet.",
+      "chapters": [
+        {
+          "number": 1,
+          "title": "Chapter I",
+          "startPage": 1,
+          "endPage": 4,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What did the grown-ups see in the narrator's Drawing Number One?",
+                "options": [
+                  "A boa constrictor",
+                  "An elephant",
+                  "A mountain",
+                  "A hat"
+                ],
+                "correctIndex": 3,
+                "explanation": "It was a boa constrictor digesting an elephant, but the grown-ups only saw a hat."
+              },
+              {
+                "prompt": "What is the narrator criticizing with this story?",
+                "options": [
+                  "That children draw badly",
+                  "That geography is useless",
+                  "That grown-ups lack imagination and need everything explained to them",
+                  "That pilots can't draw"
+                ],
+                "correctIndex": 2,
+                "explanation": "Discouraged by the grown-ups, he gives up drawing and becomes a pilot."
+              }
+            ]
+          }
+        },
+        {
+          "number": 2,
+          "title": "Chapter II",
+          "startPage": 5,
+          "endPage": 8,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does the little prince ask the narrator when they meet?",
+                "options": [
+                  "Water",
+                  "To draw him a sheep",
+                  "To fix his plane",
+                  "To take him home"
+                ],
+                "correctIndex": 1,
+                "explanation": "\"If you please... draw me a sheep!\""
+              },
+              {
+                "prompt": "Why is the little prince happy with the drawing of a box?",
+                "options": [
+                  "Because he imagines the sheep inside, just as he wanted it",
+                  "Because he likes boxes",
+                  "Because the narrator got tired",
+                  "Because he doesn't like sheep"
+                ],
+                "correctIndex": 0,
+                "explanation": "The little prince sees what is inside: imagination completes the drawing."
+              }
+            ]
+          }
+        },
+        {
+          "number": 3,
+          "title": "Chapter III",
+          "startPage": 9,
+          "endPage": 11,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does the narrator discover about where the little prince comes from?",
+                "options": [
+                  "That he is a pilot's son",
+                  "That he lives in a nearby oasis",
+                  "That he is lost from a caravan",
+                  "That he comes from another planet"
+                ],
+                "correctIndex": 3,
+                "explanation": "Laughing at the plane that \"fell from the sky\", the little prince reveals that he comes from another planet."
+              },
+              {
+                "prompt": "How does the narrator get information from the little prince?",
+                "options": [
+                  "Through direct questions the little prince answers",
+                  "By reading his diary",
+                  "Little by little, from words dropped by chance, since the little prince never answers what he is asked",
+                  "From a map"
+                ],
+                "correctIndex": 2,
+                "explanation": "The little prince asks a lot but hardly ever answers; the narrator pieces his story together."
+              }
+            ]
+          }
+        },
+        {
+          "number": 4,
+          "title": "Chapter IV",
+          "startPage": 12,
+          "endPage": 15,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Why did no one believe the Turkish astronomer the first time he presented asteroid B-612?",
+                "options": [
+                  "Because his calculations were wrong",
+                  "Because of his Turkish clothes",
+                  "Because he had no telescope",
+                  "Because he spoke another language"
+                ],
+                "correctIndex": 1,
+                "explanation": "When he presented it again in European dress, everyone believed him."
+              },
+              {
+                "prompt": "According to the narrator, what do grown-ups care about?",
+                "options": [
+                  "Figures: age, money, number of brothers",
+                  "Dreams",
+                  "Games",
+                  "Butterflies"
+                ],
+                "correctIndex": 0,
+                "explanation": "Grown-ups ask about figures, not about what matters."
+              }
+            ]
+          }
+        },
+        {
+          "number": 5,
+          "title": "Chapter V",
+          "startPage": 16,
+          "endPage": 19,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Why must baobabs be pulled up while they are small?",
+                "options": [
+                  "Because they bear poisonous fruit",
+                  "Because they block the sun",
+                  "Because the sheep don't eat them",
+                  "Because if they grow, their roots can destroy the planet"
+                ],
+                "correctIndex": 3,
+                "explanation": "Neglecting a young baobab lets it take over and split the planet to pieces."
+              },
+              {
+                "prompt": "What lesson is in the daily discipline with the baobabs?",
+                "options": [
+                  "That trees are bad",
+                  "That you have to move to another planet",
+                  "That small problems must be dealt with in time, steadily",
+                  "That work is useless"
+                ],
+                "correctIndex": 2,
+                "explanation": "\"It is a question of discipline\": taking care every day of what could turn into a disaster."
+              }
+            ]
+          }
+        },
+        {
+          "number": 6,
+          "title": "Chapter VI",
+          "startPage": 20,
+          "endPage": 21,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "How can the little prince see several sunsets in one day?",
+                "options": [
+                  "By waiting many hours",
+                  "By moving his chair a few steps on his tiny planet",
+                  "By traveling between planets",
+                  "By dreaming them"
+                ],
+                "correctIndex": 1,
+                "explanation": "His planet is so small that he only has to move his chair."
+              },
+              {
+                "prompt": "What does the day he watched the sunset forty-three times reveal?",
+                "options": [
+                  "That he was very sad",
+                  "That he was very bored",
+                  "That he was sick",
+                  "That he wanted to impress the narrator"
+                ],
+                "correctIndex": 0,
+                "explanation": "\"One loves the sunset, when one is so sad.\""
+              }
+            ]
+          }
+        },
+        {
+          "number": 7,
+          "title": "Chapter VII",
+          "startPage": 22,
+          "endPage": 25,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Why does the little prince get angry with the narrator?",
+                "options": [
+                  "Because he didn't draw him another sheep",
+                  "Because the narrator left him alone",
+                  "Because he broke the box",
+                  "Because the narrator says he is busy with \"matters of consequence\" and doesn't care if the sheep eats his flower"
+                ],
+                "correctIndex": 3,
+                "explanation": "For the little prince, his one and only flower is what truly matters."
+              },
+              {
+                "prompt": "What finally comforts the little prince in this chapter?",
+                "options": [
+                  "A new drawing",
+                  "A glass of water",
+                  "The narrator holds him and promises to draw protection for his flower",
+                  "The plane gets fixed"
+                ],
+                "correctIndex": 2,
+                "explanation": "The narrator drops his engine work and promises a muzzle for the sheep and armor for the flower."
+              }
+            ]
+          }
+        },
+        {
+          "number": 8,
+          "title": "Chapter VIII",
+          "startPage": 26,
+          "endPage": 29,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What is the little prince's flower like?",
+                "options": [
+                  "Humble and quiet",
+                  "Beautiful but vain and demanding",
+                  "Ugly and poisonous",
+                  "Just like every other flower"
+                ],
+                "correctIndex": 1,
+                "explanation": "She asks for a screen, a glass globe and care; she tells small lies so he will look after her."
+              },
+              {
+                "prompt": "What does the little prince later admit about his relationship with the flower?",
+                "options": [
+                  "That he should have judged her by her deeds and not by her words",
+                  "That he never loved her",
+                  "That it was better not to have a flower",
+                  "That he was right to doubt her"
+                ],
+                "correctIndex": 0,
+                "explanation": "The flower filled his world with fragrance and light; he was too young to know how to love her."
+              }
+            ]
+          }
+        },
+        {
+          "number": 9,
+          "title": "Chapter IX",
+          "startPage": 30,
+          "endPage": 32,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does the flower tell the little prince before he leaves?",
+                "options": [
+                  "That she hates him",
+                  "To take the volcanoes with him",
+                  "Not to come back",
+                  "That she loves him and has been silly, and that she doesn't need the glass globe"
+                ],
+                "correctIndex": 3,
+                "explanation": "The flower asks his forgiveness and wishes him happiness."
+              },
+              {
+                "prompt": "What does the flower mean by \"I must endure the presence of two or three caterpillars if I wish to become acquainted with the butterflies\"?",
+                "options": [
+                  "That she likes insects",
+                  "That the little prince is a caterpillar",
+                  "That you have to accept some discomforts to get something beautiful",
+                  "That she needs insecticide"
+                ],
+                "correctIndex": 2,
+                "explanation": "Beauty has a cost; the flower accepts the trouble."
+              }
+            ]
+          }
+        },
+        {
+          "number": 10,
+          "title": "Chapter X",
+          "startPage": 33,
+          "endPage": 37,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Why does the king only give orders that can be obeyed?",
+                "options": [
+                  "Because he is weak",
+                  "Because authority must be based on reason",
+                  "Because no one obeys him",
+                  "Because he is shy"
+                ],
+                "correctIndex": 1,
+                "explanation": "\"One must require from each one the duty which each one can perform.\""
+              },
+              {
+                "prompt": "According to the king, what is the hardest thing?",
+                "options": [
+                  "Judging yourself",
+                  "Ruling others",
+                  "Ordering the sunset",
+                  "Finding subjects"
+                ],
+                "correctIndex": 0,
+                "explanation": "\"It is much more difficult to judge oneself than to judge others.\""
+              }
+            ]
+          }
+        },
+        {
+          "number": 11,
+          "title": "Chapter XI",
+          "startPage": 38,
+          "endPage": 40,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does the conceited man want from others?",
+                "options": [
+                  "Gifts",
+                  "Fear",
+                  "To be left alone",
+                  "Admiration"
+                ],
+                "correctIndex": 3,
+                "explanation": "For the conceited man, everyone else is an admirer."
+              },
+              {
+                "prompt": "What trait shows that the conceited man only listens to praise?",
+                "options": [
+                  "He repeats everything twice",
+                  "He only talks about his planet",
+                  "He hears nothing that is not praise",
+                  "He covers his eyes"
+                ],
+                "correctIndex": 2,
+                "explanation": "Conceited people never hear anything but praise."
+              }
+            ]
+          }
+        },
+        {
+          "number": 12,
+          "title": "Chapter XII",
+          "startPage": 41,
+          "endPage": 42,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Why does the tippler drink?",
+                "options": [
+                  "To celebrate",
+                  "To forget that he is ashamed of drinking",
+                  "Because he is thirsty",
+                  "To sleep"
+                ],
+                "correctIndex": 1,
+                "explanation": "A vicious circle that leaves the little prince puzzled."
+              },
+              {
+                "prompt": "What feeling does this visit leave the little prince with?",
+                "options": [
+                  "A deep sadness",
+                  "Joy",
+                  "Envy",
+                  "Fear"
+                ],
+                "correctIndex": 0,
+                "explanation": "He leaves puzzled and sad: \"The grown-ups are certainly very, very odd.\""
+              }
+            ]
+          }
+        },
+        {
+          "number": 13,
+          "title": "Chapter XIII",
+          "startPage": 43,
+          "endPage": 46,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does the businessman do with the stars?",
+                "options": [
+                  "He watches them for pleasure",
+                  "He sells them to kings",
+                  "He gives them names",
+                  "He counts them and claims to own them so he can be rich"
+                ],
+                "correctIndex": 3,
+                "explanation": "He writes their number on a paper and puts it in a bank."
+              },
+              {
+                "prompt": "Why does the little prince think his way of owning things is different?",
+                "options": [
+                  "Because he has more things",
+                  "Because he owns nothing",
+                  "Because he is useful to what he owns: he waters his flower and cleans out his volcanoes",
+                  "Because he is richer"
+                ],
+                "correctIndex": 2,
+                "explanation": "For him, owning means taking care."
+              }
+            ]
+          }
+        },
+        {
+          "number": 14,
+          "title": "Chapter XIV",
+          "startPage": 47,
+          "endPage": 50,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Why does the lamplighter never rest anymore?",
+                "options": [
+                  "Because he is lazy",
+                  "Because his planet turns faster and faster and his orders have not changed",
+                  "Because he lost his lamp",
+                  "Because his boss punishes him"
+                ],
+                "correctIndex": 1,
+                "explanation": "Now the planet turns once a minute and he still follows orders."
+              },
+              {
+                "prompt": "Why is the lamplighter the only one who doesn't seem ridiculous to the little prince?",
+                "options": [
+                  "Because he cares about something other than himself",
+                  "Because he is very rich",
+                  "Because he is his friend",
+                  "Because he works at night"
+                ],
+                "correctIndex": 0,
+                "explanation": "His work has meaning because he looks beyond himself."
+              }
+            ]
+          }
+        },
+        {
+          "number": 15,
+          "title": "Chapter XV",
+          "startPage": 51,
+          "endPage": 54,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Why doesn't the geographer record flowers?",
+                "options": [
+                  "Because he doesn't like them",
+                  "Because he hasn't seen them",
+                  "Because they are too small",
+                  "Because they are ephemeral and he only records what is eternal"
+                ],
+                "correctIndex": 3,
+                "explanation": "Geography books only record things that do not change."
+              },
+              {
+                "prompt": "What does the little prince feel when he learns his flower is ephemeral?",
+                "options": [
+                  "Indifference",
+                  "Joy",
+                  "Regret at having left her alone",
+                  "Anger at the geographer"
+                ],
+                "correctIndex": 2,
+                "explanation": "It is his first moment of regret."
+              }
+            ]
+          }
+        },
+        {
+          "number": 16,
+          "title": "Chapter XVI",
+          "startPage": 55,
+          "endPage": 56,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Which planet does the little prince visit on the geographer's advice?",
+                "options": [
+                  "Mars",
+                  "The Earth",
+                  "Venus",
+                  "An asteroid"
+                ],
+                "correctIndex": 1,
+                "explanation": "The geographer recommends the Earth, which \"has a good reputation\"."
+              },
+              {
+                "prompt": "In what tone does the narrator describe the Earth, with its kings, geographers and lamplighters?",
+                "options": [
+                  "Ironically, as a planet full of grown-ups like the ones already seen",
+                  "With fear",
+                  "With indifference",
+                  "In a neutral, scientific tone"
+                ],
+                "correctIndex": 0,
+                "explanation": "The Earth multiplies the characters the little prince has already met."
+              }
+            ]
+          }
+        },
+        {
+          "number": 17,
+          "title": "Chapter XVII",
+          "startPage": 57,
+          "endPage": 60,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does the snake offer the little prince?",
+                "options": [
+                  "Food",
+                  "A map",
+                  "Its eternal friendship",
+                  "To help him return to his planet someday"
+                ],
+                "correctIndex": 3,
+                "explanation": "Whomever it touches, it \"sends back to the earth from whence he came\"."
+              },
+              {
+                "prompt": "Faced with the loneliness of the desert, what does the snake answer?",
+                "options": [
+                  "That the desert is full of people",
+                  "That loneliness doesn't exist",
+                  "That it is also lonely among men",
+                  "That he should look for a king"
+                ],
+                "correctIndex": 2,
+                "explanation": "Loneliness does not depend on how many people there are."
+              }
+            ]
+          }
+        },
+        {
+          "number": 18,
+          "title": "Chapter XVIII",
+          "startPage": 61,
+          "endPage": 61,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "According to the desert flower, why do men go from place to place?",
+                "options": [
+                  "Because they like to travel",
+                  "Because they have no roots and the wind blows them away",
+                  "Because they are looking for water",
+                  "Because they are fleeing war"
+                ],
+                "correctIndex": 1,
+                "explanation": "The flower has only seen one caravan: men have no roots."
+              },
+              {
+                "prompt": "How many men does the flower think exist?",
+                "options": [
+                  "Six or seven",
+                  "Millions",
+                  "None",
+                  "A hundred"
+                ],
+                "correctIndex": 0,
+                "explanation": "Her limited view shows how little she knows of the world."
+              }
+            ]
+          }
+        },
+        {
+          "number": 19,
+          "title": "Chapter XIX",
+          "startPage": 62,
+          "endPage": 63,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does the little prince hear when he speaks from the mountain?",
+                "options": [
+                  "A kind answer",
+                  "The wind",
+                  "The snake's voice",
+                  "Only the echo of his own words"
+                ],
+                "correctIndex": 3,
+                "explanation": "The echo repeats everything he says."
+              },
+              {
+                "prompt": "What does the little prince conclude about men from the echo?",
+                "options": [
+                  "That they are very wise",
+                  "That they don't know how to talk",
+                  "That they have no imagination and repeat whatever is said to them",
+                  "That they are at war"
+                ],
+                "correctIndex": 2,
+                "explanation": "He remembers that his flower always spoke first."
+              }
+            ]
+          }
+        },
+        {
+          "number": 20,
+          "title": "Chapter XX",
+          "startPage": 64,
+          "endPage": 65,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Why does the little prince cry when he finds the rose garden?",
+                "options": [
+                  "Because of the scent",
+                  "Because he discovers thousands of flowers just like his, which he thought was unique",
+                  "Because he pricked himself",
+                  "Because he misses the narrator"
+                ],
+                "correctIndex": 1,
+                "explanation": "He feels less rich: he thought he had a flower that was unique in the universe."
+              },
+              {
+                "prompt": "How many roses were in the garden?",
+                "options": [
+                  "Five thousand",
+                  "A hundred",
+                  "A thousand",
+                  "Ten"
+                ],
+                "correctIndex": 0,
+                "explanation": "Five thousand roses, all just like his."
+              }
+            ]
+          }
+        },
+        {
+          "number": 21,
+          "title": "Chapter XXI",
+          "startPage": 66,
+          "endPage": 72,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "According to the fox, what does \"tame\" mean?",
+                "options": [
+                  "To obey",
+                  "To lock up",
+                  "To teach tricks",
+                  "To establish ties"
+                ],
+                "correctIndex": 3,
+                "explanation": "When they tame each other, two beings become unique to each other."
+              },
+              {
+                "prompt": "What secret does the fox tell the little prince?",
+                "options": [
+                  "Where the well is",
+                  "How to get back to his planet",
+                  "That what is essential is invisible to the eye, and one can only see rightly with the heart",
+                  "That the rose was lying"
+                ],
+                "correctIndex": 2,
+                "explanation": "And that the time he spent on his rose is what makes her so important."
+              }
+            ]
+          }
+        },
+        {
+          "number": 22,
+          "title": "Chapter XXII",
+          "startPage": 73,
+          "endPage": 74,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "According to the railway switchman, what are the train passengers looking for?",
+                "options": [
+                  "To arrive on time",
+                  "No one knows, not even they do",
+                  "Their homes",
+                  "A job"
+                ],
+                "correctIndex": 1,
+                "explanation": "They travel without knowing what they are after, and they are never happy where they are."
+              },
+              {
+                "prompt": "Who looks out the window, according to the switchman?",
+                "options": [
+                  "Only the children",
+                  "The grown-ups",
+                  "No one",
+                  "The engineers"
+                ],
+                "correctIndex": 0,
+                "explanation": "Only the children know what they are looking for."
+              }
+            ]
+          }
+        },
+        {
+          "number": 23,
+          "title": "Chapter XXIII",
+          "startPage": 75,
+          "endPage": 75,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does the merchant sell?",
+                "options": [
+                  "Water",
+                  "Clocks",
+                  "Maps",
+                  "Pills that quench thirst"
+                ],
+                "correctIndex": 3,
+                "explanation": "Pills that save fifty-three minutes a week."
+              },
+              {
+                "prompt": "What would the little prince do with those fifty-three minutes?",
+                "options": [
+                  "Sleep",
+                  "Work more",
+                  "Walk slowly toward a spring of fresh water",
+                  "Buy more pills"
+                ],
+                "correctIndex": 2,
+                "explanation": "He values the experience, not the shortcut."
+              }
+            ]
+          }
+        },
+        {
+          "number": 24,
+          "title": "Chapter XXIV",
+          "startPage": 76,
+          "endPage": 79,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What situation is the narrator in during this chapter?",
+                "options": [
+                  "He fixes the plane",
+                  "He runs out of water and they set off to look for a well",
+                  "He is rescued",
+                  "He loses the little prince"
+                ],
+                "correctIndex": 1,
+                "explanation": "It is the eighth day since his breakdown and they drink the last drop."
+              },
+              {
+                "prompt": "According to the little prince, what makes the desert beautiful?",
+                "options": [
+                  "That somewhere it hides a well",
+                  "The stars",
+                  "The sand",
+                  "The total silence"
+                ],
+                "correctIndex": 0,
+                "explanation": "What is invisible gives value to what is visible."
+              }
+            ]
+          }
+        },
+        {
+          "number": 25,
+          "title": "Chapter XXV",
+          "startPage": 80,
+          "endPage": 84,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Why is the water from the well special?",
+                "options": [
+                  "Because it is so fresh",
+                  "Because it is magic",
+                  "Because it is the only water in the world",
+                  "Because it was born of the walk, the song of the pulley and shared effort, and it is good for the heart"
+                ],
+                "correctIndex": 3,
+                "explanation": "It is like a present."
+              },
+              {
+                "prompt": "What does the little prince remember in this chapter?",
+                "options": [
+                  "His birthday",
+                  "The king",
+                  "That the anniversary of his arrival on Earth is coming",
+                  "The astronomer"
+                ],
+                "correctIndex": 2,
+                "explanation": "Tomorrow it will be one year since he fell near this place."
+              }
+            ]
+          }
+        },
+        {
+          "number": 26,
+          "title": "Chapter XXVI",
+          "startPage": 85,
+          "endPage": 92,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What gift does the little prince leave the narrator?",
+                "options": [
+                  "His sheep",
+                  "Stars that laugh: when he looks at the sky, he will know the little prince is laughing on one of them",
+                  "A rose",
+                  "A map"
+                ],
+                "correctIndex": 1,
+                "explanation": "Every star will be like a little bell for him."
+              },
+              {
+                "prompt": "How does the little prince leave the Earth?",
+                "options": [
+                  "The snake bites him and he falls gently onto the sand",
+                  "In the plane",
+                  "With a flock of birds",
+                  "He disappears in a dream"
+                ],
+                "correctIndex": 0,
+                "explanation": "He falls \"as gently as a tree falls\", without a sound."
+              }
+            ]
+          }
+        },
+        {
+          "number": 27,
+          "title": "Chapter XXVII",
+          "startPage": 93,
+          "endPage": 96,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What did the narrator forget when he drew the muzzle?",
+                "options": [
+                  "The box",
+                  "The color",
+                  "The sheep",
+                  "To add the leather strap"
+                ],
+                "correctIndex": 3,
+                "explanation": "That is why he wonders whether the sheep has eaten the flower."
+              },
+              {
+                "prompt": "What does the narrator ask the reader at the end?",
+                "options": [
+                  "To forget the story",
+                  "To draw a sheep",
+                  "That if they meet a child with golden hair, they write to him right away",
+                  "To visit the Sahara"
+                ],
+                "correctIndex": 2,
+                "explanation": "The story stays open and tied to hope."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "chronicle-of-a-death-foretold",
+      "title": "Chronicle of a Death Foretold",
+      "author": "Gabriel García Márquez",
+      "year": 1981,
+      "pages": 120,
+      "shelves": [
+        "latin-american",
+        "classics",
+        "short-reads"
+      ],
+      "tags": [
+        "honor",
+        "fate",
+        "collective guilt",
+        "journalism",
+        "small town"
+      ],
+      "synopsis": "Twenty-seven years later, a narrator pieces together the day Santiago Nasar was murdered, a crime the whole town knew was going to happen.",
+      "chapters": [
+        {
+          "number": 1,
+          "title": "Chapter 1",
+          "startPage": 1,
+          "endPage": 26,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What device does the novel use from the very first line?",
+                "options": [
+                  "It hides the ending until the last page",
+                  "It announces right away that Santiago Nasar will be murdered",
+                  "It opens with the killer's dream",
+                  "It is told from the point of view of the dead victim"
+                ],
+                "correctIndex": 1,
+                "explanation": "The interest is not in what will happen, but in how it happened and why no one stopped it."
+              },
+              {
+                "prompt": "Why is the town stirred up that morning?",
+                "options": [
+                  "Because the bishop is arriving by boat",
+                  "Because of a fair",
+                  "Because of a storm",
+                  "Because of a game"
+                ],
+                "correctIndex": 0,
+                "explanation": "Santiago gets up early to greet the bishop."
+              },
+              {
+                "prompt": "Who tells the story?",
+                "options": [
+                  "Santiago Nasar",
+                  "Ángela Vicario",
+                  "The bishop",
+                  "A friend of Santiago's who pieces the events together years later"
+                ],
+                "correctIndex": 3,
+                "explanation": "He gathers testimonies like a journalistic investigation."
+              }
+            ]
+          }
+        },
+        {
+          "number": 2,
+          "title": "Chapter 2",
+          "startPage": 27,
+          "endPage": 50,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What is Bayardo San Román like when he arrives in town?",
+                "options": [
+                  "Poor and humble",
+                  "A priest",
+                  "Rich, mysterious and charming",
+                  "An old friend of the Vicarios"
+                ],
+                "correctIndex": 2,
+                "explanation": "He dazzles everyone and decides to marry Ángela."
+              },
+              {
+                "prompt": "Why does Ángela agree to marry Bayardo?",
+                "options": [
+                  "Because she falls in love right away",
+                  "Because of pressure from her family, who see him as a great match",
+                  "Because of a bet",
+                  "To escape the town"
+                ],
+                "correctIndex": 1,
+                "explanation": "She says she does not love him, but her family insists."
+              },
+              {
+                "prompt": "What happens on the wedding night?",
+                "options": [
+                  "Bayardo returns Ángela to her family because he discovers she was not a virgin",
+                  "Bayardo disappears",
+                  "Ángela runs away",
+                  "There is a fire"
+                ],
+                "correctIndex": 0,
+                "explanation": "That event sets off the crime."
+              }
+            ]
+          }
+        },
+        {
+          "number": 3,
+          "title": "Chapter 3",
+          "startPage": 51,
+          "endPage": 74,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What do the Vicario twins do before the crime?",
+                "options": [
+                  "They hide",
+                  "They flee the town",
+                  "They write him a letter",
+                  "They tell a great many people that they are going to kill Santiago"
+                ],
+                "correctIndex": 3,
+                "explanation": "It seems they want someone to stop them."
+              },
+              {
+                "prompt": "Why does almost no one step in to prevent the crime?",
+                "options": [
+                  "Out of fear of the twins",
+                  "Because they hated Santiago",
+                  "Because of a mix of disbelief, assuming someone else would warn him, and acceptance of the code of honor",
+                  "Because the police forbade it"
+                ],
+                "correctIndex": 2,
+                "explanation": "Collective responsibility is the central theme."
+              },
+              {
+                "prompt": "What does the mayor do when he finds out?",
+                "options": [
+                  "He arrests them",
+                  "He takes their knives away and thinks the matter is settled",
+                  "He warns Santiago",
+                  "He calls the army"
+                ],
+                "correctIndex": 1,
+                "explanation": "But the twins get other knives."
+              }
+            ]
+          }
+        },
+        {
+          "number": 4,
+          "title": "Chapter 4",
+          "startPage": 75,
+          "endPage": 98,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does the autopsy done by Father Carmen Amador reveal?",
+                "options": [
+                  "A clumsy, brutal procedure done by an untrained priest",
+                  "Careful medical work",
+                  "That Santiago died of another cause",
+                  "That there was a third guilty party"
+                ],
+                "correctIndex": 0,
+                "explanation": "It shows how poorly equipped the town is."
+              },
+              {
+                "prompt": "What does Ángela Vicario do for years after the crime?",
+                "options": [
+                  "She marries someone else",
+                  "She leaves the country",
+                  "She enters a convent",
+                  "She writes letters to Bayardo"
+                ],
+                "correctIndex": 3,
+                "explanation": "She writes hundreds of letters that get no answer."
+              },
+              {
+                "prompt": "What happens when Bayardo comes back?",
+                "options": [
+                  "He never comes back",
+                  "He comes for revenge",
+                  "He arrives with all the letters, unopened",
+                  "He demands money from her"
+                ],
+                "correctIndex": 2,
+                "explanation": "The ending raises questions about love and honor."
+              }
+            ]
+          }
+        },
+        {
+          "number": 5,
+          "title": "Chapter 5",
+          "startPage": 99,
+          "endPage": 120,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Why does Plácida Linero close the front door?",
+                "options": [
+                  "To protect herself",
+                  "Because she thinks Santiago is already inside and that the twins are about to come in",
+                  "Out of habit",
+                  "Because Santiago asked her to"
+                ],
+                "correctIndex": 1,
+                "explanation": "One of the tragic coincidences that seal his fate."
+              },
+              {
+                "prompt": "What is the point of the pile-up of coincidences at the end?",
+                "options": [
+                  "That fate and collective inaction combined so that no one prevented it",
+                  "That the crime was unavoidable for everyone",
+                  "That Santiago was guilty",
+                  "That it was an accident"
+                ],
+                "correctIndex": 0,
+                "explanation": "The chronicle shows how a whole town let it happen."
+              },
+              {
+                "prompt": "What is left unresolved at the end?",
+                "options": [
+                  "Who killed him",
+                  "Where he died",
+                  "When he died",
+                  "Whether Santiago was really the one who dishonored Ángela"
+                ],
+                "correctIndex": 3,
+                "explanation": "The doubt makes the crime even more absurd."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "aura",
+      "title": "Aura",
+      "author": "Carlos Fuentes",
+      "year": 1962,
+      "pages": 60,
+      "shelves": [
+        "mexican",
+        "latin-american",
+        "short-reads"
+      ],
+      "tags": [
+        "fantasy",
+        "time",
+        "desire",
+        "mexico city",
+        "memory"
+      ],
+      "synopsis": "A young historian takes a job in an old house in downtown Mexico City and meets an elderly widow and her niece Aura.",
+      "chapters": [
+        {
+          "number": 1,
+          "title": "Part I",
+          "startPage": 1,
+          "endPage": 14,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What is special about the narrative voice in Aura?",
+                "options": [
+                  "It is in the first person",
+                  "It is an omniscient third-person narrator",
+                  "It is in the second person: \"you\"",
+                  "It is told in letters"
+                ],
+                "correctIndex": 2,
+                "explanation": "The reader becomes Felipe Montero."
+              },
+              {
+                "prompt": "Why does Felipe Montero feel the newspaper ad is meant for him?",
+                "options": [
+                  "Because it has his name on it",
+                  "Because it describes his profile exactly: a young historian who knows French",
+                  "Because it was mailed to him",
+                  "Because he was looking for a house"
+                ],
+                "correctIndex": 1,
+                "explanation": "All that is missing is his name."
+              },
+              {
+                "prompt": "What job does Señora Consuelo offer him?",
+                "options": [
+                  "To edit and finish the memoirs of her late husband, General Llorente",
+                  "To teach classes",
+                  "To organize a library",
+                  "To look after Aura"
+                ],
+                "correctIndex": 0,
+                "explanation": "On the condition that he live in the house."
+              }
+            ]
+          }
+        },
+        {
+          "number": 2,
+          "title": "Part II",
+          "startPage": 15,
+          "endPage": 26,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What is the house on Donceles Street like?",
+                "options": [
+                  "Modern and bright",
+                  "Full of people",
+                  "A country house",
+                  "Dark, damp and cut off from the world"
+                ],
+                "correctIndex": 3,
+                "explanation": "A space outside of time."
+              },
+              {
+                "prompt": "What strikes Felipe about Aura?",
+                "options": [
+                  "Her laugh",
+                  "Her modern clothes",
+                  "Her green eyes and her presence, which seems to depend on the old woman",
+                  "Her talk about politics"
+                ],
+                "correctIndex": 2,
+                "explanation": "Felipe feels drawn to her."
+              },
+              {
+                "prompt": "What does the old woman do in her bedroom?",
+                "options": [
+                  "She works",
+                  "She prays before religious images, in a room full of votive candles",
+                  "She reads novels",
+                  "She sleeps all day"
+                ],
+                "correctIndex": 1,
+                "explanation": "An atmosphere of worship and devotion."
+              }
+            ]
+          }
+        },
+        {
+          "number": 3,
+          "title": "Part III",
+          "startPage": 27,
+          "endPage": 38,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does Felipe discover when he reads the general's papers?",
+                "options": [
+                  "Details of Consuelo's youth and her life with the general",
+                  "Unimportant facts",
+                  "A hidden treasure",
+                  "A confession to a crime"
+                ],
+                "correctIndex": 0,
+                "explanation": "The story of the past starts to be reflected in the present."
+              },
+              {
+                "prompt": "What disturbing scene does Felipe witness in the kitchen?",
+                "options": [
+                  "A fight",
+                  "A fire",
+                  "A party",
+                  "Aura cutting the throat of a goat while the old woman copies her gestures in her room"
+                ],
+                "correctIndex": 3,
+                "explanation": "It suggests a supernatural bond."
+              },
+              {
+                "prompt": "What does the matching of gestures between Aura and the old woman suggest?",
+                "options": [
+                  "That they hate each other",
+                  "That they are dancing",
+                  "That they are linked in a mysterious way, almost as if they were the same person",
+                  "That they are twins"
+                ],
+                "correctIndex": 2,
+                "explanation": "It is one of the keys to the fantastic element."
+              }
+            ]
+          }
+        },
+        {
+          "number": 4,
+          "title": "Part IV",
+          "startPage": 39,
+          "endPage": 48,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What change does Felipe notice in Aura?",
+                "options": [
+                  "That she has grown younger",
+                  "That she seems to have aged",
+                  "That she has changed her name",
+                  "That she has left"
+                ],
+                "correctIndex": 1,
+                "explanation": "Her age seems to change."
+              },
+              {
+                "prompt": "What does Aura ask of Felipe?",
+                "options": [
+                  "To love her forever",
+                  "To leave",
+                  "Not to finish the memoirs",
+                  "To talk to the old woman"
+                ],
+                "correctIndex": 0,
+                "explanation": "The promise of eternal love is central."
+              },
+              {
+                "prompt": "What atmosphere dominates this part?",
+                "options": [
+                  "Humor",
+                  "Adventure",
+                  "Scientific",
+                  "Ritual, sensual and dreamlike"
+                ],
+                "correctIndex": 3,
+                "explanation": "Reality dissolves."
+              }
+            ]
+          }
+        },
+        {
+          "number": 5,
+          "title": "Part V",
+          "startPage": 49,
+          "endPage": 60,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What do the photographs of the general and Consuelo reveal?",
+                "options": [
+                  "Nothing important",
+                  "That they were poor",
+                  "That the general looks like Felipe and the young Consuelo looks like Aura",
+                  "That they had children"
+                ],
+                "correctIndex": 2,
+                "explanation": "The final revelation."
+              },
+              {
+                "prompt": "What was the young Consuelo trying to do, according to the papers?",
+                "options": [
+                  "Write a novel",
+                  "Keep or regain her youth with plants and potions",
+                  "Run away to France",
+                  "Get a divorce"
+                ],
+                "correctIndex": 1,
+                "explanation": "The wish to stop time explains Aura."
+              },
+              {
+                "prompt": "What does Felipe understand at the end?",
+                "options": [
+                  "That Aura and Consuelo are the same woman",
+                  "That he must run away",
+                  "That it was a dream",
+                  "That Aura died"
+                ],
+                "correctIndex": 0,
+                "explanation": "The ending brings past and present together."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lazarillo-de-tormes",
+      "title": "Lazarillo de Tormes",
+      "author": "Anonymous",
+      "year": 1554,
+      "pages": 96,
+      "shelves": [
+        "classics",
+        "short-reads",
+        "spanish"
+      ],
+      "tags": [
+        "picaresque",
+        "hunger",
+        "honor",
+        "satire",
+        "spain"
+      ],
+      "synopsis": "Lázaro, a poor boy from Salamanca, tells in the first person how he survived by serving different masters in 16th-century Spain.",
+      "chapters": [
+        {
+          "number": 1,
+          "title": "Prologue",
+          "startPage": 1,
+          "endPage": 5,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Whom is Lázaro addressing when he tells his life story?",
+                "options": [
+                  "\"Your Worship\", who has asked him to tell his case",
+                  "His former masters",
+                  "King Charles V",
+                  "His children"
+                ],
+                "correctIndex": 0,
+                "explanation": "The book is a long letter to \"Your Worship\", who asked Lázaro to tell \"the case\" in full."
+              },
+              {
+                "prompt": "What contrast does the prologue draw between nobles and those who, like Lázaro, started with nothing?",
+                "options": [
+                  "That nobles deserve their fortune because of their lineage",
+                  "That those who get ahead by \"rowing\" with strength and skill deserve more credit than those who inherit their rank",
+                  "That poverty is a punishment from God",
+                  "That no one can change their social position"
+                ],
+                "correctIndex": 1,
+                "explanation": "Lázaro ironically defends the merit of those who prosper through their own effort over those who inherit \"noble estates\"."
+              }
+            ]
+          }
+        },
+        {
+          "number": 2,
+          "title": "First treatise: the blind man",
+          "startPage": 6,
+          "endPage": 23,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What lesson does the blind man teach Lázaro by slamming his head against the stone bull in Salamanca?",
+                "options": [
+                  "That he must respect sacred images",
+                  "That he must never lie to his master",
+                  "That a blind man's boy must know more than the devil",
+                  "That stone is harder than need"
+                ],
+                "correctIndex": 2,
+                "explanation": "After the blow, the blind man tells him that a blind man's boy \"must know one point more than the devil\": Lázaro wakes up to cunning."
+              },
+              {
+                "prompt": "In the grapes episode, how does the blind man find out that Lázaro cheated him?",
+                "options": [
+                  "Because he counted the grapes left on the bunch",
+                  "Because Lázaro's hands were stained",
+                  "Because a neighbor told him",
+                  "Because he was eating two at a time and Lázaro said nothing, so he figured the boy was eating three at a time"
+                ],
+                "correctIndex": 3,
+                "explanation": "The blind man breaks their deal to eat them one by one; since Lázaro doesn't complain, he deduces that the boy was cheating him too."
+              },
+              {
+                "prompt": "How does Lázaro finally get revenge on the blind man before leaving him?",
+                "options": [
+                  "He makes him jump into a stone post, pretending there is a stream",
+                  "He leaves him in the middle of the countryside at night",
+                  "He steals all the money from his purse",
+                  "He reports him to the law in Escalona"
+                ],
+                "correctIndex": 0,
+                "explanation": "In Escalona, Lázaro places the blind man in front of a post and tells him to jump over the water; the blind man hits the post and Lázaro runs off."
+              }
+            ]
+          }
+        },
+        {
+          "number": 3,
+          "title": "Second treatise: the priest of Maqueda",
+          "startPage": 24,
+          "endPage": 37,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Compared with the blind man, what is the priest of Maqueda like?",
+                "options": [
+                  "Generous but violent",
+                  "Even stingier: Lázaro goes hungrier with him",
+                  "Poor but charitable",
+                  "Absent-minded and easy to fool"
+                ],
+                "correctIndex": 1,
+                "explanation": "Lázaro says he escaped the thunder only to run into the lightning: the priest is even meaner than the blind man."
+              },
+              {
+                "prompt": "How does Lázaro get to the bread kept in the chest?",
+                "options": [
+                  "He breaks the lock with a stone",
+                  "He asks the priest's maid for it",
+                  "He buys a key from a tinker who comes by the house",
+                  "He gets in through a cellar window"
+                ],
+                "correctIndex": 2,
+                "explanation": "A tinker sells him a key to the chest; then Lázaro pretends that mice (and a \"snake\") are to blame."
+              },
+              {
+                "prompt": "How does the priest discover the trick?",
+                "options": [
+                  "Lázaro confesses at Mass",
+                  "He finds crumbs in the boy's bed",
+                  "A neighbor sees Lázaro open the chest",
+                  "The key, which Lázaro keeps in his mouth while he sleeps, whistles and the priest thinks it is the snake"
+                ],
+                "correctIndex": 3,
+                "explanation": "When he strikes the supposed snake in the straw, the priest finds the key in Lázaro's mouth and throws him out."
+              }
+            ]
+          }
+        },
+        {
+          "number": 4,
+          "title": "Third treatise: the squire",
+          "startPage": 38,
+          "endPage": 55,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What paradox defines the squire of Toledo?",
+                "options": [
+                  "He looks rich and honorable, but he is so poor that Lázaro has to beg to feed him",
+                  "He is rich but lives like a beggar out of greed",
+                  "He is noble and generous with the poor",
+                  "He is a thief dressed as a gentleman"
+                ],
+                "correctIndex": 0,
+                "explanation": "The squire cares about appearances (he even pretends to have eaten by picking his teeth), while Lázaro supports him with alms."
+              },
+              {
+                "prompt": "What new feeling does Lázaro have toward this master, unlike the earlier ones?",
+                "options": [
+                  "Hatred and a desire for revenge",
+                  "Pity: he feels sorry for him and shares what he gets",
+                  "Constant fear of his blows",
+                  "Envy of his wealth"
+                ],
+                "correctIndex": 1,
+                "explanation": "Lázaro says that, unlike the others, he felt pity for this one, and he feeds him even though he is his master."
+              },
+              {
+                "prompt": "Why does the squire disappear at the end of the treatise?",
+                "options": [
+                  "He is called to war",
+                  "He inherits a fortune in Old Castile",
+                  "He runs away to avoid paying the rent on the house and the bed to those who come to collect",
+                  "He is arrested for a duel"
+                ],
+                "correctIndex": 2,
+                "explanation": "When they come to collect, the squire goes out \"to change a coin\" and never comes back, leaving Lázaro alone with the creditors."
+              }
+            ]
+          }
+        },
+        {
+          "number": 5,
+          "title": "Fourth treatise: the friar of the Order of Mercy",
+          "startPage": 56,
+          "endPage": 59,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What trait of the friar of the Order of Mercy does Lázaro point out?",
+                "options": [
+                  "That he was very studious",
+                  "That he was always fasting",
+                  "That he was extremely stingy with bread",
+                  "That he was a great walker, fonder of the streets than of the choir"
+                ],
+                "correctIndex": 3,
+                "explanation": "The friar spent his life walking from place to place; Lázaro couldn't keep up with \"his trotting\" and left him."
+              },
+              {
+                "prompt": "What did the friar give Lázaro?",
+                "options": [
+                  "His first shoes",
+                  "His first sword",
+                  "A job as town crier",
+                  "A letter of recommendation"
+                ],
+                "correctIndex": 0,
+                "explanation": "The friar gave him the first shoes he ever wore out, though they didn't last long because of all the walking."
+              }
+            ]
+          }
+        },
+        {
+          "number": 6,
+          "title": "Fifth treatise: the pardoner",
+          "startPage": 60,
+          "endPage": 71,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does the pardoner do for a living?",
+                "options": [
+                  "He paints tambourines",
+                  "He sells papal bulls (indulgences), using tricks to win people over",
+                  "He sells water around the city",
+                  "He collects taxes for the king"
+                ],
+                "correctIndex": 1,
+                "explanation": "The pardoner preaches and sells bulls, and turns to deceit when people don't want to buy them."
+              },
+              {
+                "prompt": "What trick does the pardoner stage with the constable?",
+                "options": [
+                  "The constable arrests anyone who doesn't buy bulls",
+                  "They forge letters from the Pope",
+                  "They fake a quarrel and a \"miracle\": the constable falls down as if possessed and the pardoner \"heals\" him",
+                  "They hide the bulls so the price goes up"
+                ],
+                "correctIndex": 2,
+                "explanation": "After the fake miracle, the impressed townspeople buy bulls in droves; Lázaro realizes it was all set up."
+              },
+              {
+                "prompt": "What does Lázaro learn as a witness to this master?",
+                "options": [
+                  "That miracles are common",
+                  "That the Church punishes cheats",
+                  "That it pays to become a friar",
+                  "That deceit can be dressed up as religion for profit"
+                ],
+                "correctIndex": 3,
+                "explanation": "The treatise satirizes corruption in the sale of bulls: people's faith is exploited with theater."
+              }
+            ]
+          }
+        },
+        {
+          "number": 7,
+          "title": "Sixth treatise: the chaplain",
+          "startPage": 72,
+          "endPage": 77,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What job does the chaplain give Lázaro?",
+                "options": [
+                  "Water seller: selling water around Toledo with a donkey",
+                  "Altar boy at the cathedral",
+                  "Wine crier",
+                  "Kitchen servant"
+                ],
+                "correctIndex": 0,
+                "explanation": "Lázaro works as a water seller; it is his first \"good\" job where he keeps some earnings."
+              },
+              {
+                "prompt": "What does Lázaro do with what he saves in four years?",
+                "options": [
+                  "He gets married right away",
+                  "He buys secondhand clothes and a sword to look like a gentleman, and quits the job",
+                  "He gives it to the church",
+                  "He gambles it away"
+                ],
+                "correctIndex": 1,
+                "explanation": "Now \"very respectably dressed\", Lázaro gives up the donkey: like the squire, he cares about the appearance of honor."
+              }
+            ]
+          }
+        },
+        {
+          "number": 8,
+          "title": "Seventh treatise: the archpriest of San Salvador",
+          "startPage": 78,
+          "endPage": 96,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What \"royal office\" does Lázaro get in the end?",
+                "options": [
+                  "Chief constable",
+                  "The king's squire",
+                  "Town crier of Toledo",
+                  "Cathedral chaplain"
+                ],
+                "correctIndex": 2,
+                "explanation": "As town crier he advertises wines and walks with condemned criminals; he sees it as a safe and profitable job."
+              },
+              {
+                "prompt": "Whom does Lázaro marry, in a match arranged by the archpriest of San Salvador?",
+                "options": [
+                  "The daughter of a rich merchant",
+                  "The squire's widow",
+                  "A noblewoman from Salamanca",
+                  "One of the archpriest's maids"
+                ],
+                "correctIndex": 3,
+                "explanation": "The archpriest marries him to his maid and gives them a house and help."
+              },
+              {
+                "prompt": "How does Lázaro respond to the rumors about his wife and the archpriest?",
+                "options": [
+                  "He chooses to ignore them to keep his comfortable life, and says he is at the height of his good fortune",
+                  "He leaves his wife",
+                  "He confronts the archpriest in public",
+                  "He reports the matter to the Inquisition"
+                ],
+                "correctIndex": 0,
+                "explanation": "The ending is ironic: Lázaro's \"honor\" depends on accepting a dishonorable situation in exchange for comfort."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "hamlet",
+      "title": "Hamlet",
+      "author": "William Shakespeare",
+      "year": 1603,
+      "pages": 208,
+      "shelves": [
+        "classics",
+        "drama"
+      ],
+      "tags": [
+        "drama",
+        "revenge",
+        "doubt",
+        "power",
+        "death",
+        "madness"
+      ],
+      "synopsis": "The Prince of Denmark receives a revelation that forces him to choose between doubt and action, in a court where no one says what they think.",
+      "chapters": [
+        {
+          "number": 1,
+          "title": "Act I",
+          "startPage": 1,
+          "endPage": 40,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does the ghost reveal to Hamlet?",
+                "options": [
+                  "That he died in battle against Norway",
+                  "That Claudius murdered him by pouring poison in his ear while he slept",
+                  "That Gertrude poisoned him",
+                  "That Polonius plotted to kill him"
+                ],
+                "correctIndex": 1,
+                "explanation": "The ghost of the king says his brother Claudius poisoned him to take the crown and the queen, and asks for revenge."
+              },
+              {
+                "prompt": "What bothers Hamlet about his mother, Gertrude, from the start?",
+                "options": [
+                  "That she wants to send him to England",
+                  "That she disinherited him",
+                  "That she married Claudius very soon after his father's death",
+                  "That she supports Fortinbras"
+                ],
+                "correctIndex": 2,
+                "explanation": "Hamlet laments the hasty wedding: \"the funeral baked meats did coldly furnish forth the marriage tables\"."
+              },
+              {
+                "prompt": "What does Hamlet tell Horatio and Marcellus after seeing the ghost?",
+                "options": [
+                  "That he will kill Claudius that very night",
+                  "That he will flee to Wittenberg",
+                  "That he will give up the throne to Laertes",
+                  "That he may put on a strange or mad manner, and he makes them swear to keep silent"
+                ],
+                "correctIndex": 3,
+                "explanation": "Hamlet warns that he might take on an \"antic disposition\" and asks them not to reveal what they saw."
+              }
+            ]
+          }
+        },
+        {
+          "number": 2,
+          "title": "Act II",
+          "startPage": 41,
+          "endPage": 80,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "How does Polonius explain Hamlet's strange behavior?",
+                "options": [
+                  "As madness from love for Ophelia, because she rejected him on his advice",
+                  "As the effect of a poison",
+                  "As ambition for the throne",
+                  "As possession by the ghost"
+                ],
+                "correctIndex": 0,
+                "explanation": "Polonius believes Ophelia's rejection drove Hamlet out of his mind, and he tells the king and queen."
+              },
+              {
+                "prompt": "Why does Claudius send for Rosencrantz and Guildenstern?",
+                "options": [
+                  "To take a message to Norway",
+                  "To spy on Hamlet and find out the cause of his change",
+                  "To organize the play",
+                  "To protect Ophelia"
+                ],
+                "correctIndex": 1,
+                "explanation": "They are Hamlet's old schoolfellows, used by the king and queen to draw him out; Hamlet soon sees through it."
+              },
+              {
+                "prompt": "What plan does Hamlet come up with when the players arrive?",
+                "options": [
+                  "To use the players to escape the castle",
+                  "To ask the players to kill Claudius",
+                  "To stage a play like his father's murder to watch Claudius's reaction",
+                  "To write a play to win Ophelia's love"
+                ],
+                "correctIndex": 2,
+                "explanation": "\"The play's the thing wherein I'll catch the conscience of the king\": Hamlet wants to confirm what the ghost told him."
+              }
+            ]
+          }
+        },
+        {
+          "number": 3,
+          "title": "Act III",
+          "startPage": 81,
+          "endPage": 128,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does Claudius's reaction during the play confirm?",
+                "options": [
+                  "His innocence: he applauds the play",
+                  "That Gertrude was an accomplice",
+                  "That Polonius planned the crime",
+                  "His guilt: he rises in distress and stops the performance"
+                ],
+                "correctIndex": 3,
+                "explanation": "On seeing the poisoning scene, Claudius calls for lights and leaves: Hamlet no longer doubts the ghost."
+              },
+              {
+                "prompt": "Why doesn't Hamlet kill Claudius when he finds him praying?",
+                "options": [
+                  "Because he fears that, killed while praying, his soul would go to heaven",
+                  "Because Horatio stops him",
+                  "Because Claudius is armed",
+                  "Because he decides to forgive him"
+                ],
+                "correctIndex": 0,
+                "explanation": "Hamlet wants to kill him in sin; ironically, Claudius admits he cannot truly pray."
+              },
+              {
+                "prompt": "What happens in the queen's chamber?",
+                "options": [
+                  "Gertrude confesses to the murder",
+                  "Hamlet kills Polonius, who was spying hidden behind a curtain",
+                  "Hamlet wounds Claudius",
+                  "Ophelia declares her love for Hamlet"
+                ],
+                "correctIndex": 1,
+                "explanation": "Thinking it is the king, Hamlet runs his sword through the curtain and kills Polonius; the ghost appears again."
+              }
+            ]
+          }
+        },
+        {
+          "number": 4,
+          "title": "Act IV",
+          "startPage": 129,
+          "endPage": 168,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does Claudius intend by sending Hamlet to England?",
+                "options": [
+                  "For him to sign a peace treaty",
+                  "To protect him from Laertes",
+                  "For him to be executed there, through sealed letters",
+                  "For him to marry an English princess"
+                ],
+                "correctIndex": 2,
+                "explanation": "The letters carried by Rosencrantz and Guildenstern order Hamlet's death."
+              },
+              {
+                "prompt": "What trap do Claudius and Laertes plan against Hamlet?",
+                "options": [
+                  "An ambush in the graveyard",
+                  "Accusing him before the people",
+                  "Locking him in a tower",
+                  "A duel with an unblunted, poisoned sword, and a poisoned cup as backup"
+                ],
+                "correctIndex": 3,
+                "explanation": "Laertes wants to avenge his father and Claudius makes sure of the outcome with double poison."
+              },
+              {
+                "prompt": "What happens to Ophelia in this act?",
+                "options": [
+                  "She goes mad after her father's death and drowns in a brook",
+                  "She flees to France with Laertes",
+                  "She marries Fortinbras",
+                  "She reveals Claudius's crime"
+                ],
+                "correctIndex": 0,
+                "explanation": "Ophelia hands out flowers while singing songs; Gertrude later describes her death in the water."
+              }
+            ]
+          }
+        },
+        {
+          "number": 5,
+          "title": "Act V",
+          "startPage": 169,
+          "endPage": 208,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What thought does Yorick's skull prompt in Hamlet?",
+                "options": [
+                  "That he should give up revenge",
+                  "That death makes everyone equal and the body returns to dust, whether jester or king",
+                  "That Yorick was murdered too",
+                  "That the graveyard is cursed"
+                ],
+                "correctIndex": 1,
+                "explanation": "Before the skull of the jester he knew as a child, Hamlet reflects on how brief life is (even Alexander the Great ends up as dust)."
+              },
+              {
+                "prompt": "How does Gertrude die?",
+                "options": [
+                  "Laertes wounds her in the duel",
+                  "She takes her own life when she learns the truth",
+                  "She drinks by mistake from the poisoned cup meant for Hamlet",
+                  "Claudius stabs her"
+                ],
+                "correctIndex": 2,
+                "explanation": "She drinks to Hamlet from the cup Claudius had poisoned; before dying, she warns of the poison."
+              },
+              {
+                "prompt": "What does Hamlet ask of Horatio before he dies?",
+                "options": [
+                  "To kill Fortinbras",
+                  "To bury him next to Ophelia",
+                  "To take the throne of Denmark",
+                  "To go on living to tell his story truthfully"
+                ],
+                "correctIndex": 3,
+                "explanation": "Hamlet stops him from drinking the poison and charges him with telling what happened. His last words: \"The rest is silence\"."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "the-house-of-bernarda-alba",
+      "title": "The House of Bernarda Alba",
+      "author": "Federico García Lorca",
+      "year": 1936,
+      "pages": 112,
+      "shelves": [
+        "classics",
+        "drama",
+        "spanish"
+      ],
+      "tags": [
+        "drama",
+        "repression",
+        "freedom",
+        "desire",
+        "honor",
+        "women"
+      ],
+      "synopsis": "After her second husband dies, Bernarda shuts her five daughters away in strict mourning, while desire and rivalry grow behind the walls.",
+      "chapters": [
+        {
+          "number": 1,
+          "title": "Act One",
+          "startPage": 1,
+          "endPage": 36,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does Bernarda impose on her daughters after the funeral?",
+                "options": [
+                  "Eight years of mourning shut indoors, without even \"the wind from the street\" getting in",
+                  "Getting married within a year",
+                  "Working in the fields",
+                  "Moving to the city"
+                ],
+                "correctIndex": 0,
+                "explanation": "Bernarda orders strict mourning that turns the house into a prison."
+              },
+              {
+                "prompt": "Why does Pepe el Romano want to marry Angustias?",
+                "options": [
+                  "Because she is the youngest and prettiest",
+                  "Because she is the richest heiress, thanks to her father's inheritance",
+                  "Because Bernarda forces him",
+                  "Because she is the only unmarried one"
+                ],
+                "correctIndex": 1,
+                "explanation": "Angustias, the daughter of the first husband and almost forty, has her own fortune, and that draws Pepe."
+              },
+              {
+                "prompt": "What does Adela's gesture with her green dress reveal?",
+                "options": [
+                  "Her joy at Angustias's wedding",
+                  "Her plan to become a nun",
+                  "Her wish to live and her rebellion against mourning",
+                  "Her obedience to Bernarda"
+                ],
+                "correctIndex": 2,
+                "explanation": "Adela puts on the green dress she meant to wear for the first time: the color clashes with the black of mourning and signals her rebellion."
+              }
+            ]
+          }
+        },
+        {
+          "number": 2,
+          "title": "Act Two",
+          "startPage": 37,
+          "endPage": 76,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What mismatch raises suspicion about Pepe's visits?",
+                "options": [
+                  "Pepe never visited Angustias",
+                  "Pepe came with another woman",
+                  "Bernarda saw him come in through the yard",
+                  "Angustias says he left at half past one, but others heard him leave around four"
+                ],
+                "correctIndex": 3,
+                "explanation": "The times don't match: after talking with Angustias, Pepe stays with another sister, Adela."
+              },
+              {
+                "prompt": "Where does the stolen picture of Pepe that belonged to Angustias turn up?",
+                "options": [
+                  "In Martirio's bed",
+                  "In Adela's room",
+                  "Under the grandmother's pillow",
+                  "In the yard"
+                ],
+                "correctIndex": 0,
+                "explanation": "Martirio says it was a joke; the theft shows that she is also in love with Pepe."
+              },
+              {
+                "prompt": "Why is Adela so distressed when Librada's daughter is lynched?",
+                "options": [
+                  "Because she was her best friend",
+                  "Because the woman is punished for having a child outside marriage, which Adela fears for herself",
+                  "Because Librada works in the house",
+                  "Because Pepe takes part in the lynching"
+                ],
+                "correctIndex": 1,
+                "explanation": "While Bernarda calls for her death, Adela holds her belly: the village punishes what she is living in secret."
+              }
+            ]
+          }
+        },
+        {
+          "number": 3,
+          "title": "Act Three",
+          "startPage": 77,
+          "endPage": 112,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does Bernarda do when she finds Adela with Pepe?",
+                "options": [
+                  "She throws Adela out of the house",
+                  "She forces Pepe to marry Adela",
+                  "She grabs the shotgun and goes out to shoot at Pepe",
+                  "She calls the Civil Guard"
+                ],
+                "correctIndex": 2,
+                "explanation": "Bernarda fires; Martirio, out of jealousy, says Pepe is dead, though he actually ran away."
+              },
+              {
+                "prompt": "What does Adela do when she believes Pepe is dead?",
+                "options": [
+                  "She runs off to the village",
+                  "She confronts Martirio",
+                  "She asks her mother for forgiveness",
+                  "She locks herself in and hangs herself"
+                ],
+                "correctIndex": 3,
+                "explanation": "Martirio's lie causes the final tragedy."
+              },
+              {
+                "prompt": "What does Bernarda's final reaction to Adela's death reveal?",
+                "options": [
+                  "That she cares more about appearances and honor than about grief: she orders people to say Adela died a virgin and demands silence",
+                  "That she regrets her harshness",
+                  "That she blames Martirio in public",
+                  "That she decides to end the mourning"
+                ],
+                "correctIndex": 0,
+                "explanation": "\"My daughter has died a virgin!... Silence!\": public honor above everything."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "1984",
+      "title": "1984",
+      "author": "George Orwell",
+      "year": 1949,
+      "pages": 352,
+      "shelves": [
+        "classics",
+        "dystopias"
+      ],
+      "tags": [
+        "dystopia",
+        "surveillance",
+        "totalitarianism",
+        "language",
+        "memory",
+        "truth"
+      ],
+      "synopsis": "In a State that watches every move and rewrites the past, a Party official begins to have secret doubts.",
+      "chapters": [
+        {
+          "number": 1,
+          "title": "Part One",
+          "startPage": 1,
+          "endPage": 120,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What is Winston's job at the Ministry of Truth?",
+                "options": [
+                  "Writing Big Brother's speeches",
+                  "Rewriting old documents and newspapers so they match what the Party says",
+                  "Watching the telescreens",
+                  "Torturing dissidents"
+                ],
+                "correctIndex": 1,
+                "explanation": "Winston alters the historical record: the past is made to fit the official version of the present."
+              },
+              {
+                "prompt": "Why is it dangerous for Winston to keep a diary?",
+                "options": [
+                  "Because paper is rationed",
+                  "Because writing is banned for everyone",
+                  "Because thinking and recording your own ideas is thoughtcrime",
+                  "Because his boss is watching him"
+                ],
+                "correctIndex": 2,
+                "explanation": "In the diary he writes \"DOWN WITH BIG BROTHER\": a private act the State punishes."
+              },
+              {
+                "prompt": "According to Syme, what is the goal of Newspeak?",
+                "options": [
+                  "To unify the world's languages",
+                  "To make communication more poetic",
+                  "To make learning easier for children",
+                  "To shrink the vocabulary so that certain ideas become impossible to think"
+                ],
+                "correctIndex": 3,
+                "explanation": "If there are no words for dissent, dissenting thought becomes impossible."
+              }
+            ]
+          }
+        },
+        {
+          "number": 2,
+          "title": "Part Two",
+          "startPage": 121,
+          "endPage": 260,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does the room above Mr. Charrington's shop mean to Winston?",
+                "options": [
+                  "A private refuge where he and Julia feel free",
+                  "His secret workplace",
+                  "The Brotherhood's headquarters",
+                  "A prison"
+                ],
+                "correctIndex": 0,
+                "explanation": "With no telescreen in sight, the room seems to be a space outside the Party's control."
+              },
+              {
+                "prompt": "What happens in the middle of a speech during Hate Week?",
+                "options": [
+                  "The speaker is arrested",
+                  "The official enemy changes and everyone acts as if it had always been that way",
+                  "Big Brother's death is announced",
+                  "A bomb goes off in the square"
+                ],
+                "correctIndex": 1,
+                "explanation": "The war switches from Eurasia to Eastasia mid-sentence: doublethink in action."
+              },
+              {
+                "prompt": "How does Part Two end?",
+                "options": [
+                  "They flee to the proles",
+                  "They join the Brotherhood",
+                  "Winston and Julia are arrested: there was a hidden telescreen and Charrington was in the Thought Police",
+                  "Julia turns Winston in"
+                ],
+                "correctIndex": 2,
+                "explanation": "The refuge was a trap: \"You are the dead\", says the voice behind the picture."
+              }
+            ]
+          }
+        },
+        {
+          "number": 3,
+          "title": "Part Three",
+          "startPage": 261,
+          "endPage": 352,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does O'Brien want when he tortures Winston?",
+                "options": [
+                  "To get the names of other rebels",
+                  "To punish him to death",
+                  "To use him as a spy",
+                  "Not just his obedience, but for him to truly believe whatever the Party says, like 2 + 2 = 5"
+                ],
+                "correctIndex": 3,
+                "explanation": "The Party wants to control the mind: Winston must see five fingers if he is told to."
+              },
+              {
+                "prompt": "What is in Room 101?",
+                "options": [
+                  "The worst thing in the world for each prisoner; for Winston, rats",
+                  "An ordinary interrogation room",
+                  "Julia's cell",
+                  "Big Brother's office"
+                ],
+                "correctIndex": 0,
+                "explanation": "Faced with the rats, Winston betrays Julia and begs them to do it to her."
+              },
+              {
+                "prompt": "How does Winston end up?",
+                "options": [
+                  "Executed in public",
+                  "Released but defeated: he loves Big Brother",
+                  "Running away with Julia",
+                  "Leading a rebellion"
+                ],
+                "correctIndex": 1,
+                "explanation": "The last sentence marks total defeat: the Party has conquered even his feelings."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "jekyll-and-hyde",
+      "title": "Strange Case of Dr Jekyll and Mr Hyde",
+      "author": "Robert Louis Stevenson",
+      "year": 1886,
+      "pages": 112,
+      "shelves": [
+        "classics",
+        "short-reads"
+      ],
+      "tags": [
+        "double",
+        "morality",
+        "science",
+        "mystery",
+        "london",
+        "identity"
+      ],
+      "synopsis": "A London lawyer looks into the strange bond between his respectable friend, Dr. Jekyll, and a repulsive man named Hyde.",
+      "chapters": [
+        {
+          "number": 1,
+          "title": "Story of the Door",
+          "startPage": 1,
+          "endPage": 10,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does Enfield tell about Hyde?",
+                "options": [
+                  "That he robbed a bank",
+                  "That he murdered a policeman",
+                  "That he ran into a little girl and trampled her calmly",
+                  "That he set a house on fire"
+                ],
+                "correctIndex": 2,
+                "explanation": "Hyde's cold cruelty horrifies every witness from the first scene."
+              },
+              {
+                "prompt": "What is puzzling about how Hyde pays the girl's family?",
+                "options": [
+                  "He pays with fake coins",
+                  "He refuses to pay",
+                  "He pays twice what was asked",
+                  "He covers it with a check signed by a highly respected man"
+                ],
+                "correctIndex": 3,
+                "explanation": "Hyde goes through a door and comes back with a check from an honorable man: Utterson guesses who it is."
+              },
+              {
+                "prompt": "What do Utterson and Enfield agree on at the end of their talk?",
+                "options": [
+                  "Never to speak of the matter again",
+                  "To go to the police together",
+                  "To visit Jekyll that night",
+                  "To watch the door every night"
+                ],
+                "correctIndex": 0,
+                "explanation": "Both prefer to stay silent: the discretion of Victorian gentlemen protects the secret."
+              }
+            ]
+          }
+        },
+        {
+          "number": 2,
+          "title": "Search for Mr. Hyde",
+          "startPage": 11,
+          "endPage": 22,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does Jekyll's will say?",
+                "options": [
+                  "That everything goes to Utterson",
+                  "That if he dies or disappears, everything goes to Edward Hyde",
+                  "That he leaves his fortune to a hospital",
+                  "That Lanyon will be his heir"
+                ],
+                "correctIndex": 1,
+                "explanation": "The \"disappearance\" clause makes Utterson fear that Hyde is blackmailing Jekyll."
+              },
+              {
+                "prompt": "What impression does Hyde make on Utterson when he finally meets him?",
+                "options": [
+                  "That he is an elegant, kind man",
+                  "That he is a sick old man",
+                  "A disgust he can't explain, with no clear deformity to account for it",
+                  "That he looks a lot like Jekyll"
+                ],
+                "correctIndex": 2,
+                "explanation": "No one can describe what is wrong with Hyde, but everyone feels disgust: they sense something evil in him."
+              },
+              {
+                "prompt": "What does Dr. Lanyon think of Jekyll?",
+                "options": [
+                  "That he is the best doctor in London",
+                  "That he is seriously ill",
+                  "That he is Hyde's victim",
+                  "That they grew apart because Jekyll's scientific ideas became fanciful"
+                ],
+                "correctIndex": 3,
+                "explanation": "Lanyon calls Jekyll's theories unscientific nonsense."
+              }
+            ]
+          }
+        },
+        {
+          "number": 3,
+          "title": "Dr. Jekyll Was Quite at Ease",
+          "startPage": 23,
+          "endPage": 28,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "How does Jekyll respond when Utterson brings up the will?",
+                "options": [
+                  "He tells him not to worry and, if anything happens to him, to make sure Hyde gets his rights",
+                  "He changes the will right away",
+                  "He admits Hyde is blackmailing him",
+                  "He gets angry and throws him out"
+                ],
+                "correctIndex": 0,
+                "explanation": "Jekyll insists he can be rid of Hyde whenever he wants, and asks Utterson to protect him."
+              },
+              {
+                "prompt": "What does Jekyll's attitude in this scene suggest?",
+                "options": [
+                  "That he doesn't know Hyde",
+                  "That he has a link to Hyde he would rather hide",
+                  "That he plans to flee London",
+                  "That he suspects Utterson"
+                ],
+                "correctIndex": 1,
+                "explanation": "His apparent calm contrasts with the mystery he is protecting."
+              }
+            ]
+          }
+        },
+        {
+          "number": 4,
+          "title": "The Carew Murder Case",
+          "startPage": 29,
+          "endPage": 40,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Who witnesses the murder of Sir Danvers Carew?",
+                "options": [
+                  "Utterson",
+                  "Poole, the butler",
+                  "A maid looking out of the window",
+                  "A policeman on duty"
+                ],
+                "correctIndex": 2,
+                "explanation": "The maid sees Hyde furiously beat a kind old man with a cane."
+              },
+              {
+                "prompt": "What clue links the crime to Jekyll?",
+                "options": [
+                  "A letter signed by Jekyll",
+                  "Footprints in the laboratory",
+                  "Lanyon's testimony",
+                  "The broken cane, which Utterson had given to Jekyll"
+                ],
+                "correctIndex": 3,
+                "explanation": "Utterson recognizes the weapon and leads the police to Hyde's house in Soho."
+              },
+              {
+                "prompt": "What do they find at Hyde's house?",
+                "options": [
+                  "Half of the cane and a burned checkbook, but Hyde has vanished",
+                  "Hyde's body",
+                  "Jekyll's formula",
+                  "The original will"
+                ],
+                "correctIndex": 0,
+                "explanation": "Hyde disappears: no one has a photograph of him and few can describe him."
+              }
+            ]
+          }
+        },
+        {
+          "number": 5,
+          "title": "Incident of the Letter",
+          "startPage": 41,
+          "endPage": 50,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does Jekyll assure Utterson after the crime?",
+                "options": [
+                  "That Hyde is innocent",
+                  "That he is done with Hyde forever",
+                  "That Hyde lives with him",
+                  "That he will turn Hyde in"
+                ],
+                "correctIndex": 1,
+                "explanation": "Jekyll shows a letter from Hyde saying he has fled."
+              },
+              {
+                "prompt": "What does Mr. Guest find when he compares the handwriting?",
+                "options": [
+                  "That the letter is from Lanyon",
+                  "That the ink is fresh",
+                  "That Hyde's letter and a note from Jekyll are in the same hand, only sloped differently",
+                  "That it is a woman's handwriting"
+                ],
+                "correctIndex": 2,
+                "explanation": "Utterson concludes, horrified, that Jekyll forged the letter to cover for a murderer."
+              },
+              {
+                "prompt": "What wrong conclusion does Utterson draw?",
+                "options": [
+                  "That Hyde is already dead",
+                  "That Guest is an accomplice",
+                  "That Carew is still alive",
+                  "That Jekyll forges documents to protect Hyde"
+                ],
+                "correctIndex": 3,
+                "explanation": "Utterson still can't imagine the truth: that Jekyll and Hyde are the same person."
+              }
+            ]
+          }
+        },
+        {
+          "number": 6,
+          "title": "Remarkable Incident of Dr. Lanyon",
+          "startPage": 51,
+          "endPage": 60,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What happens to Lanyon shortly after a dinner with Jekyll?",
+                "options": [
+                  "He falls ill after a great shock and dies within a few weeks",
+                  "He moves abroad",
+                  "He is murdered by Hyde",
+                  "He makes up with Jekyll"
+                ],
+                "correctIndex": 0,
+                "explanation": "Lanyon says he has had a shock he will never recover from, and he won't hear Jekyll's name."
+              },
+              {
+                "prompt": "What does Lanyon leave for Utterson?",
+                "options": [
+                  "His will",
+                  "An envelope to be opened only if Jekyll dies or disappears",
+                  "Carew's cane",
+                  "A pistol"
+                ],
+                "correctIndex": 1,
+                "explanation": "The envelope's condition strangely echoes the one in Jekyll's will."
+              },
+              {
+                "prompt": "How does Jekyll's behavior change in this chapter?",
+                "options": [
+                  "He marries and gives up science",
+                  "He turns himself in to the police",
+                  "After a period of social life, he shuts himself away again and refuses visitors",
+                  "He travels around Europe"
+                ],
+                "correctIndex": 2,
+                "explanation": "Jekyll's isolation signals that something serious is happening."
+              }
+            ]
+          }
+        },
+        {
+          "number": 7,
+          "title": "Incident at the Window",
+          "startPage": 61,
+          "endPage": 66,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What do Utterson and Enfield see at Jekyll's window?",
+                "options": [
+                  "Hyde waving at them",
+                  "Jekyll writing a letter",
+                  "Poole crying",
+                  "A look of utter terror that makes him slam the window shut"
+                ],
+                "correctIndex": 3,
+                "explanation": "Jekyll is talking with them until something terrible changes him before their eyes."
+              },
+              {
+                "prompt": "What effect does the scene have on the two friends?",
+                "options": [
+                  "They walk away in silence, horrified by what they saw",
+                  "They go into the house to help him",
+                  "They call the police",
+                  "They laugh about it"
+                ],
+                "correctIndex": 0,
+                "explanation": "The scene hints at the transformation without explaining it."
+              }
+            ]
+          }
+        },
+        {
+          "number": 8,
+          "title": "The Last Night",
+          "startPage": 67,
+          "endPage": 80,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Why does Poole come to Utterson?",
+                "options": [
+                  "Jekyll fired him",
+                  "He thinks his master has been murdered and someone else is locked in the cabinet",
+                  "Hyde attacked him",
+                  "Lanyon asked to see him"
+                ],
+                "correctIndex": 1,
+                "explanation": "The voice in the cabinet is not Jekyll's, and whoever is inside is desperately asking for a chemical."
+              },
+              {
+                "prompt": "What do they find when they break down the cabinet door?",
+                "options": [
+                  "Jekyll asleep",
+                  "An empty cabinet",
+                  "Hyde's body, dead from poison, wearing clothes far too big for him",
+                  "Jekyll dead"
+                ],
+                "correctIndex": 2,
+                "explanation": "Hyde has killed himself; the clothes are Jekyll's, and Jekyll is nowhere to be found."
+              },
+              {
+                "prompt": "What has changed in the will they find?",
+                "options": [
+                  "It leaves everything to Poole",
+                  "It was destroyed",
+                  "It names Lanyon",
+                  "It now names Utterson as heir instead of Hyde"
+                ],
+                "correctIndex": 3,
+                "explanation": "Utterson also receives the papers that will explain everything."
+              }
+            ]
+          }
+        },
+        {
+          "number": 9,
+          "title": "Dr. Lanyon's Narrative",
+          "startPage": 81,
+          "endPage": 92,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does Jekyll ask Lanyon to do in his letter?",
+                "options": [
+                  "Take a drawer from his cabinet and hand it to a man at midnight",
+                  "Destroy his experiments",
+                  "Lock him up in a hospital",
+                  "Publish his discovery"
+                ],
+                "correctIndex": 0,
+                "explanation": "The messenger is Hyde, who comes for the chemicals in the drawer."
+              },
+              {
+                "prompt": "What does Lanyon witness?",
+                "options": [
+                  "Jekyll turning into Hyde",
+                  "Hyde drinking the mixture and turning into Jekyll",
+                  "Hyde's death",
+                  "A robbery at his practice"
+                ],
+                "correctIndex": 1,
+                "explanation": "Seeing the transformation ruins Lanyon's health: he can't bear what he has seen."
+              },
+              {
+                "prompt": "Why does Lanyon agree to watch?",
+                "options": [
+                  "Because Hyde threatens him",
+                  "Because Utterson asks him to",
+                  "Out of scientific curiosity, when Hyde offers to show him the secret",
+                  "By mistake"
+                ],
+                "correctIndex": 2,
+                "explanation": "Hyde lets him choose between leaving without knowing or seeing something that will change his science; Lanyon chooses to know."
+              }
+            ]
+          }
+        },
+        {
+          "number": 10,
+          "title": "Henry Jekyll's Full Statement of the Case",
+          "startPage": 93,
+          "endPage": 112,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What was Jekyll trying to do with his experiment?",
+                "options": [
+                  "Cure a disease",
+                  "Become immortal",
+                  "Become invisible",
+                  "Separate the two sides of his nature: the respectable one and the one that sought hidden pleasures"
+                ],
+                "correctIndex": 3,
+                "explanation": "Jekyll felt the duality of human nature and wanted to give each side its own body."
+              },
+              {
+                "prompt": "What starts happening that terrifies Jekyll?",
+                "options": [
+                  "He turns into Hyde without taking the potion, even in his sleep",
+                  "The potion stops existing",
+                  "Hyde becomes kind",
+                  "He loses his memory"
+                ],
+                "correctIndex": 0,
+                "explanation": "Hyde grows stronger: the dark side, once fed, starts to take over."
+              },
+              {
+                "prompt": "Why can't he become Jekyll again?",
+                "options": [
+                  "Utterson steals the formula",
+                  "The salt in the first batch was impure and he can't reproduce it",
+                  "Lanyon destroys the laboratory",
+                  "He decides to stay as Hyde"
+                ],
+                "correctIndex": 1,
+                "explanation": "The new supply doesn't work: the effect depended on an unknown impurity."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "frankenstein",
+      "title": "Frankenstein",
+      "author": "Mary Shelley",
+      "year": 1818,
+      "pages": 288,
+      "shelves": [
+        "classics"
+      ],
+      "tags": [
+        "science",
+        "responsibility",
+        "solitude",
+        "monster",
+        "creation",
+        "ambition"
+      ],
+      "synopsis": "A young scientist brings to life a being made from human remains and runs away from his creation, never imagining the consequences.",
+      "chapters": [
+        {
+          "number": 1,
+          "title": "Volume I",
+          "startPage": 1,
+          "endPage": 96,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Who narrates the beginning of the novel?",
+                "options": [
+                  "Victor Frankenstein in his diary",
+                  "The creature",
+                  "Robert Walton, an explorer writing letters to his sister from the Arctic",
+                  "Elizabeth Lavenza"
+                ],
+                "correctIndex": 2,
+                "explanation": "Walton rescues Victor on the ice; his ambition to discover mirrors Victor's."
+              },
+              {
+                "prompt": "How does Victor react when his creature comes to life?",
+                "options": [
+                  "He cares for it like a son",
+                  "He presents it to the university",
+                  "He destroys it at once",
+                  "He feels horror and disgust, and runs away, abandoning it"
+                ],
+                "correctIndex": 3,
+                "explanation": "Being abandoned by its creator is the root of the tragedy."
+              },
+              {
+                "prompt": "What injustice happens after little William's death?",
+                "options": [
+                  "Justine, the family's servant, is convicted and executed even though she is innocent",
+                  "Victor is jailed",
+                  "Elizabeth is accused",
+                  "Clerval flees Geneva"
+                ],
+                "correctIndex": 0,
+                "explanation": "Victor knows the creature is guilty, but he stays silent and lets Justine die."
+              }
+            ]
+          }
+        },
+        {
+          "number": 2,
+          "title": "Volume II",
+          "startPage": 97,
+          "endPage": 192,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "How does the creature learn to speak and read?",
+                "options": [
+                  "From a teacher in Ingolstadt",
+                  "By secretly watching the De Lacey family in their cottage",
+                  "By reading Victor's notebooks",
+                  "Thanks to Walton"
+                ],
+                "correctIndex": 1,
+                "explanation": "In hiding, the creature learns language and history, and longs to be accepted by that family."
+              },
+              {
+                "prompt": "What makes the creature hate humans?",
+                "options": [
+                  "A natural instinct for evil",
+                  "An order from Victor",
+                  "The violent rejection he faces again and again despite his good intentions",
+                  "Hunger"
+                ],
+                "correctIndex": 2,
+                "explanation": "The creature says: \"I was benevolent and good; misery made me a fiend\"."
+              },
+              {
+                "prompt": "What does the creature demand from Victor?",
+                "options": [
+                  "To make him human",
+                  "To give him money",
+                  "To teach him science",
+                  "To create a female companion as deformed as he is, to live with far from humans"
+                ],
+                "correctIndex": 3,
+                "explanation": "He asks for company so he won't be alone; Victor agrees at first."
+              }
+            ]
+          }
+        },
+        {
+          "number": 3,
+          "title": "Volume III",
+          "startPage": 193,
+          "endPage": 288,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does Victor do with the creature's companion?",
+                "options": [
+                  "He destroys her before finishing her, fearing they will reproduce",
+                  "He finishes her and sets her free",
+                  "He hands her over to Walton",
+                  "He hides her in Scotland"
+                ],
+                "correctIndex": 0,
+                "explanation": "The creature sees this and swears: \"I shall be with you on your wedding-night\"."
+              },
+              {
+                "prompt": "How does the creature carry out his threat?",
+                "options": [
+                  "He kills Victor at the wedding",
+                  "He kills Elizabeth on the wedding night",
+                  "He burns down the family home",
+                  "He kidnaps Walton"
+                ],
+                "correctIndex": 1,
+                "explanation": "He had already murdered Clerval; with Elizabeth gone, Victor loses everything."
+              },
+              {
+                "prompt": "How does the creature react to Victor's death?",
+                "options": [
+                  "He celebrates his revenge",
+                  "He attacks Walton",
+                  "He mourns over the body and says he will kill himself in the far north",
+                  "He stays on the ship"
+                ],
+                "correctIndex": 2,
+                "explanation": "The ending shows the creature in despair: he hated his creator, but he also needed him."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "the-stranger",
+      "title": "The Stranger",
+      "author": "Albert Camus",
+      "year": 1942,
+      "pages": 128,
+      "shelves": [
+        "classics",
+        "short-reads"
+      ],
+      "tags": [
+        "absurd",
+        "indifference",
+        "justice",
+        "death",
+        "algiers",
+        "existentialism"
+      ],
+      "synopsis": "Meursault, an office clerk in Algiers, lives with an indifference that society is not willing to forgive.",
+      "chapters": [
+        {
+          "number": 1,
+          "title": "Part One",
+          "startPage": 1,
+          "endPage": 64,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What stands out about Meursault's behavior at his mother's vigil?",
+                "options": [
+                  "He organizes a big funeral",
+                  "He refuses to go",
+                  "He gives a moving speech",
+                  "He doesn't cry, and he smokes and drinks coffee with milk next to the coffin"
+                ],
+                "correctIndex": 3,
+                "explanation": "His lack of visible grief will be used against him later."
+              },
+              {
+                "prompt": "How does Meursault answer when Marie asks if he wants to marry her?",
+                "options": [
+                  "That it doesn't matter to him, but if she wants to, they can",
+                  "That he loves her deeply",
+                  "That he will never marry",
+                  "That he will think about it for a year"
+                ],
+                "correctIndex": 0,
+                "explanation": "Meursault doesn't fake feelings he doesn't have: to him, the question isn't important."
+              },
+              {
+                "prompt": "What does Meursault say about the moment he shoots the Arab?",
+                "options": [
+                  "He does it for Raymond",
+                  "The sun, the heat and the glint of the knife daze him; he fires once and then four more times",
+                  "He is defending himself from an armed attack",
+                  "He does it to rob him"
+                ],
+                "correctIndex": 1,
+                "explanation": "The crime happens almost without a reason; the last four shots are \"like knocking four quick times on the door of unhappiness\"."
+              }
+            ]
+          }
+        },
+        {
+          "number": 2,
+          "title": "Part Two",
+          "startPage": 65,
+          "endPage": 128,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does Meursault's trial focus on?",
+                "options": [
+                  "The ballistic evidence",
+                  "The Arab's past",
+                  "His indifference to his mother's death more than the crime",
+                  "His financial situation"
+                ],
+                "correctIndex": 2,
+                "explanation": "The prosecutor accuses him of burying his mother \"with crime in his heart\"."
+              },
+              {
+                "prompt": "What does Meursault say when asked why he killed?",
+                "options": [
+                  "That it was self-defense",
+                  "That he was drunk",
+                  "That he doesn't remember anything",
+                  "That it was because of the sun"
+                ],
+                "correctIndex": 3,
+                "explanation": "The answer makes the courtroom laugh: his honesty looks absurd to the justice system."
+              },
+              {
+                "prompt": "What does Meursault discover after rejecting the chaplain?",
+                "options": [
+                  "He opens himself to \"the gentle indifference of the world\" and feels at peace",
+                  "He converts to the faith",
+                  "He asks the court for mercy",
+                  "He writes a confession"
+                ],
+                "correctIndex": 0,
+                "explanation": "He accepts the absurdity of existence and finds that he is happy in the face of death."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "the-underdogs",
+      "title": "The Underdogs",
+      "author": "Mariano Azuela",
+      "year": 1915,
+      "pages": 160,
+      "shelves": [
+        "mexican",
+        "latin-american",
+        "classics"
+      ],
+      "tags": [
+        "mexican revolution",
+        "violence",
+        "disillusionment",
+        "peasants",
+        "power"
+      ],
+      "synopsis": "Demetrio Macías, a peasant from Jalisco, takes up arms and is swept along by the whirlwind of the Mexican Revolution.",
+      "chapters": [
+        {
+          "number": 1,
+          "title": "Part One",
+          "startPage": 1,
+          "endPage": 72,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Why does Demetrio Macías join the fight?",
+                "options": [
+                  "He gets an order from Villa",
+                  "The federal troops burn his house and he has to flee with his family",
+                  "He wants to get rich",
+                  "Luis Cervantes recruits him"
+                ],
+                "correctIndex": 1,
+                "explanation": "The federal troops' violence drives him into the mountains with a group of men."
+              },
+              {
+                "prompt": "Who is Luis Cervantes?",
+                "options": [
+                  "Demetrio's brother",
+                  "A Villista general",
+                  "A student and journalist who deserted the federal army and joins Demetrio's band",
+                  "The village priest"
+                ],
+                "correctIndex": 2,
+                "explanation": "He talks about revolutionary ideals, but mostly looks out for himself."
+              },
+              {
+                "prompt": "What does Alberto Solís express about the Revolution?",
+                "options": [
+                  "Unreserved enthusiasm",
+                  "Total rejection from the start",
+                  "Indifference",
+                  "Disillusionment: he admires it, but sees its ideals lost in barbarism and greed"
+                ],
+                "correctIndex": 3,
+                "explanation": "Solís says: \"How beautiful the revolution is, even in its very barbarism!\", shortly before he dies."
+              }
+            ]
+          }
+        },
+        {
+          "number": 2,
+          "title": "Part Two",
+          "startPage": 73,
+          "endPage": 128,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What changes in Demetrio's band after the taking of Zacatecas?",
+                "options": [
+                  "It gives itself over to looting and violence with no clear direction",
+                  "It breaks up peacefully",
+                  "It goes back to working the land",
+                  "It joins the federal army"
+                ],
+                "correctIndex": 0,
+                "explanation": "Victory brings loot, drunkenness and abuse: the fight loses its meaning."
+              },
+              {
+                "prompt": "What happens to Camila?",
+                "options": [
+                  "She marries Luis Cervantes",
+                  "La Pintada kills her out of jealousy",
+                  "She goes back to her ranch",
+                  "She becomes a famous soldadera"
+                ],
+                "correctIndex": 1,
+                "explanation": "Camila, brought along by Cervantes through deceit, ends up a victim of the group's violence."
+              },
+              {
+                "prompt": "What does Demetrio's confusion over the split between Villa and Carranza reveal?",
+                "options": [
+                  "That he is a political strategist",
+                  "That he supports Huerta",
+                  "That he fights without really understanding why or against whom",
+                  "That he wants to be president"
+                ],
+                "correctIndex": 2,
+                "explanation": "Demetrio only knows he is a soldier: the Revolution carries him beyond his own reasons."
+              }
+            ]
+          }
+        },
+        {
+          "number": 3,
+          "title": "Part Three",
+          "startPage": 129,
+          "endPage": 160,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Where is Luis Cervantes at the start of Part Three?",
+                "options": [
+                  "Dead in battle",
+                  "In prison in Mexico",
+                  "At Demetrio's side",
+                  "In El Paso, Texas, safe and enjoying his profits"
+                ],
+                "correctIndex": 3,
+                "explanation": "From the United States he writes to Venancio: the opportunist survives."
+              },
+              {
+                "prompt": "What does Demetrio answer when his wife asks why he keeps fighting?",
+                "options": [
+                  "He throws a stone into the canyon: \"Look at that stone, how it keeps going...\"",
+                  "That he will fight until victory",
+                  "That he does it for money",
+                  "That Villa ordered him to"
+                ],
+                "correctIndex": 0,
+                "explanation": "The image expresses a force that, once set in motion, can't stop."
+              },
+              {
+                "prompt": "How does the novel end?",
+                "options": [
+                  "Demetrio goes home in peace",
+                  "In the same canyon where it all began, Demetrio is left aiming his rifle, frozen forever",
+                  "Demetrio is shot by Carranza's troops",
+                  "Demetrio flees north"
+                ],
+                "correctIndex": 1,
+                "explanation": "The circular ending suggests violence with no way out."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "the-labyrinth-of-solitude",
+      "title": "The Labyrinth of Solitude",
+      "author": "Octavio Paz",
+      "year": 1950,
+      "pages": 192,
+      "shelves": [
+        "mexican",
+        "essays"
+      ],
+      "tags": [
+        "essays",
+        "identity",
+        "mexico",
+        "history",
+        "solitude",
+        "culture"
+      ],
+      "synopsis": "An essay on Mexican identity: its masks, its fiestas, its relationship with death and its history.",
+      "chapters": [
+        {
+          "number": 1,
+          "title": "The Pachuco and Other Extremes",
+          "startPage": 1,
+          "endPage": 22,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "Why does Paz start with the pachuco?",
+                "options": [
+                  "Because he represents the typical Mexican",
+                  "Because he is a national hero",
+                  "Because his extreme attitude makes the Mexican's solitude and identity conflict visible",
+                  "Because it was a political movement"
+                ],
+                "correctIndex": 2,
+                "explanation": "The pachuco neither blends in nor claims his origins: his excess reveals a shared wound."
+              },
+              {
+                "prompt": "How is adolescence linked to solitude for Paz?",
+                "options": [
+                  "It is a stage without conflict",
+                  "It is when identity is lost",
+                  "It is a modern invention",
+                  "It is the moment we discover our uniqueness and, with it, our solitude"
+                ],
+                "correctIndex": 3,
+                "explanation": "Like a teenager, a people asks who it is when it finds out it is different."
+              },
+              {
+                "prompt": "What does the pachuco's exaggerated clothing express?",
+                "options": [
+                  "A defiant statement toward a society that rejects him",
+                  "His wealth",
+                  "His wish to go unnoticed",
+                  "A fashion from his home country"
+                ],
+                "correctIndex": 0,
+                "explanation": "His style is both provocation and defense."
+              }
+            ]
+          }
+        },
+        {
+          "number": 2,
+          "title": "Mexican Masks",
+          "startPage": 23,
+          "endPage": 44,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does the \"mask\" mean for Paz?",
+                "options": [
+                  "A pre-Hispanic ritual object",
+                  "The closed-off reserve the Mexican uses to protect himself and hide his inner life",
+                  "A form of humor",
+                  "Makeup worn at fiestas"
+                ],
+                "correctIndex": 1,
+                "explanation": "The Mexican closes himself off to defend himself from the outside world."
+              },
+              {
+                "prompt": "Why is \"rajarse\" (to crack open, to back down) seen as negative?",
+                "options": [
+                  "It means working too hard",
+                  "It means lying to friends",
+                  "It means opening up or showing weakness, seen as a disgrace",
+                  "It means leaving the country"
+                ],
+                "correctIndex": 2,
+                "explanation": "The ideal of the \"macho\" is never to crack."
+              },
+              {
+                "prompt": "What is \"ninguneo\"?",
+                "options": [
+                  "A popular fiesta",
+                  "A kind of greeting",
+                  "A children's game",
+                  "Acting as if someone didn't exist, turning them into a \"ninguno\", a nobody"
+                ],
+                "correctIndex": 3,
+                "explanation": "Paz describes it as a form of dissimulation that cancels out the other person."
+              }
+            ]
+          }
+        },
+        {
+          "number": 3,
+          "title": "The Day of the Dead",
+          "startPage": 45,
+          "endPage": 70,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What role does the fiesta play for the Mexican, according to Paz?",
+                "options": [
+                  "To break his solitude and reserve for a moment, in a collective explosion",
+                  "To celebrate wealth",
+                  "To show social discipline",
+                  "To remember heroes"
+                ],
+                "correctIndex": 0,
+                "explanation": "At the fiesta the Mexican opens up, expresses himself and communes with others."
+              },
+              {
+                "prompt": "How does Paz describe the Mexican's relationship with death?",
+                "options": [
+                  "He ignores it completely",
+                  "He seeks it out, mocks it, caresses it and celebrates it",
+                  "He fears it more than other peoples do",
+                  "He treats it as taboo"
+                ],
+                "correctIndex": 1,
+                "explanation": "This closeness to death also reflects a certain indifference to life."
+              },
+              {
+                "prompt": "What link does Paz draw between death and life?",
+                "options": [
+                  "They are unrelated",
+                  "Death matters more than life",
+                  "How we see death reflects how we see life",
+                  "Only eternal life matters"
+                ],
+                "correctIndex": 2,
+                "explanation": "\"Tell me how you die and I will tell you who you are\"."
+              }
+            ]
+          }
+        },
+        {
+          "number": 4,
+          "title": "The Sons of La Malinche",
+          "startPage": 71,
+          "endPage": 96,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does \"la Chingada\" represent in the essay?",
+                "options": [
+                  "An Aztec goddess",
+                  "A heroine of Independence",
+                  "A religious figure",
+                  "The mythical violated mother, a figure tied to La Malinche and the Conquest"
+                ],
+                "correctIndex": 3,
+                "explanation": "Paz analyzes the verb \"chingar\" and the violence it carries."
+              },
+              {
+                "prompt": "Why does Paz speak of \"sons of La Malinche\"?",
+                "options": [
+                  "Because the Mexican rejects an origin he associates with rape and betrayal",
+                  "Because of a noble lineage",
+                  "Because of the Catholic religion",
+                  "Because of Independence"
+                ],
+                "correctIndex": 0,
+                "explanation": "For Paz, rejecting that origin explains part of the Mexican's solitude."
+              },
+              {
+                "prompt": "What is \"malinchismo\", according to the essay?",
+                "options": [
+                  "Love of traditions",
+                  "The charge against those who let themselves be seduced by what is foreign",
+                  "An art movement",
+                  "A form of nationalism"
+                ],
+                "correctIndex": 1,
+                "explanation": "The term comes from seeing La Malinche as the one who gave herself to the conqueror."
+              }
+            ]
+          }
+        },
+        {
+          "number": 5,
+          "title": "The Conquest and Colonialism",
+          "startPage": 97,
+          "endPage": 120,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What did Catholicism offer the conquered peoples, according to Paz?",
+                "options": [
+                  "Political freedom",
+                  "Wealth",
+                  "A place in a universal order after the fall of their gods",
+                  "Cultural independence"
+                ],
+                "correctIndex": 2,
+                "explanation": "After being orphaned by the Conquest, religion gave meaning and belonging."
+              },
+              {
+                "prompt": "Which figure does Paz highlight as an expression of the colonial era?",
+                "options": [
+                  "Miguel Hidalgo",
+                  "Benito Juárez",
+                  "Emiliano Zapata",
+                  "Sor Juana Inés de la Cruz"
+                ],
+                "correctIndex": 3,
+                "explanation": "Sor Juana embodies both the richness and the limits of the colonial world."
+              },
+              {
+                "prompt": "How does Paz describe the colonial order?",
+                "options": [
+                  "As a closed and stable order, but with no room for change",
+                  "As permanent chaos",
+                  "As a democracy",
+                  "As an equal society"
+                ],
+                "correctIndex": 0,
+                "explanation": "A world with meaning, but frozen in place."
+              }
+            ]
+          }
+        },
+        {
+          "number": 6,
+          "title": "From Independence to the Revolution",
+          "startPage": 121,
+          "endPage": 146,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "How does Paz see the liberal Reform?",
+                "options": [
+                  "As a continuation of the colonial era",
+                  "As a break with the Indigenous and Catholic past that left a void",
+                  "As a military failure",
+                  "As a peasant revolution"
+                ],
+                "correctIndex": 1,
+                "explanation": "The Reform denied tradition in order to found the country on universal ideas."
+              },
+              {
+                "prompt": "What role did positivism play under Porfirio Díaz's rule?",
+                "options": [
+                  "The regime rejected it",
+                  "It drove land reform",
+                  "It worked as an ideological mask that justified an unequal order",
+                  "It was a popular philosophy"
+                ],
+                "correctIndex": 2,
+                "explanation": "Positivism gave a \"scientific\" justification to privilege."
+              },
+              {
+                "prompt": "How does Paz define the Mexican Revolution?",
+                "options": [
+                  "As a copy of the French Revolution",
+                  "As a coup",
+                  "As a war between nations",
+                  "As a sudden immersion of Mexico in its own being"
+                ],
+                "correctIndex": 3,
+                "explanation": "The Revolution was a discovery of what was Mexico's own more than an ideological program."
+              }
+            ]
+          }
+        },
+        {
+          "number": 7,
+          "title": "The Mexican Intelligentsia",
+          "startPage": 147,
+          "endPage": 168,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What is this chapter about?",
+                "options": [
+                  "The role of Mexican intellectuals after the Revolution",
+                  "Primary education",
+                  "Technology",
+                  "Pre-Hispanic art"
+                ],
+                "correctIndex": 0,
+                "explanation": "Paz reviews how thinkers and artists tried to shape modern Mexico."
+              },
+              {
+                "prompt": "Which intellectual does Paz highlight for his education project?",
+                "options": [
+                  "Porfirio Díaz",
+                  "José Vasconcelos",
+                  "Agustín de Iturbide",
+                  "Hernán Cortés"
+                ],
+                "correctIndex": 1,
+                "explanation": "Vasconcelos led a large education and culture campaign after the Revolution."
+              },
+              {
+                "prompt": "What tension do Mexican intellectuals face, according to Paz?",
+                "options": [
+                  "Between the countryside and the city",
+                  "Between Spanish and English",
+                  "Between serving the State and keeping their critical independence",
+                  "Between science and art"
+                ],
+                "correctIndex": 2,
+                "explanation": "Many intellectuals worked with those in power and lost their critical distance."
+              }
+            ]
+          }
+        },
+        {
+          "number": 8,
+          "title": "The Present Day",
+          "startPage": 169,
+          "endPage": 192,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What famous statement closes the main body of the essay?",
+                "options": [
+                  "That Mexico should cut itself off from the world",
+                  "That the Indigenous past will return",
+                  "That the Revolution ended in failure",
+                  "That for the first time in our history we are contemporaries of all mankind"
+                ],
+                "correctIndex": 3,
+                "explanation": "Mexico finds itself part of the problems of the modern world."
+              },
+              {
+                "prompt": "What does Paz propose in the face of the modern crisis?",
+                "options": [
+                  "That Mexico think for itself about the problems it shares with everyone",
+                  "Imitating the United States",
+                  "Going back to the colonial era",
+                  "Rejecting modernity"
+                ],
+                "correctIndex": 0,
+                "explanation": "Mexican solitude becomes part of universal solitude."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "the-prince",
+      "title": "The Prince",
+      "author": "Niccolò Machiavelli",
+      "year": 1532,
+      "pages": 144,
+      "shelves": [
+        "classics",
+        "italian",
+        "essays"
+      ],
+      "tags": [
+        "politics",
+        "power",
+        "renaissance",
+        "italy",
+        "ethics",
+        "fortune"
+      ],
+      "synopsis": "A treatise written in Renaissance Florence on how power is won and kept, as it really is and not as it should be.",
+      "chapters": [
+        {
+          "number": 1,
+          "title": "Dedication and Chapters I–XI: Principalities",
+          "startPage": 1,
+          "endPage": 52,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "To whom does Machiavelli dedicate The Prince?",
+                "options": [
+                  "Pope Alexander VI",
+                  "Lorenzo de' Medici",
+                  "Cesare Borgia",
+                  "The King of France"
+                ],
+                "correctIndex": 1,
+                "explanation": "Machiavelli offers the book as his most valuable gift: his knowledge of statesmen."
+              },
+              {
+                "prompt": "Why does Machiavelli hold up Cesare Borgia as a model?",
+                "options": [
+                  "Because he was a kind prince",
+                  "Because he inherited a stable kingdom",
+                  "Because, although he won his state through his father's fortune, he skillfully made it secure",
+                  "Because he never used force"
+                ],
+                "correctIndex": 2,
+                "explanation": "Borgia shows how virtù can hold on to what was gained by fortune."
+              },
+              {
+                "prompt": "What does Machiavelli say about cruelties that are \"well used\"?",
+                "options": [
+                  "That they can never be justified",
+                  "That they should be applied little by little",
+                  "That they bring the prince glory",
+                  "That they should be done all at once, at the start, and not repeated"
+                ],
+                "correctIndex": 3,
+                "explanation": "Discussing Agathocles: injuries should be done all at once; benefits, little by little."
+              }
+            ]
+          }
+        },
+        {
+          "number": 2,
+          "title": "Chapters XII–XIV: The Military",
+          "startPage": 53,
+          "endPage": 76,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What does Machiavelli think of mercenary troops?",
+                "options": [
+                  "That they are useless and dangerous: disunited, ambitious and disloyal",
+                  "That they are the best defense",
+                  "That they are cheap and loyal",
+                  "That they should be combined with allies"
+                ],
+                "correctIndex": 0,
+                "explanation": "He blames Italy's ruin on having relied on mercenaries."
+              },
+              {
+                "prompt": "What kind of army does he recommend?",
+                "options": [
+                  "Auxiliary troops from a powerful ally",
+                  "Your own arms, made up of subjects or citizens",
+                  "Foreign mercenaries",
+                  "No standing army"
+                ],
+                "correctIndex": 1,
+                "explanation": "Without its own arms, no principality is safe."
+              },
+              {
+                "prompt": "According to Chapter XIV, what should a prince devote himself to above all?",
+                "options": [
+                  "The arts and culture",
+                  "Trade",
+                  "The art of war, even in times of peace",
+                  "Religion"
+                ],
+                "correctIndex": 2,
+                "explanation": "Neglecting military preparation is the main cause of losing a state."
+              }
+            ]
+          }
+        },
+        {
+          "number": 3,
+          "title": "Chapters XV–XXIII: The Qualities of the Prince",
+          "startPage": 77,
+          "endPage": 124,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "What method does Machiavelli propose in Chapter XV?",
+                "options": [
+                  "Describing ideal republics",
+                  "Following the Church's advice",
+                  "Imitating the ancient philosophers",
+                  "Speaking of the \"effectual truth\" of things, of how people live and not how they ought to live"
+                ],
+                "correctIndex": 3,
+                "explanation": "Whoever gives up what is done for what ought to be done learns his own ruin."
+              },
+              {
+                "prompt": "Is it better to be loved or feared, according to Machiavelli?",
+                "options": [
+                  "If you can't be both, it is safer to be feared, but without being hated",
+                  "It is always better to be loved",
+                  "It is better to be hated than despised",
+                  "It makes no difference"
+                ],
+                "correctIndex": 0,
+                "explanation": "Fear is held in place by punishment; love depends on people's changing will."
+              },
+              {
+                "prompt": "What does it mean that the prince must be \"a fox and a lion\"?",
+                "options": [
+                  "He must be solitary and a hunter",
+                  "He must combine the cunning to spot traps with the strength to frighten off wolves",
+                  "He must be cruel to everyone",
+                  "He must trust only his army"
+                ],
+                "correctIndex": 1,
+                "explanation": "The lion can't defend himself from traps and the fox can't defend himself from wolves: you need to be both."
+              }
+            ]
+          }
+        },
+        {
+          "number": 4,
+          "title": "Chapters XXIV–XXVI: Italy and Fortune",
+          "startPage": 125,
+          "endPage": 144,
+          "quiz": {
+            "questions": [
+              {
+                "prompt": "How much of our actions does fortune govern, according to Machiavelli?",
+                "options": [
+                  "All of them",
+                  "None",
+                  "About half; the other half is left to us",
+                  "Only wars"
+                ],
+                "correctIndex": 2,
+                "explanation": "He compares fortune to a flooding river that you can build dikes against in calm times."
+              },
+              {
+                "prompt": "Why did the Italian princes lose their states?",
+                "options": [
+                  "Because of a plague",
+                  "Because the Pope decided it",
+                  "Because of an earthquake",
+                  "Because of their own negligence, not bad luck"
+                ],
+                "correctIndex": 3,
+                "explanation": "Blaming fortune is the excuse of someone who didn't prepare."
+              },
+              {
+                "prompt": "What does the final chapter call for?",
+                "options": [
+                  "For a prince to free Italy from the foreign \"barbarians\"",
+                  "For Italy to submit to France",
+                  "For the Roman Empire to be restored",
+                  "For the principalities to be dissolved"
+                ],
+                "correctIndex": 0,
+                "explanation": "The exhortation ends with lines by Petrarch about virtue against fury."
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

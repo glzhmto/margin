@@ -1,0 +1,13 @@
+{
+  "supabaseUrl": "https://jrstqzmsyscnhxjbqtrm.supabase.co",
+  "publishableKey": "sb_publishable_4vUUUoG4se5Da4PxVQBNMQ_XboKzRSK",
+  "inviteBaseUrl": "https://marginreads.vercel.app/app/",
+  "pricesFunction": "book-prices",
+  "pollSeconds": 20,
+  "requestTimeoutSeconds": 15,
+  "fil": {
+    "url": "https://www.fil.com.mx",
+    "image": "FIL/fil-2026",
+    "endsOn": "2026-12-07"
+  }
+}

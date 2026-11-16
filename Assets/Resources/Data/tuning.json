@@ -1,0 +1,20 @@
+{
+  "momentumLambda": 0.85,
+  "dailyCap": 1.5,
+  "levelSteady": 0.25,
+  "levelStrong": 0.6,
+  "levelUnstoppable": 0.9,
+  "reminderWeeklyBudget": 4,
+  "reminderIgnoredThreshold": 3,
+  "maxPagesPerCheckIn": 400,
+  "editionMinRatio": 0.5,
+  "editionMaxRatio": 2.0,
+  "quizPassRatio": 0.6667,
+  "shelfWeight": 2.0,
+  "tagWeight": 1.0,
+  "seedShelfWeight": 0.5,
+  "ratingBoost": 0.5,
+  "lowRatingPenalty": 0.75,
+  "shortBookBonus": 1.0,
+  "shortBookPages": 150
+}
