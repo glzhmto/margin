@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Margin</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%227%22 fill=%22%23C8402A%22/%3E%3Ctext x=%2216%22 y=%2223%22 font-family=%22Georgia,serif%22 font-size=%2220%22 text-anchor=%22middle%22 fill=%22white%22%3Em%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <div class="device"><div class="app" id="app"></div></div>
+  <aside class="side">
+    <h1>Margin 5.3</h1>
+    <p>Web replica of the Unity app, to review it without the editor. The official deliverable is the Unity project. <a href="/">About Margin</a></p>
+    <p>Accounts are real. Sign up with your email, add friends by @username or with your invite link, and everything you log is saved in Supabase and shows up for your friends.</p>
+    <div class="tools">
+      <button id="t-day">Simulate the next day</button>
+      <button id="t-notif">Show a reminder</button>
+      <button id="t-theme">Toggle light/dark theme</button>
+    </div>
+    <p class="small">Real data: accounts, friends, shared reads, creator posts, activity and Margin reviews are stored in Supabase and protected per user. The Goodreads reviews are real, quoted with author and link. Covers: Open Library. "Simulate the next day" only moves this browser's clock for the demo.</p>
+  </aside>
+  <script>
+    // Load the scripts without cache so you always see the latest version.
+    (function () {
+      var v = Date.now(), files = ["../vendor/supabase.min", "../vendor/qrcode", "core", "ui", "data", "net", "screens-auth", "screens-main", "commerce", "screens-book", "screens-flow", "screens-settings", "screens-social", "app"];
+      var css = document.querySelector('link[rel="stylesheet"]'); css.href = "css/app.css?v=" + v;
+      (function next(i) { if (i >= files.length) { window.dispatchEvent(new Event("DOMContentLoaded")); return; }
+        var s = document.createElement("script"); s.src = "js/" + files[i] + ".js?v=" + v; s.onload = function () { next(i + 1); }; document.body.appendChild(s); })(0);
+    })();
+  </script>
+</body>
+</html>

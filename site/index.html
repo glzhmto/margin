@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Margin · Read it yourself</title>
+<meta name="description" content="Margin is a reading diary for university students who want to read more books on paper. A small daily goal, a ten-second check-in, three questions per chapter, and then you close the app.">
+<meta name="theme-color" content="#F4EFE6">
+<meta property="og:title" content="Margin · Read it yourself">
+<meta property="og:description" content="A reading diary for paper books. Set a small goal, log your page in ten seconds, then close the app.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://marginreads.vercel.app/">
+<meta property="og:image" content="https://marginreads.vercel.app/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%227%22 fill=%22%23C8402A%22/%3E%3Ctext x=%2216%22 y=%2223%22 font-family=%22Georgia,serif%22 font-size=%2220%22 text-anchor=%22middle%22 fill=%22white%22%3Em%3C/text%3E%3C/svg%3E">
+<link rel="preload" href="fonts/eb-garamond-400-normal.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="fonts/inter-400-normal.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="wordmark" href="/" aria-label="Margin, home">margin</a>
+    <nav aria-label="Sections">
+      <ul class="nav">
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#friends">Friends</a></li>
+        <li><a href="#creators">Creators</a></li>
+        <li><a href="#paper">On paper</a></li>
+        <li><a href="#fil">FIL 2026</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn-ink btn-s" href="/app/">Open Margin</a>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <div class="hero-text">
+      <h1 id="hero-title">Read it yourself.</h1>
+      <p class="lede">Margin helps university students read more books on paper. You set a small goal, log your page in about ten seconds, and then close the app and read.</p>
+      <div class="ctas">
+        <a class="btn btn-red" href="/app/">Open Margin</a>
+        <a class="btn btn-line" href="/app/?guest=1">Try it without an account</a>
+      </div>
+      <p class="fine">Free, in the browser on your phone or laptop. The guest mode needs no email; you can save your account later. The iPhone app isn't in the App Store.</p>
+    </div>
+    <figure class="hero-phone">
+      <div class="phone"><img src="img/home.webp" width="780" height="1688" alt="Margin's Home screen: reading momentum Strong, 52 of 75 pages this week, reading Fahrenheit 451 on page 84 of 208, with buttons to log reading and start focus mode."></div>
+      <figcaption class="note">Home, after five days with <cite>Fahrenheit 451</cite>. Rest days are striped.</figcaption>
+    </figure>
+  </section>
+
+  <section class="problem" aria-labelledby="problem-title">
+    <div class="wrap">
+      <h2 id="problem-title">The world is built to take your attention</h2>
+      <p class="sub">Reading is how you choose where it goes. These are the numbers we started from.</p>
+      <ol class="facts">
+        <li>
+          <p class="big">47 <span>seconds</span></p>
+          <p>The average time people kept their attention on one screen before switching, across studies from 2016 to 2020. In 2003 it was about two and a half minutes.</p>
+          <p class="src">Gloria Mark, UC Irvine. <cite>Attention Span</cite>, 2023. <a href="https://www.universityofcalifornia.edu/news/how-sharpen-your-attention-and-meet-your-goals-2024">Interview at UC Newsroom</a></p>
+        </li>
+        <li>
+          <p class="big">4 <span>in 10</span></p>
+          <p>Nearly four in ten university students said trouble focusing is a big obstacle to their learning, along with time management.</p>
+          <p class="src">Pearson, Student Success Survey, 2023. <a href="https://www.pearson.com/ped-blogs/blogs/2023/07/pearson-has-the-pulse-on-what-higher-education-students-need.html">Pearson blog</a></p>
+        </li>
+        <li>
+          <p class="big">71<span>%</span></p>
+          <p>of 18 to 34 year olds in the US want to become better readers. The top reason people gave for not reading more: no time, at 43%.</p>
+          <p class="src">NPR/Ipsos poll, February 2025, 2,033 adults. <a href="https://www.ipsos.com/en-us/most-americans-read-its-not-our-priority-leisure-activity">Ipsos release</a></p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="how" class="how wrap" aria-labelledby="how-title">
+    <div class="how-head">
+      <h2 id="how-title">How Margin works</h2>
+      <p class="sub">Five steps, and the last one is leaving.</p>
+    </div>
+    <div class="how-grid">
+      <ol class="steps">
+        <li class="step" data-shot="img/home.webp" data-alt="Home screen with the week's reading and the current book.">
+          <h3><span class="n">1</span>Make a pact</h3>
+          <p>Pick how many pages a day, which days you read and at what time. Ten pages take about fifteen minutes. The days you leave out are planned rest and don't count against you.</p>
+          <img class="step-img" loading="lazy" src="img/home-390.webp" width="390" height="844" alt="Home screen with the week's reading and the current book.">
+        </li>
+        <li class="step" data-shot="img/checkin.webp" data-alt="Log reading sheet: you were on page 84 of 208, page 99 entered, plus 15 pages.">
+          <h3><span class="n">2</span>Check in, ten seconds</h3>
+          <p>Type the page you reached in the book. Margin works out the pages, the chapter and your week. You can log yesterday too, if you forgot.</p>
+          <img class="step-img" loading="lazy" src="img/checkin-390.webp" width="390" height="844" alt="Log reading sheet: you were on page 84 of 208, page 99 entered, plus 15 pages.">
+        </li>
+        <li class="step" data-shot="img/quiz.webp" data-alt="Chapter quiz for Fahrenheit 451, question 1 of 3, about Clarisse's question to Montag.">
+          <h3><span class="n">3</span>Three questions per chapter</h3>
+          <p>When you finish a chapter, Margin offers a short quiz about it. It's optional and it doesn't change your momentum. Remembering what you read is what makes it stay.</p>
+          <img class="step-img" loading="lazy" src="img/quiz-390.webp" width="390" height="844" alt="Chapter quiz for Fahrenheit 451, question 1 of 3, about Clarisse's question to Montag.">
+        </li>
+        <li class="step" data-shot="img/focus.webp" data-alt="Focus mode: choose 15, 25, 45 or 60 minutes, then put the phone face down.">
+          <h3><span class="n">4</span>Focus mode</h3>
+          <p>Choose 15, 25, 45 or 60 minutes and put the phone face down. It vibrates when time's up. In the iPhone version, the apps you pick go quiet until then.</p>
+          <img class="step-img" loading="lazy" src="img/focus-390.webp" width="390" height="844" alt="Focus mode: choose 15, 25, 45 or 60 minutes, then put the phone face down.">
+        </li>
+        <li class="step" data-shot="img/close.webp" data-alt="After logging, Margin says: now close the app and go read.">
+          <h3><span class="n">5</span>Close the app</h3>
+          <p>After you log, Margin tells you to close it and go read. There is no feed to scroll. Reminders come four times a week at most, with a line from your book.</p>
+          <img class="step-img" loading="lazy" src="img/close-390.webp" width="390" height="844" alt="After logging, Margin says: now close the app and go read.">
+        </li>
+      </ol>
+      <div class="how-phone" aria-hidden="true">
+        <div class="phone"><img id="how-shot" src="img/home.webp" width="780" height="1688" alt=""></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="friends" class="friends" aria-labelledby="friends-title">
+    <div class="wrap split">
+      <figure class="split-img">
+        <div class="phone phone-s"><img loading="lazy" src="img/invite.webp" width="780" height="1688" alt="Invite sheet with a QR code for @mateo and the link marginreads.vercel.app/app/?add=mateo, with Share and Copy buttons."></div>
+      </figure>
+      <div class="split-text">
+        <h2 id="friends-title">Read with your friends</h2>
+        <p>Reading is easier when someone asks you how it's going. Send your invite link or let a friend scan your QR code. When they open it, they land on your profile and can add you.</p>
+        <p>Pick a book together and it becomes a shared pact. You see each other's page, and when one of you finishes a chapter or the book, the other one finds out.</p>
+        <dl class="facts-s">
+          <div><dt>Friends see</dt><dd>the book you're reading, your page and the books you finish</dd></div>
+          <div><dt>They don't see</dt><dd>your reflections, unless you post one as a review</dd></div>
+          <div><dt>Turn it off</dt><dd>with "Only me" in Settings, Privacy</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section id="creators" class="creators wrap" aria-labelledby="creators-title">
+    <h2 id="creators-title">Reading lists from people who read</h2>
+    <div class="creators-grid">
+      <p class="sub">Any reader can turn on a creator account and publish. Follow a creator and their posts show up next to your friends' activity. Posts have no like counts and videos never play on their own.</p>
+      <ul class="kinds">
+        <li><h3>Lists</h3><p>Books from the catalog, each with a short note on why it's there.</p></li>
+        <li><h3>Notes</h3><p>A short essay about a book, written by the person who signs it. No AI text.</p></li>
+        <li><h3>Videos</h3><p>A YouTube link that plays inside the post when you tap it.</p></li>
+      </ul>
+    </div>
+    <div class="shelf" aria-label="Some of the books in Margin's catalog">
+      <img loading="lazy" src="img/cover-the-metamorphosis.webp" width="240" height="369" alt="The Metamorphosis, Franz Kafka">
+      <img loading="lazy" src="img/cover-the-stranger.webp" width="240" height="369" alt="The Stranger, Albert Camus">
+      <img loading="lazy" src="img/cover-aura.webp" width="240" height="369" alt="Aura, Carlos Fuentes">
+      <img loading="lazy" src="img/cover-frankenstein.webp" width="240" height="350" alt="Frankenstein, Mary Shelley">
+      <img loading="lazy" src="img/cover-the-labyrinth-of-solitude.webp" width="240" height="369" alt="The Labyrinth of Solitude, Octavio Paz">
+      <img loading="lazy" src="img/cover-hamlet.webp" width="240" height="332" alt="Hamlet, William Shakespeare">
+      <img loading="lazy" src="img/cover-animal-farm.webp" width="240" height="369" alt="Animal Farm, George Orwell">
+    </div>
+  </section>
+
+  <section id="paper" class="paper" aria-labelledby="paper-title">
+    <div class="wrap">
+      <h2 id="paper-title">Get it on paper</h2>
+      <p class="sub">Every book in Margin has a "Buy it" section with the lowest printed prices at Gandhi, checked live, and a search link for other stores. Margin earns nothing from these links.</p>
+      <div class="paper-grid">
+        <table class="prices">
+          <caption>Lowest printed copy at Gandhi, checked November 12, 2026</caption>
+          <thead><tr><th scope="col">Book</th><th scope="col" class="r">Price</th></tr></thead>
+          <tbody>
+            <tr>
+              <th scope="row"><img loading="lazy" src="img/cover-the-little-prince.webp" width="240" height="369" alt=""><span><a href="https://www.gandhi.com.mx/clasicos--el-principito-9786075323732/p">El principito</a><small>Antoine de Saint-Exupéry</small></span></th>
+              <td class="r num">$44 MXN</td>
+            </tr>
+            <tr>
+              <th scope="row"><img loading="lazy" src="img/cover-1984.webp" width="240" height="372" alt=""><span><a href="https://www.gandhi.com.mx/1984-9789807875059/p">1984</a><small>George Orwell</small></span></th>
+              <td class="r num">$79 MXN</td>
+            </tr>
+            <tr>
+              <th scope="row"><img loading="lazy" src="img/cover-fahrenheit-451.webp" width="240" height="373" alt=""><span><a href="https://www.gandhi.com.mx/fahrenheit-451-9781451690316/p">Fahrenheit 451</a><small>Ray Bradbury</small></span></th>
+              <td class="r num">$199 MXN</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="stores">
+          <h3>Also searched from the book's page</h3>
+          <p>Amazon México, Mercado Libre, Sanborns and El Sótano. Or skip buying: Margin can open the bookstores near you in Maps, or point you to a public library.</p>
+          <figure class="phone phone-xs"><img loading="lazy" src="img/buy.webp" width="780" height="1688" alt="Buy it section for Fahrenheit 451: Gandhi at $199, $228 and $269 MXN, then Amazon México, Mercado Libre, Sanborns and El Sótano."></figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="fil" class="fil wrap" aria-labelledby="fil-title">
+    <a class="fil-card" href="https://www.fil.com.mx">
+      <img loading="lazy" src="img/fil-2026.webp" width="1080" height="566" alt="Official poster of FIL Guadalajara 2026, the 40th edition, with Italy as guest of honor, November 28 to December 6.">
+      <div class="fil-text">
+        <h2 id="fil-title">FIL Guadalajara, November 28 to December 6</h2>
+        <p>The largest book fair in Spanish turns 40 this year, and Italy is the guest of honor. Margin shows it on Home until the fair ends.</p>
+        <span class="fil-link">fil.com.mx</span>
+      </div>
+    </a>
+  </section>
+
+  <section class="manifesto" aria-labelledby="manifesto-title">
+    <div class="wrap-narrow">
+      <h2 id="manifesto-title" class="vh">Why we made Margin</h2>
+      <p>When we ask our parents, our teachers and our grandparents where they learned most of what they know, they give the same answer. Books.</p>
+      <p>Then the day starts. A thousand notifications, billboards on the way, the radio, a podcast. In class, the laptop open with ten tabs and three chats. Everything asks for attention, and it gets hard to give it to one thing.</p>
+      <p>A book asks for hours of it, and gives back a long conversation with someone who thought hard about something: the Greeks, the Romans, Kafka, Rulfo, cities we've never seen.</p>
+      <p>Margin helps with the first part, which is opening the book. You do the reading.</p>
+      <p class="sign">Read it yourself.</p>
+    </div>
+  </section>
+
+  <section class="end wrap" aria-labelledby="end-title">
+    <h2 id="end-title">Start with the book on your table</h2>
+    <div class="ctas">
+      <a class="btn btn-red" href="/app/">Open Margin</a>
+      <a class="btn btn-line" href="/app/?guest=1">Try it without an account</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <p class="wordmark" aria-hidden="true">margin</p>
+    <p>Made by Mateo González Herrera and Carlos Santiago Cruz for Human-Computer Interaction, Universidad Panamericana, 2026.</p>
+    <p class="fine">Covers from Open Library. Prices from gandhi.com.mx. FIL 2026 poster from the Feria Internacional del Libro de Guadalajara. Type set in EB Garamond and Inter, both under the SIL Open Font License.</p>
+  </div>
+</footer>
+
+<script src="js/site.js" defer></script>
+</body>
+</html>

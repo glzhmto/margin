@@ -24,7 +24,10 @@
 # Course material (not published)
 UP_HCI_FinalP_2026.pdf
 
-# Web preview: JS copy of the app for reviewing screens (not the deliverable; it would duplicate the logic)
-/preview/
+# Local tools, build scripts and working notes (not part of the deliverable)
 /tools/
+/docs/
 /favicon.ico
+
+# Local tool output
+/.playwright-mcp/
