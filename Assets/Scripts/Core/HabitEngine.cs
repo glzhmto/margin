@@ -105,7 +105,7 @@ namespace Margin.Core
             {
                 case MomentumLevel.Kindling: return "Every reader started with one page.";
                 case MomentumLevel.Steady: return "You are building a rhythm. A few pages today keep it going.";
-                case MomentumLevel.Strong: return "Your habit has taken root.";
+                case MomentumLevel.Strong: return "Reading has become part of your days.";
                 default: return "You read like you breathe.";
             }
         }
