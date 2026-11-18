@@ -52,6 +52,22 @@ namespace Margin.Core
         public int pages;
         public List<string> shelves = new List<string>();
         public List<string> tags = new List<string>();
+
+        // Taste quiz metadata. Values come from the fixed vocabularies in TasteQuiz (MoodVocab, PaceVocab,
+        // FieldVocab, LifeVocab, ScreenVocab); DataIntegrityTests rejects anything else.
+        /// <summary>How the book tends to make readers feel.</summary>
+        public List<string> moods = new List<string>();
+        /// <summary>"fast", "medium" or "slow".</summary>
+        public string pace;
+        /// <summary>Study fields whose themes the book speaks to.</summary>
+        public List<string> fields = new List<string>();
+        /// <summary>Life situations at the center of the book.</summary>
+        public List<string> life = new List<string>();
+        /// <summary>Film and series genres a viewer could come from.</summary>
+        public List<string> screen = new List<string>();
+        /// <summary>Short phrase per field explaining the link ("the law against your conscience"). Only where accurate.</summary>
+        public Dictionary<string, string> fieldNotes = new Dictionary<string, string>();
+
         public string synopsis;
         public List<Chapter> chapters = new List<Chapter>();
 

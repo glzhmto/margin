@@ -25,6 +25,8 @@ namespace Margin.Core
         public List<string> books_read = new List<string>();
         public List<string> favorites = new List<string>();
         public DateTime created_at;
+        /// <summary>Profile photo as a small JPEG data URL, or null (initials are shown).</summary>
+        public string avatar;
     }
 
     public static class FriendshipStatus
