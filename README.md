@@ -72,4 +72,4 @@ For the demo: Settings › Simulate next day moves the app's clock one day ahead
 - Build: PENDING
 - Commercial: PENDING
 
-Other documents: [DesignJustification.md](DesignJustification.md), [UserResearch.md](UserResearch.md), [UserTesting.md](UserTesting.md), [AIUsage.md](AIUsage.md).
+Other documents: [TECHNICAL.md](TECHNICAL.md), [DesignJustification.md](DesignJustification.md), [UserResearch.md](UserResearch.md), [UserTesting.md](UserTesting.md), [AIUsage.md](AIUsage.md).

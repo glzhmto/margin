@@ -42,10 +42,10 @@ Better to prevent the error than to explain it later (Norman; Nielsen 5).
 ## 5. Ethical design
 We didn't want guilt or aggressive notifications.
 - At most 4 reminders per week; if you ignore 3 in a row, they are cut in half, and they never arrive if you already read that day (`ReminderPlanner.cs`).
-- There is no infinite feed. The tabs are Home, Explore, Log, Diary and Profile, and the friends' activity on Home is a short list that ends.
-- At the end of the check-in: "Now close the app and go read."
+- There is no infinite feed. The tabs are Home, Explore, Log, Library and Profile, and the friends' activity on Home is a short list that ends.
+- At the end of the check-in you only see the pages you added and your momentum, and a "Done" button. Before, this screen said "Now close the app and go read" and offered "Keep reading in Focus mode". We took both out: when you log, your reading session is already over, so telling you to go read (or to read more) didn't make sense.
 
-<img src="screenshots/closing.jpg" width="240" alt="The app asks you to close it and read">
+<img src="screenshots/closing.jpg" width="240" alt="The end of a session: pages added, momentum and Done">
 
 ## 6. Transparent AI
 - Each quiz says the questions were made with AI and reviewed by people.
@@ -111,7 +111,7 @@ Nielsen's heuristic 6: it is easier to recognize than to remember.
 ## 13. Getting the book on paper (mapping)
 The goal is reading on paper, so the Book screen ends with "Buy it".
 - Real prices from Librerías Gandhi, only printed books, with the lowest one first. The price is the real one, not an estimate, and it says when it was updated.
-- Links to search the same book in other Mexican stores, using the Spanish title so the search works.
+- Links to search the same book in Amazon México and El Sótano, using the Spanish title so the search works.
 - It says that Margin earns nothing from these links.
 - The FIL Guadalajara banner on Home links to the real fair. You can close it and it disappears after the fair ends.
 
@@ -129,6 +129,13 @@ Fogg (B = MAP): if something is hard to start, fewer people try it. An account f
 - Friends only see a short public summary. You can hide your current book and set your activity to "Only me".
 - Reflections are never shared and we don't use your writing to train any AI.
 
+## 16. Starting and finishing a book (feedback and motivation)
+Starting a book is a big decision, so we gave it its own moment instead of a small toast.
+- "Start reading" is the main button (in the accent color) on a book page when you are not reading anything. If you are already reading another book, the main button stays "Want to read", so you don't replace your book by accident.
+- Before you start, a screen shows the length, about how many weeks it will take at your pace and today's goal. When you confirm there is a little confetti and you go back to Home to log your reading.
+- When you finish a book you see the achievements you unlocked, you can rate it, post a review or share it.
+- "Find your next book" asks five questions and also learns from what you read and rated (`NextBook.cs`). Every result says why it was picked, so it is not a black box.
+
 ## Summary: where each decision comes from
 | Decision | Why | File |
 |---|---|---|
@@ -139,11 +146,12 @@ Fogg (B = MAP): if something is hard to start, fewer people try it. An account f
 | Optional quiz with explanation | Testing effect, feedback | `QuizScreen` in `BookFlowScreens.cs` |
 | At most 4 reminders | Ethical design | `ReminderPlanner.cs` |
 | "Written by a human" stamp | Students worry that using AI makes them stop thinking | `ReflectionScreen` in `BookFlowScreens.cs` |
-| "Now close the app" | People understand better on paper | `ClosingScreen` in `BookFlowScreens.cs` |
+| Short end of session, just "Done" | The session is already over, no extra time in the app | `ClosingScreen` in `BookFlowScreens.cs` |
 | Friends see progress, no rankings | Social support without guilt | `SocialGraph.cs`, `ProfileSummary.cs` |
 | Search by name and invite link | Recognition over recall | `FindFriendsScreen` in `SettingsSocialScreens.cs`, `InviteLink.cs` |
 | Only lists, texts and YouTube links | Constraints, no infinite feed | `PostRules.cs` |
 | "Buy it" with real prices | Mapping to the real goal: a paper book | `Commerce.cs`, `Shop` in `MainScreens.cs` |
+| A screen to start a book, achievements at the end | Feedback, motivation | `StartBookScreen`, `FinishedScreen` in `BookFlowScreens.cs` |
 | Guest mode | Fogg: lower the cost to start | `WelcomeScreen` in `AuthScreens.cs`, `AccountService.cs` |
 
 What we changed because of the interviews and tests is in [UserResearch.md](UserResearch.md) and [UserTesting.md](UserTesting.md).
