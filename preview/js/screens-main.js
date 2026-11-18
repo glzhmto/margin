@@ -67,7 +67,7 @@ class HomeScreen extends Screen {
       h("div.row.mt6", { style: { alignItems: "baseline", gap: "10px" } }, h("span.level", Copy.levelName(m.level)),
         streak.current ? h("span.small.muted", streak.current === 1 ? "You met your goal last week" : `${streak.current} weeks in a row meeting your goal`) : null),
       week,
-      h("div.row.mt12.small", h("span.grow.num", h("b", F.n(weekly.pagesRead)), ` of ${F.n(weekly.target)} pages this week`), h("span.faint.num", left > 0 ? `${left} to go` : "goal met")),
+      h("div.row.mt12.small", h("span.grow.num", h("b", F.n(weekly.pagesRead)), ` of ${F.n(weekly.target)} pages this week`), h("span.row.gap8", h("span.faint.num", left > 0 ? `${left} to go` : "goal met"), h("button.small.link", { onclick: () => Nav.push(new SettingsDetail("reading")) }, "Change"))),
       bar(weekly.pagesRead / weekly.target, "ink"));
     mom.querySelector(".bar").classList.add("mt6");
 
@@ -324,8 +324,14 @@ class DiaryScreen extends Screen {
     const s = Data.state(), today = Clock.today(), y = today.getFullYear();
     const done = Data.booksInYear(s, y), st = Data.weeksMeetingGoal(s, today);
     const dayOfYear = Math.floor((today - new Date(y, 0, 1)) / 864e5) + 1, expected = s.yearGoal * dayOfYear / 365;
+    const g = s.profile.goals;
     return [
-      h("div.card.block", { style: { margin: "4px 16px 0" } }, h("div.caps", `${y} goal`), h("div.row.mt6", { style: { alignItems: "baseline", gap: "6px" } }, h("span.level", { style: { fontFamily: "var(--serif)", fontSize: "34px", fontWeight: 600 } }, done), h("span.muted", `of ${F.books(s.yearGoal)}`)),
+      // The daily goal first, with its own button (in user testing, 3 of 6 couldn't find where to change it).
+      h("div.card.block", { style: { margin: "4px 16px 0" } }, h("div.caps", "Daily goal"),
+        h("div.row.mt6", { style: { alignItems: "baseline", gap: "6px" } }, h("span.level", { style: { fontFamily: "var(--serif)", fontSize: "30px", fontWeight: 600 } }, F.n(g.dailyPages)), h("span.muted", "pages a day")),
+        h("p.small.muted.mt4", `${F.pages(S.weeklyTarget(g))} a week, ${Fmt.dayList(g.readingDays)}.`),
+        h("button.btn.sm.accent.mt12", { onclick: () => Nav.push(new SettingsDetail("reading")) }, "Change daily goal")),
+      h("div.card.block", { style: { margin: "12px 16px 0" } }, h("div.caps", `${y} goal`), h("div.row.mt6", { style: { alignItems: "baseline", gap: "6px" } }, h("span.level", { style: { fontFamily: "var(--serif)", fontSize: "34px", fontWeight: 600 } }, done), h("span.muted", `of ${F.books(s.yearGoal)}`)),
         h("div.mt8", bar(done / s.yearGoal, "ink")), h("p.small.muted.mt8", done >= s.yearGoal ? `You already met your ${y} goal.` : `${s.yearGoal - done === 1 ? "1 book" : `${s.yearGoal - done} books`} to go, with ${Math.max(1, Math.round((new Date(y, 11, 31) - today) / 6048e5))} weeks left in the year.`),
         h("button.btn.sm.secondary.mt12", { onclick: () => Nav.push(new SettingsDetail("reading")) }, "Change goal")),
       h("div.statgrid.mt12",
@@ -360,7 +366,7 @@ class ProfileScreen extends Screen {
       acc.isCreator ? h("div.mt6", h("span.badge.ok", "Creator")) : null,
       u.bio ? h("p.small.mt8", { style: { maxWidth: "300px" } }, u.bio) : null,
       h("div.row.gap8.mt12", h("button.btn.sm.secondary", { onclick: () => Nav.push(new SettingsDetail("profile")) }, "Edit profile"),
-        h("button.btn.sm.secondary", { onclick: () => InviteSheet.open() }, icon("share"), "Invite")),
+        h("button.btn.sm.secondary", { onclick: () => Nav.push(new FriendsScreen()) }, icon("share"), "Invite")),
       acc.isGuest ? h("button.btn.sm.accent.mt8", { onclick: () => Nav.push(new SaveAccountScreen()) }, "Save your account") : null);
     const favs = (s.favorites || []).map(id => Data.book(id)).filter(Boolean);
     const cur = Data.book(s.profile.currentBookId);

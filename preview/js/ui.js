@@ -340,3 +340,10 @@ function ratingInput(val, onRate) {
   }
   return wrap;
 }
+
+/* Password strength as bars plus a word and a tip (V.strength and V.strengthTip in screens-auth.js). */
+function passwordMeter(pw, st = V.strength(pw)) {
+  const word = !pw ? "" : ["Too weak", "Weak", "Okay", "Good", "Strong"][st];
+  return [h("div.strength" + (st <= 1 ? ".weak" : st === 2 ? ".mid" : ""), [0, 1, 2, 3].map(i => h("i" + (i < st ? ".on" : "")))),
+    pw ? h("div.strength-label", h("b", word), h("span", V.strengthTip(pw))) : null];
+}

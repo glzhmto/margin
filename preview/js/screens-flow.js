@@ -75,10 +75,10 @@ class QuizScreen extends Screen {
   build() {
     const qs = this.c.quiz.questions;
     if (this.phase === "offer") return h("div", navbar("", { onBack: () => this.finish() }), h("div.scroll.under-nav", h("div.pad",
-      cover(this.b, 72), h("div.h1.mt16", `You finished “${this.c.title}”`), h("p.muted.mt8", `${this.b.title}, pages ${this.c.startPage} to ${this.c.endPage}.`),
-      h("p.mt16", `${qs.length} questions about what you just read. Recalling what you read is the best way not to forget it. It's optional and doesn't affect your momentum.`),
+      cover(this.b, 72), h("div.h1.mt16", `Nice, you finished “${this.c.title}”`), h("p.muted.mt8", `${this.b.title}, pages ${this.c.startPage} to ${this.c.endPage}.`),
+      h("p.mt16", `Want to see what stayed with you? ${qs.length} quick questions, no grades. Recalling what you read helps you remember it. You can skip them, they don't change your momentum.`),
       h("p.xs.faint.mt12", "Questions written with AI and checked by people. The AI asks; you think."))),
-      h("div.footbar", h("button.btn.accent", { onclick: () => { this.phase = "q"; Nav.refresh(); } }, "Take the quiz"), h("button.btn.ghost.mt4", { onclick: () => this.finish() }, "Not now")));
+      h("div.footbar", h("button.btn.accent", { onclick: () => { this.phase = "q"; Nav.refresh(); } }, "Try the questions"), h("button.btn.ghost.mt4", { onclick: () => this.finish() }, "Skip for now")));
     if (this.phase === "done") {
       const sc = QuizEngine.score(this.c.quiz, this.answers);
       if (!this.recorded) { QuizEngine.record(Data.state(), this.b.id, this.c.number, sc, Clock.today()); Data.save(); this.recorded = true; }

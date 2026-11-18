@@ -777,10 +777,10 @@ namespace Margin.App.Web.Screens
             var qs = c.quiz.questions;
             if (phase == "offer")
                 return El("div", Navbar("", new NavOpts { OnBack = Finish }), El("div.scroll.under-nav", El("div.pad",
-                        Cover(b, 72), El("div.h1.mt16", $"You finished “{c.title}”"), El("p.muted.mt8", $"{b.title}, pages {c.startPage} to {c.endPage}."),
-                        El("p.mt16", $"{qs.Count} questions about what you just read. Recalling what you read is the best way not to forget it. It's optional and doesn't affect your momentum."),
+                        Cover(b, 72), El("div.h1.mt16", $"Nice, you finished “{c.title}”"), El("p.muted.mt8", $"{b.title}, pages {c.startPage} to {c.endPage}."),
+                        El("p.mt16", $"Want to see what stayed with you? {qs.Count} quick questions, no grades. Recalling what you read helps you remember it. You can skip them, they don't change your momentum."),
                         El("p.xs.faint.mt12", "Questions written with AI and checked by people. The AI asks; you think."))),
-                    Bottom(Btn("button.btn.accent", () => { phase = "q"; Nav.Refresh(); }, "Take the quiz"), Btn("button.btn.ghost.mt4", Finish, "Not now")));
+                    Bottom(Btn("button.btn.accent", () => { phase = "q"; Nav.Refresh(); }, "Try the questions"), Btn("button.btn.ghost.mt4", Finish, "Skip for now")));
 
             if (phase == "done")
             {

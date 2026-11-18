@@ -34,6 +34,15 @@ const V = {
     return null;
   },
   strength(p) { let s = 0; if (p.length >= 8) s++; if (/\d/.test(p)) s++; if (/[A-Z]/.test(p) && /[a-z]/.test(p)) s++; if (/[^A-Za-z0-9]/.test(p) || p.length >= 12) s++; return s; },
+  // What would make a password stronger, in words (the bars alone weren't clear in user testing, T5).
+  strengthTip(p) {
+    if (!p) return "";
+    if (p.length < 8) return "Use at least 8 characters.";
+    if (!/\d/.test(p)) return "Add a number.";
+    if (!(/[A-Z]/.test(p) && /[a-z]/.test(p))) return "Mix uppercase and lowercase to make it stronger.";
+    if (!(/[^A-Za-z0-9]/.test(p) || p.length >= 12)) return "Add a symbol or make it longer to make it stronger.";
+    return "Good to go.";
+  },
   password(p) { return p.length < 8 ? "At least 8 characters." : !/\d/.test(p) ? "Add at least one number." : null; },
 };
 
@@ -95,7 +104,7 @@ class SignupScreen extends Screen {
       field("Email", inp("email", { type: "email", autocomplete: "email", inputmode: "email", placeholder: "you@email.com" }), helpEl("email")),
       field("Username", h("div.inwrap", inp("username", { autocapitalize: "none", placeholder: "no spaces", oninput: e => { e.target.value = e.target.value.toLowerCase().replace(/\s/g, ""); } })), userHelp()),
       field("Password", h("div.inwrap", pw, h("button.iconbtn.trail", { type: "button", "aria-label": this.show ? "Hide password" : "Show password", onclick: () => { this.show = !this.show; this.update(); } }, icon(this.show ? "eyeoff" : "eye"))),
-        h("div.strength" + (st <= 1 ? ".weak" : st === 2 ? ".mid" : ""), [0, 1, 2, 3].map(i => h("i" + (i < st ? ".on" : "")))),
+        passwordMeter(v.password, st),
         helpEl("password", "At least 8 characters, with at least one number.")),
       field("University (optional)", inp("university", { autocomplete: "organization", placeholder: "Universidad Panamericana", maxlength: 80 }), h("div.help", "We suggest friends from the same place.")),
       h("button.check.mt20" + (this.terms ? ".on" : ""), { onclick: () => { this.terms = !this.terms; this.update(); } },
@@ -404,10 +413,11 @@ class TasteQuizScreen extends Screen {
 class NextBookScreen extends Screen {
   constructor() { super(); this.a = {}; this.step = 0; this.sel = 0; }
   build() {
+    if (this.finding) return h("div", navbar("", { onBack: () => { this.finding = false; this.step--; Nav.refresh(); } }), findingView());
     const Q = NextBook.Questions, q = Q[this.step];
     let content, foot = null;
     if (q) {
-      const pick = id => { this.a[q.key] = id; this.step++; Nav.refresh(); };
+      const pick = id => { this.a[q.key] = id; this.step++; if (this.step === Q.length) this.think(); Nav.refresh(); };
       content = [h("div.caps", `Question ${this.step + 1} of ${Q.length}`), h("div.h1.mt6", q.title), h("p.muted.mt8", q.sub),
         h("div.list", { style: { margin: "20px 0 0" } }, q.options().map(o => h("button.item", { onclick: () => pick(o.id) },
           h("div.grow", h("div", o.label), o.hint ? h("div.xs.faint", o.hint) : null), icon("chev", "chev"))))];
@@ -420,6 +430,11 @@ class NextBookScreen extends Screen {
     return h("div", navbar("", { onBack: () => { if (this.step > 0) { this.step--; this.sel = 0; Nav.refresh(); } else Nav.back(); } }),
       q ? h("div.pad.mt8", bar((this.step + 1) / Q.length, "ink")) : null,
       h("div.scroll.under-nav", h("div.pad.mt20", content, h("div.bottom-space"))), foot);
+  }
+  // After the last answer: "Finding your match…" for a moment, then the results (same as the first-book quiz).
+  think() {
+    this.sel = 0; this.finding = true;
+    setTimeout(() => { if (!this.finding) return; this.finding = false; if (Nav.current() === this) Nav.refresh(); }, TIMING.findingMatchMs);
   }
 }
 

@@ -14,7 +14,7 @@ const PLAN = {
   yearOptions: [4, 6, 12, 24, 52],
 };
 const FOCUS = { minutes: [15, 25, 45, 60], silenced: ["instagram", "tiktok", "youtube"] };
-const TIMING = { findingMatchMs: 1500 };
+const TIMING = { findingMatchMs: 2000 }; // "Finding your match…": a short pause so the match feels considered
 
 function hash(str) { let x = 2166136261; for (const c of str) { x ^= c.charCodeAt(0); x = Math.imul(x, 16777619); } return x >>> 0; }
 

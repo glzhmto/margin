@@ -138,6 +138,20 @@ namespace Margin.App.Web.Screens
         /// <summary>The web's \d (ASCII digits only).</summary>
         static bool IsDigit(char c) => c >= '0' && c <= '9';
 
+        /// <summary>What would make a password stronger, in words (the bars alone weren't clear in user testing, T5).</summary>
+        public static string StrengthTip(string p)
+        {
+            p = p ?? "";
+            if (p.Length == 0) return "";
+            if (p.Length < 8) return "Use at least 8 characters.";
+            if (!p.Any(IsDigit)) return "Add a number.";
+            if (!(p.Any(c => c >= 'A' && c <= 'Z') && p.Any(c => c >= 'a' && c <= 'z'))) return "Mix uppercase and lowercase to make it stronger.";
+            if (Strength(p) < 4) return "Add a symbol or make it longer to make it stronger.";
+            return "Good to go.";
+        }
+
+        public static readonly string[] StrengthWords = { "Too weak", "Weak", "Okay", "Good", "Strong" };
+
         public static string Password(string p) =>
             (p ?? "").Length < 8 ? "At least 8 characters." : !(p ?? "").Any(IsDigit) ? "Add at least one number." : null;
     }
@@ -346,12 +360,17 @@ namespace Margin.App.Web.Screens
             if (meter)
             {
                 var bars = Enumerable.Range(0, 4).Select(_ => El("i")).ToList();
-                strength = El("div.strength", bars);
+                var word = Text("b", ""); var tip = Text("span", "");
+                var label = El("div.strength-label", word, tip);
+                strength = El("div", El("div.strength", bars), label);
+                var meterBars = strength.Q(className: "strength");
                 live.Add(() =>
                 {
                     int st = V.Strength(v.password);
-                    strength.EnableInClassList("weak", st <= 1);
-                    strength.EnableInClassList("mid", st == 2);
+                    bool any = !string.IsNullOrEmpty(v.password);
+                    word.text = any ? V.StrengthWords[st] : ""; tip.text = V.StrengthTip(v.password); label.Show(any);
+                    meterBars.EnableInClassList("weak", st <= 1);
+                    meterBars.EnableInClassList("mid", st == 2);
                     for (int i = 0; i < 4; i++) bars[i].EnableInClassList("on", i < st);
                 });
             }
@@ -1019,7 +1038,7 @@ namespace Margin.App.Web.Screens
             {
                 if (Data.X != null) { Data.X.tastes = TasteQuiz.Clean(t); Data.Save(); }
                 sel = 0; finding = true;
-                App.Root.schedule.Execute(() => { if (!finding) return; finding = false; if (IsCurrent) Nav.Refresh(); }).StartingIn(1500);
+                App.Root.schedule.Execute(() => { if (!finding) return; finding = false; if (IsCurrent) Nav.Refresh(); }).StartingIn(MatchUI.FindingMs);
             }
             Nav.Refresh();
         }
@@ -1030,6 +1049,9 @@ namespace Margin.App.Web.Screens
     /// <summary>Spotlight + compact list of matches, shared by the first-book flow and "Find your next book".</summary>
     public static class MatchUI
     {
+        /// <summary>How long "Finding your match…" shows: a short pause so the match feels considered.</summary>
+        public const int FindingMs = 2000;
+
         /// <summary>Calm "Finding your match…" interstitial.</summary>
         public static VisualElement Finding()
         {
@@ -1102,14 +1124,24 @@ namespace Margin.App.Web.Screens
             }
         }
 
+        bool finding;
+
+        /// <summary>After the last answer: "Finding your match…" for a moment, then the results (same as the first-book quiz).</summary>
+        void Think()
+        {
+            sel = 0; finding = true;
+            App.Root.schedule.Execute(() => { if (!finding) return; finding = false; if (IsCurrent) Nav.Refresh(); }).StartingIn(MatchUI.FindingMs);
+        }
+
         public override VisualElement Build()
         {
+            if (finding) return El("div", Navbar("", new NavOpts { OnBack = () => { finding = false; step--; Nav.Refresh(); } }), MatchUI.Finding());
             var q = step < Questions.Length ? Questions[step] : null;
             object[] content;
             VisualElement foot;
             if (q != null)
             {
-                void Pick(string id) { Set(q.Key, id); step++; Nav.Refresh(); }
+                void Pick(string id) { Set(q.Key, id); step++; if (step == Questions.Length) Think(); Nav.Refresh(); }
                 content = new object[]
                 {
                     El("div.caps", $"Question {step + 1} of {Questions.Length}"), El("div.h1.mt6", q.Title), El("p.muted.mt8", q.Sub),

@@ -174,7 +174,8 @@ namespace Margin.App.Web.Screens
                     .AlignItems(Align.FlexEnd), // baseline in the web
                 week,
                 El("div.row.mt12.small", El("span.grow.num", El("b", F.N(weekly.PagesRead)), $" of {F.N(weekly.Target)} pages this week"),
-                    El("span.faint.num", left > 0 ? $"{left} to go" : "goal met")),
+                    El("span.row.gap8", El("span.faint.num", left > 0 ? $"{left} to go" : "goal met"),
+                        Btn("button.small.link", () => Nav.Push(new SettingsDetail("reading")), "Change"))),
                 Bar(weekly.Target > 0 ? weekly.PagesRead / (double)weekly.Target : 0, "ink").Cls("mt6"));
 
             // Reading
@@ -638,8 +639,16 @@ namespace Margin.App.Web.Screens
             int goal = Math.Max(1, Data.X.yearGoal);
             int weeksLeft = Math.Max(1, (int)Math.Round((new DateTime(y, 12, 31) - today.Date).TotalDays / 7, MidpointRounding.AwayFromZero));
             int toGo = goal - done;
+            var g = s.profile.goals;
             return new object[]
             {
+                // The daily goal first, with its own button (in user testing, 3 of 6 couldn't find where to change it).
+                El("div.card.block",
+                    El("div.caps", "Daily goal"),
+                    El("div.row.mt6.gap6", El("span.level", F.N(g.dailyPages)).Font(serif: true, weight: 600).FontSize(30), El("span.muted", "pages a day")).AlignItems(Align.FlexEnd),
+                    El("p.small.muted.mt4", $"{F.Pages(g.WeeklyTarget)} a week, {Fmt.DayList(g.readingDays)}."),
+                    Btn("button.btn.sm.accent.mt12", () => Nav.Push(new SettingsDetail("reading")), "Change daily goal"))
+                    .M(4, 16, 0),
                 El("div.card.block",
                     El("div.caps", $"{y} goal"),
                     El("div.row.mt6.gap6", El("span.level", done.ToString()).Font(serif: true, weight: 600).FontSize(34), El("span.muted", $"of {F.Books(goal)}"))
@@ -647,7 +656,7 @@ namespace Margin.App.Web.Screens
                     El("div.mt8", Bar(done / (double)goal, "ink")),
                     El("p.small.muted.mt8", done >= goal ? $"You already met your {y} goal." : $"{(toGo == 1 ? "1 book" : $"{toGo} books")} to go, with {weeksLeft} weeks left in the year."),
                     Btn("button.btn.sm.secondary.mt12", () => Nav.Push(new SettingsDetail("reading")), "Change goal"))
-                    .M(4, 16, 0),
+                    .M(12, 16, 0),
                 El("div.statgrid.mt12",
                     El("div", El("div.v", st.Current.ToString()), El("div.xs.muted", st.Current == 1 ? "week meeting your goal (last week)" : "weeks in a row meeting your goal")),
                     El("div", El("div.v", st.Best.ToString()), El("div.xs.muted", st.Best == 1 ? "week is your best" : "weeks is your best")),
@@ -700,7 +709,7 @@ namespace Margin.App.Web.Screens
                     !string.IsNullOrEmpty(u.Bio) ? El("p.small.mt8", u.Bio).MaxW(300) : null,
                     El("div.row.gap8.mt12",
                         Btn("button.btn.sm.secondary", () => Nav.Push(new SettingsDetail("profile")), "Edit profile"),
-                        Btn("button.btn.sm.secondary", () => InviteSheet.Open(), Icon("share"), "Invite")),
+                        Btn("button.btn.sm.secondary", () => Nav.Push(new FriendsScreen()), Icon("share"), "Invite")),
                     acc.IsGuest ? Btn("button.btn.sm.accent.mt8", () => Nav.Push(new SaveAccountScreen()), "Save your account") : null)
                 .AlignItems(Align.Center);
             var favs = (Data.X.favorites ?? new List<string>()).Select(Data.Book).Where(b => b != null).ToList();
