@@ -24,7 +24,7 @@ namespace Margin.Core
         public const double WantBoost = 0.75, ReasonMin = 0.5;
         public const double MoodMatch = 2.5, LengthMatch = 2.0, LengthNear = 0.75, KindMatch = 2.5, RegionMatch = 3.0;
 
-        static readonly string[] GenericShelves = { "classics", "short-reads", "modern" };
+        static readonly string[] GenericShelves = { "classics", "short-reads", "modern", "most-read" };
 
         // Option "reason" = the phrase used in the result's why ("something gripping").
         public static readonly TasteOption[] Moods =

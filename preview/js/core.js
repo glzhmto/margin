@@ -218,7 +218,7 @@ const TasteQuiz = {
   BeginnerShort: 2.0, BeginnerFast: 1.0, BeginnerLong: -1.5, CasualShort: 1.0, CasualFast: 0.5, CasualLong: -0.75, HomeBoost: 0.5,
   ShortPages: 150, MediumPages: 300, ModernYear: 1990, MaxPerAuthor: 1, MaxPerShelf: 3, Questions: 10,
   Any: "any", Both: "both", None: "none", Other: "other", World: "world",
-  GenericShelves: ["classics", "short-reads", "modern"], GenericTags: ["modern"],
+  GenericShelves: ["classics", "short-reads", "modern", "most-read"], GenericTags: ["modern"],
 
   Fields: [
     { id: "law", label: "Law", reason: "You study Law" },

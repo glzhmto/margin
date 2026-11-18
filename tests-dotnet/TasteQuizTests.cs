@@ -35,7 +35,7 @@ namespace Margin.Tests
 
             var tech = Recs(new Tastes { field = "tech" });
             Assert.IsTrue(tech.All(r => r.Book.fields.Contains("tech")), string.Join(", ", tech.Select(r => r.Book.id)));
-            CollectionAssert.IsSubsetOf(new[] { "klara-and-the-sun", "1984" }, Ids(new Tastes { field = "tech" }, null, 15));
+            CollectionAssert.IsSubsetOf(new[] { "klara-and-the-sun", "1984" }, Ids(new Tastes { field = "tech" }, null, 20));
             var psych = Recs(new Tastes { field = "psychology" }, null, 10);
             Assert.IsTrue(psych.All(r => r.Book.fields.Contains("psychology")), string.Join(", ", psych.Select(r => r.Book.id)));
             var psychIds = Ids(new Tastes { field = "psychology" }, null, 30);

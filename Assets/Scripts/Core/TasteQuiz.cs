@@ -103,7 +103,7 @@ namespace Margin.Core
         public const int Questions = 10;
 
         /// <summary>Shelves and tags too common to say anything about taste.</summary>
-        static readonly string[] GenericShelves = { "classics", "short-reads", "modern" };
+        static readonly string[] GenericShelves = { "classics", "short-reads", "modern", "most-read" };
         static readonly string[] GenericTags = { "modern" };
 
         // ---------- Questions ----------
