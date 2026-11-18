@@ -59,7 +59,7 @@ namespace Margin.App.Services
         const string RemoteFile = "margin-remote-state.json";
         const string LocalFile = "margin-local-state.json";
 
-        public const string ProfileColumns = "id,username,name,bio,university,color,is_creator,is_guest,current_book_id,current_page,momentum_level,pages_this_week,books_read,favorites,created_at";
+        public const string ProfileColumns = "id,username,name,bio,university,color,is_creator,is_guest,current_book_id,current_page,momentum_level,pages_this_week,books_read,favorites,created_at,avatar";
 
         readonly SupabaseClient _sb;
         readonly IStateHost _host;
@@ -142,9 +142,9 @@ namespace Margin.App.Services
         }
 
         /// <summary>Guest mode: a real (anonymous) account with a generated @username, saved later if they like it.</summary>
-        public async Task<AuthOutcome> ContinueAsGuest()
+        public async Task<AuthOutcome> ContinueAsGuest(string name = "Guest")
         {
-            var r = await _sb.SignUpAnonymously(new JObject { ["name"] = "Guest" });
+            var r = await _sb.SignUpAnonymously(new JObject { ["name"] = name });
             if (!r.Ok)
             {
                 if ((r.Error ?? "").IndexOf("anonymous", StringComparison.OrdinalIgnoreCase) >= 0)

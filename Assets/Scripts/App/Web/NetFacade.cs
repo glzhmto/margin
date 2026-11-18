@@ -42,7 +42,7 @@ namespace Margin.App.Web
 
         public static Task<AuthOutcome> SignUp(SignupValues v) => A.SignUp(v.name, v.email, v.username, v.password, v.university);
         public static Task<AuthOutcome> SignIn(string email, string password) => A.LogIn(email, password);
-        public static Task<AuthOutcome> SignInGuest() => A.ContinueAsGuest();
+        public static Task<AuthOutcome> SignInGuest(string name = "Guest") => A.ContinueAsGuest(name);
 
         /// <summary>Saves a guest account. Returns (error, pendingEmail) like the web's string | { pending }.</summary>
         public static Task<(string error, string pending)> SaveGuest(SignupValues v) => A.SaveGuest(v.name, v.email, v.username, v.password);
@@ -52,6 +52,7 @@ namespace Margin.App.Web
             try { await A.SignOut(); }
             catch (Exception e) { Debug.LogWarning("[Margin] sign out: " + e.Message); A.ForgetLocalAccount(); }
             Social.Reset();
+            Screens.ExploreScreen.Last = null;
         }
 
         public static Task<string> ResetPassword(string email) => A.ResetPassword(email);

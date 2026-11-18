@@ -86,20 +86,20 @@ We thought A would have fewer errors because you don't have to subtract. Every t
 | B: seconds | 3 | 12 | 45 | 23 | 5 | 11 | average 16.5 s |
 | Which was easier? | Card 2 (B) | Card 2 (B) | Card 2 (B) | Card 2 (B) | Card 2 (B) | Card 2 (B) | 6 of 6 said B |
 
-Result: our hypothesis was not supported. 3 of 6 got A wrong (T1, T3, T4) and nobody got B wrong. B was faster for 5 of 6 testers (average 16.5 s against 30.7 s for A, with T3 the only one slower on B), and all 6 said B was easier. Everyone saw A first, so some of B's advantage may come from practice. What we decided because of this: we kept version A since it's faster for users to input instead of keeping in mind how many they read in a session.
+Result: our hypothesis was not supported. 3 of 6 got A wrong (T1, T3, T4) and nobody got B wrong. B was faster for 5 of 6 testers (average 16.5 s against 30.7 s for A, with T3 the only one slower on B), and all 6 said B was easier. Everyone saw A first, so some of B's advantage may come from practice. What we decided because of this: we kept version A. In the real app you only copy the number printed on the page and the app works out the pages read for you ("+18 pages"). On the cards, people had to work the page out from the information we gave them, which the app never asks. Since everyone saw A first, we want to test it again with the order switched.
 
 ## What we changed
 | What happened | Who | What we changed |
 |---|---|---|
-| Couldn't find the book, or chose the wrong one, when setting up (task 1, the slowest task) | T3, T4 (2 of 6) | We changed how we asked the task and that cleared up any confusion on finding the book. |
-| Tried to click the calendar to go to the previous day (task 2) | T1, T2 (2 of 6) | Slightly changed the tone of the calendar so it wouldn't seem clickable. |
-| Hard to find where to change the goal, "too many steps" (task 6) | T1, T3, T6 (3 of 6) | Made a clearer showcase in the Diary tab. |
-| The "Invite a friend" button shows different screens (QR code only, or search) depending on where it is (task 7) | T2 (1 of 6) | Fixed it so every button allows searching. |
-| The quiz can be closed by accident and is hard to quit (task 3) | T4 (1 of 6) | Changed wording of quiz popup to look more friendly. |
+| Couldn't find the book, or chose the wrong one, when setting up (task 1, the slowest task) | T3, T4 (2 of 6) | We changed how we asked the task, and the book step of the setup now has a search box (type the title or the author). |
+| Tried to click the calendar to go to the previous day (task 2) | T1, T2 (2 of 6) | Made the week calendar lower and flatter so it reads as a small chart, not buttons. To log yesterday you use "Yesterday" in the log sheet. |
+| Hard to find where to change the goal, "too many steps" (task 6) | T1, T3, T6 (3 of 6) | The daily goal is now the first card in Library › Goals with a "Change daily goal" button, and Home has a "Change" link next to "pages this week". |
+| The "Invite a friend" button shows different screens (QR code only, or search) depending on where it is (task 7) | T2 (1 of 6) | Every invite button now opens the Friends screen, which has the search and the invite link together. |
+| The quiz can be closed by accident and is hard to quit (task 3) | T4 (1 of 6) | Changed the wording of the quiz offer to be friendlier ("Try the questions" / "Skip for now"). Leaving in the middle already asks first. |
 | Book details need scrolling (task 8) | T4 (1 of 6) | Didn't apply changes. |
 | The first questions felt off topic | T1 (1 of 6) | Didn't apply changes since that was the point of those initial questions. |
-| Asking for the page was answered wrongly more often than asking for the pages read (A/B) | T1, T3, T4 (3 of 6) | Kept scenario B. |
-| Password requirements not understandable | T5 (1 of 6) | Added text to further specify a strong and allowed password. |
+| Asking for the page was answered wrongly more often than asking for the pages read (A/B) | T1, T3, T4 (3 of 6) | Kept version A (see the A/B section) and the app shows the pages read ("+18 pages") as you type, so you can check the number. |
+| Password requirements not understandable | T5 (1 of 6) | Next to the bars the app now says the strength in words ("Okay") and what would make it stronger ("Add a number"). |
 
 ## Before and after screenshots:
 

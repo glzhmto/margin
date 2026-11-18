@@ -77,8 +77,7 @@ class FriendsScreen extends Screen {
         Social.incoming.length ? [sect("Requests", F.n(Social.incoming.length)), Social.incoming.map(requestRow)] : null,
         sect("Your friends", Social.friends.length ? F.n(Social.friends.length) : null),
         !Social.loaded ? h("p.pad.small.faint", "Loading…")
-          : Social.friends.length ? Social.friends.map(x => personRow(x.p, { noButton: true }))
-          : h("p.pad.small.muted", "No friends yet — invite someone. Reading is easier when someone asks you how it's going."),
+          : Social.friends.length ? Social.friends.map(x => personRow(x.p, { noButton: true })) : null,
         invite,
         Social.outgoing.length ? [sect("Sent"), Social.outgoing.map(x => personRow(x.p))] : null,
         acc.university ? h("div.pad.mt16", h("button.btn.secondary", { onclick: () => Nav.push(new FindFriendsScreen()) }, `People from ${acc.university}`)) : null,
@@ -219,7 +218,7 @@ class PostScreen extends Screen {
     return h("div", navbar(POST_KIND[p.kind], { right: mine ? h("button.iconbtn", { "aria-label": "Delete post", onclick: () => iosAlert("Delete this post?", "Your followers won't see it anymore.", [{ label: "Cancel" }, { label: "Delete", red: true, do: async () => { try { await Social.deletePost(p.id); Nav.back(); toast("Post deleted"); } catch (e) { netFail(e); } } }]) }, icon("trash")) : null }),
       h("div.scroll.under-nav", h("div.pad",
         h("div.h1", p.title),
-        h("div.row.gap8.mt12", h("button.row.gap8.grow", { style: { textAlign: "left" }, onclick: () => mine ? Nav.push(new ProfileScreen()) : Nav.push(new UserScreen(authorP)) }, avatar(pav(a), 32),
+        h("div.row.gap8.mt12", h("button.row.gap8.grow", { style: { textAlign: "left" }, onclick: () => mine ? Nav.push(new ProfileScreen()) : Nav.push(new UserScreen(authorP)) }, avatar(pav(a), 36),
           h("div", h("div.small.strong", pname(a)), h("div.xs.faint", `@${a.username} · ${F.date(new Date(p.created_at))}`))), mine ? null : followButton(authorP)),
         vid ? h("div.mt16", { style: { position: "relative", paddingTop: "56.25%", borderRadius: "12px", overflow: "hidden", background: "#000" } },
           h("iframe", { src: `https://www.youtube-nocookie.com/embed/${vid}?rel=0`, title: p.title, allow: "encrypted-media; picture-in-picture", allowfullscreen: true, loading: "lazy", referrerpolicy: "strict-origin-when-cross-origin",

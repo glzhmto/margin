@@ -1,4 +1,4 @@
-/* Main tabs: Home, Explore, Diary, Profile; plus Activity and Notifications. Social data is real (js/net.js). */
+/* Main tabs: Home, Explore, Library, Profile; plus Activity and Notifications. Social data is real (js/net.js). */
 "use strict";
 
 function bookLink(b) { return h("button.strong", { style: { fontFamily: "var(--serif)", fontSize: "1.06em" }, onclick: e => { e.stopPropagation(); Nav.push(new BookScreen(b.id)); } }, b.title); }
@@ -67,7 +67,7 @@ class HomeScreen extends Screen {
       h("div.row.mt6", { style: { alignItems: "baseline", gap: "10px" } }, h("span.level", Copy.levelName(m.level)),
         streak.current ? h("span.small.muted", streak.current === 1 ? "You met your goal last week" : `${streak.current} weeks in a row meeting your goal`) : null),
       week,
-      h("div.row.mt12.small", h("span.grow.num", h("b", F.n(weekly.pagesRead)), ` of ${F.n(weekly.target)} pages this week`), h("span.faint.num", left > 0 ? `${left} to go` : "goal met")),
+      h("div.row.mt12.small", h("span.grow.num", h("b", F.n(weekly.pagesRead)), ` of ${F.n(weekly.target)} pages this week`), h("span.row.gap8", h("span.faint.num", left > 0 ? `${left} to go` : "goal met"), h("button.small.link", { onclick: () => Nav.push(new SettingsDetail("reading")) }, "Change"))),
       bar(weekly.pagesRead / weekly.target, "ink"));
     mom.querySelector(".bar").classList.add("mt6");
 
@@ -84,7 +84,16 @@ class HomeScreen extends Screen {
         h("div.row.gap8.mt12", h("button.btn.sm.accent", { style: { flex: 1 }, onclick: () => LogSheet.open() }, "Log reading"),
           h("button.btn.sm.secondary", { onclick: () => Nav.push(new FocusScreen()) }, icon("moon"), "Focus mode")));
     } else {
-      reading = h("div.card.block.mt12.empty", { style: { margin: "12px 16px 0" } }, h("div.h3", "You haven't picked a book yet."), h("p.small", "Pick a book to start logging pages."), h("button.btn.sm.primary.mt12", { style: { margin: "12px auto 0" }, onclick: () => Nav.reset(new ExploreScreen(), "explore") }, "Find a book"));
+      // No current book. First book: the onboarding taste quiz (saved answers open on the matches).
+      // Later books: "Find your next book", which also learns from what they read (the same quiz as in Explore).
+      const first = !Data.finished(s).length, matched = s.tastes && !TasteQuiz.isEmpty(s.tastes);
+      // It goes above the momentum card, so it's the first thing on Home.
+      reading = h("div.card.block", { style: { margin: "8px 16px 0" } },
+        h("div.row.top.gap12", h("span.iconbtn", { style: { background: "var(--accent)", color: "#fff", width: "44px", height: "44px", borderRadius: "22px", flex: "none" } }, icon("bookopen")),
+          h("div.grow", h("div.h3", first ? "Choose your first book" : "Choose your next book"),
+            h("p.small.muted.mt4", !first ? "Five questions, matched to what you've read." : matched ? "We matched books from the catalog to your answers." : "Answer a few questions and we'll match you with a book."))),
+        h("div.row.gap8.mt12", h("button.btn.sm.accent", { style: { flex: 1 }, onclick: () => Nav.push(first ? new TasteQuizScreen() : new NextBookScreen()) }, first && matched ? "See my matches" : "Find my book"),
+          h("button.btn.sm.secondary", { onclick: () => Nav.reset(new ExploreScreen(), "explore") }, "Browse")));
     }
 
     // Shared pacts
@@ -107,14 +116,15 @@ class HomeScreen extends Screen {
         : friendsEmpty()];
 
     // For you
-    const recs = Recommender.recommend(s, m.level, 6);
+    // The quiz answers nudge the reading-based picks (TasteQuiz.boost); without answers this is the plain list.
+    const recs = TasteQuiz.boost(Recommender.recommend(s, m.level, Catalog.data.books.length), s.tastes, 6);
     const forYou = [sect("For you"), h("div.hscroll", recs.map(r => h("button.col", { style: { width: "96px", textAlign: "left" }, onclick: () => Nav.push(new BookScreen(r.book.id)) },
       cover(r.book, 96), h("div.xs.strong.mt6.clamp2", r.book.title), h("div.xs.faint.clamp2", r.reason))))];
 
     const q = Data.quoteOfDay(today);
     const quote = q ? h("div.pad.mt32", h("div.serif.italic", `“${q.text}”`), h("div.xs.faint.mt6", `${q.author}${q.source ? ", " + q.source : ""}`)) : null;
 
-    return h("div", h("div.scroll", head, guestNote(true), mom, reading, Fil.banner(), together, friendsRow, act, forYou, quote, h("div.bottom-space")), tabbar("home"));
+    return h("div", h("div.scroll", head, guestNote(true), book ? [mom, reading] : [reading, mom], Fil.banner(), together, friendsRow, act, forYou, quote, h("div.bottom-space")), tabbar("home"));
   }
 }
 
@@ -152,12 +162,14 @@ class NotificationsScreen extends Screen {
 
 /* ---------------- Explore ---------------- */
 class ExploreScreen extends Screen {
-  constructor() { super(); this.q = ""; this.users = null; }
+  // Starts from the last data it loaded (ExploreScreen.last) and refreshes in the background, so switching
+  // tabs doesn't show a half-built page that then jumps as sections arrive.
+  constructor() { super(); this.q = ""; this.users = null; this.d = ExploreScreen.last || null; }
   onShow() {
     screenLoad(this, async () => {
       const [counts, readers, creators, posts] = await Promise.all([Social.bookCounts(), Social.readerCount(), Social.creators(), Social.posts({ limit: 8 })]);
-      return { counts, readers, creators, posts };
-    });
+      return (ExploreScreen.last = { counts, readers, creators, posts });
+    }, () => this.renderResults());
   }
   build() {
     const input = h("input.input", { value: this.q, placeholder: "Books, authors or readers", "aria-label": "Search", style: { paddingLeft: "40px", height: "42px", borderRadius: "10px" } });
@@ -165,7 +177,7 @@ class ExploreScreen extends Screen {
     this.results = h("div");
     const searchBar = h("div.row.gap8.pad", { style: { paddingTop: "8px", paddingBottom: "8px" } },
       h("div.grow", { style: { position: "relative" } }, h("span", { style: { position: "absolute", left: "12px", top: "11px", color: "var(--ink-3)" } }, icon("search")), input));
-    const el = h("div", h("div", { style: { paddingTop: "50px" } }, h("div.pad.h1", { style: { paddingTop: "6px" } }, "Explore"), searchBar), h("div.scroll.under-nav", this.results), tabbar("explore"));
+    const el = h("div", h("div", h("div.pad.h1", { style: { paddingTop: "14px" } }, "Explore"), searchBar), h("div.scroll.under-nav", this.results), tabbar("explore"));
     this.renderResults();
     return el;
   }
@@ -199,11 +211,15 @@ class ExploreScreen extends Screen {
       h("div.pad.mt8", h("button.card.block.row.gap12", { style: { width: "100%", textAlign: "left" }, onclick: () => Nav.push(new FriendsScreen()) },
         h("span.iconbtn", { style: { background: "var(--accent)", color: "#fff", width: "40px", height: "40px", borderRadius: "20px" } }, icon("users")),
         h("div.grow", h("div.strong", "Find friends"), h("div.small.muted", "Search by @username or share your invite link")), icon("chev", "chev"))),
+      h("div.pad.mt8", h("button.card.block.row.gap12", { style: { width: "100%", textAlign: "left" }, onclick: () => Nav.push(new NextBookScreen()) },
+        h("span.iconbtn", { style: { background: "var(--ink)", color: "var(--paper)", width: "40px", height: "40px", borderRadius: "20px" } }, icon("bookopen")),
+        h("div.grow", h("div.strong", "Find your next book"), h("div.small.muted", "Five questions, matched to what you've read")), icon("chev", "chev"))),
       trending.length ? [sect("Being read on Margin"), h("div.hscroll", trending.map((b, i) => h("button.col", { style: { width: "96px", textAlign: "left" }, onclick: () => Nav.push(new BookScreen(b.id)) },
         cover(b, 96, { rank: i + 1 }), h("div.xs.muted.mt6.num", `${F.n(d.counts[b.id])} reading now`))))] : null,
-      sect("Creators"),
-      !d ? h("p.pad.small.faint", this.err || "Loading…")
-        : creators.length ? h("div.hscroll", creators.map(p => creatorCard(p)))
+      // Nothing from the server yet: one quiet line instead of empty sections that would move when data arrives.
+      !d ? h("p.pad.small.faint.mt16", this.err || "Loading…") : sect("Creators"),
+      !d ? null
+        : creators.length || Data.creators.length ? h("div.hscroll", { style: { alignItems: "stretch" } }, creators.map(p => creatorCard(p)), Data.creators.map(c => webCreatorCard(c)))
         : h("p.pad.small.muted", "No creators yet. Anyone can become one in Settings › Profile and publish lists, notes and videos about books."),
       d && d.posts.length ? [sect("Latest from creators"), d.posts.map(p => postRow(p))] : null,
       shelves,
@@ -222,12 +238,28 @@ function listRow(l) {
 }
 /* ---------------- Diary ---------------- */
 class DiaryScreen extends Screen {
-  constructor() { super(); this.mode = "diary"; this.year = Clock.today().getFullYear(); }
+  constructor() { super(); this.mode = "library"; this.year = Clock.today().getFullYear(); }
   build() {
-    const top = h("div", { style: { paddingTop: "50px" } }, h("div.row.pad", { style: { paddingTop: "6px" } }, h("div.h1.grow", "Diary")),
-      h("div.pad.mt12", { style: { paddingBottom: "10px" } }, h("div.seg", [["diary", "Diary"], ["stats", "Stats"], ["goals", "Goals"]].map(([k, l]) => h("button" + (this.mode === k ? ".on" : ""), { onclick: () => { this.mode = k; Nav.refresh(); } }, l)))));
-    const body = this.mode === "diary" ? this.diary() : this.mode === "stats" ? this.stats() : this.goals();
+    const top = h("div", h("div.row.pad", { style: { paddingTop: "14px" } }, h("div.h1.grow", "Library")),
+      h("div.pad.mt12", { style: { paddingBottom: "10px" } }, h("div.seg", [["library", "Books"], ["diary", "Diary"], ["stats", "Stats"], ["goals", "Goals"]].map(([k, l]) => h("button" + (this.mode === k ? ".on" : ""), { onclick: () => { this.mode = k; Nav.refresh(); } }, l)))));
+    const body = this.mode === "library" ? this.library() : this.mode === "diary" ? this.diary() : this.mode === "stats" ? this.stats() : this.goals();
     return h("div", top, h("div.scroll.under-nav", body), tabbar("diary"));
+  }
+  // The reader's own library: reading now, want to read, and every book read, including the ones read before
+  // Margin, which they add by hand (they count as finished books, not as logged pages).
+  library() {
+    const s = Data.state(), cur = Data.book(s.profile.currentBookId);
+    const read = Data.finished(s).slice().sort((a, b) => (b.finishedOn || "").localeCompare(a.finishedOn || ""));
+    const shelf = list => h("div.grid3.pad.mt8", list.map(({ b, sub }) => h("button.col.gap4", { style: { textAlign: "left" }, onclick: () => Nav.push(new BookScreen(b.id)) },
+      cover(b, 110, { style: { width: "100%" } }), h("div.xs.strong.clamp2", b.title), sub ? h("div.xs.faint", sub) : null)));
+    return [
+      h("div.pad.mt4", h("button.btn.accent", { onclick: () => LibraryAdd.open() }, icon("plus"), "Add books you've read")),
+      h("p.pad.xs.faint.mt6", "Books you read before Margin count too. Add them so your library and recommendations know you."),
+      cur ? [sect("Reading now"), shelf([{ b: cur, sub: `Page ${S.progressFor(s, cur.id).currentPage} of ${cur.pages}` }])] : null,
+      s.want.length ? [sect("Want to read", F.n(s.want.length)), shelf(s.want.map(id => ({ b: Data.book(id) })).filter(x => x.b))] : null,
+      [sect("Read", F.n(read.length)), read.length ? shelf(read.map(p => ({ b: Data.book(p.bookId), sub: [p.rating ? "★".repeat(Math.round(p.rating)) : "", p.finishedOn ? p.finishedOn.slice(0, 4) : ""].filter(Boolean).join(" · ") })).filter(x => x.b))
+        : h("p.pad.small.muted", "Nothing here yet. Finish a book, or add the ones you've already read.")],
+      h("div.bottom-space")];
   }
   diary() {
     const s = Data.state();
@@ -244,7 +276,7 @@ class DiaryScreen extends Screen {
       if (mk !== month) {
         month = mk;
         const pages = entries.filter(x => x.date.startsWith(mk)).reduce((t, x) => t + x.to - x.from, 0);
-        out.push(h("div.month", h("span.h3", `${Fmt.Months[d.getMonth()][0].toUpperCase()}${Fmt.Months[d.getMonth()].slice(1)} ${d.getFullYear()}`), h("span.xs.faint.num", F.pages(pages))));
+        out.push(h("div.month", h("span.h3", `${Fmt.Months[d.getMonth()]} ${d.getFullYear()}`), h("span.xs.faint.num", F.pages(pages))));
       }
       const b = Data.book(e.bookId), fin = fins.get(e.bookId + "|" + e.date);
       out.push(h("button.dentry", { onclick: () => Nav.push(new BookScreen(b.id)) },
@@ -292,8 +324,14 @@ class DiaryScreen extends Screen {
     const s = Data.state(), today = Clock.today(), y = today.getFullYear();
     const done = Data.booksInYear(s, y), st = Data.weeksMeetingGoal(s, today);
     const dayOfYear = Math.floor((today - new Date(y, 0, 1)) / 864e5) + 1, expected = s.yearGoal * dayOfYear / 365;
+    const g = s.profile.goals;
     return [
-      h("div.card.block", { style: { margin: "4px 16px 0" } }, h("div.caps", `${y} goal`), h("div.row.mt6", { style: { alignItems: "baseline", gap: "6px" } }, h("span.level", { style: { fontFamily: "var(--serif)", fontSize: "34px", fontWeight: 600 } }, done), h("span.muted", `of ${F.books(s.yearGoal)}`)),
+      // The daily goal first, with its own button (in user testing, 3 of 6 couldn't find where to change it).
+      h("div.card.block", { style: { margin: "4px 16px 0" } }, h("div.caps", "Daily goal"),
+        h("div.row.mt6", { style: { alignItems: "baseline", gap: "6px" } }, h("span.level", { style: { fontFamily: "var(--serif)", fontSize: "30px", fontWeight: 600 } }, F.n(g.dailyPages)), h("span.muted", "pages a day")),
+        h("p.small.muted.mt4", `${F.pages(S.weeklyTarget(g))} a week, ${Fmt.dayList(g.readingDays)}.`),
+        h("button.btn.sm.accent.mt12", { onclick: () => Nav.push(new SettingsDetail("reading")) }, "Change daily goal")),
+      h("div.card.block", { style: { margin: "12px 16px 0" } }, h("div.caps", `${y} goal`), h("div.row.mt6", { style: { alignItems: "baseline", gap: "6px" } }, h("span.level", { style: { fontFamily: "var(--serif)", fontSize: "34px", fontWeight: 600 } }, done), h("span.muted", `of ${F.books(s.yearGoal)}`)),
         h("div.mt8", bar(done / s.yearGoal, "ink")), h("p.small.muted.mt8", done >= s.yearGoal ? `You already met your ${y} goal.` : `${s.yearGoal - done === 1 ? "1 book" : `${s.yearGoal - done} books`} to go, with ${Math.max(1, Math.round((new Date(y, 11, 31) - today) / 6048e5))} weeks left in the year.`),
         h("button.btn.sm.secondary.mt12", { onclick: () => Nav.push(new SettingsDetail("reading")) }, "Change goal")),
       h("div.statgrid.mt12",
@@ -328,7 +366,7 @@ class ProfileScreen extends Screen {
       acc.isCreator ? h("div.mt6", h("span.badge.ok", "Creator")) : null,
       u.bio ? h("p.small.mt8", { style: { maxWidth: "300px" } }, u.bio) : null,
       h("div.row.gap8.mt12", h("button.btn.sm.secondary", { onclick: () => Nav.push(new SettingsDetail("profile")) }, "Edit profile"),
-        h("button.btn.sm.secondary", { onclick: () => InviteSheet.open() }, icon("share"), "Invite")),
+        h("button.btn.sm.secondary", { onclick: () => Nav.push(new FriendsScreen()) }, icon("share"), "Invite")),
       acc.isGuest ? h("button.btn.sm.accent.mt8", { onclick: () => Nav.push(new SaveAccountScreen()) }, "Save your account") : null);
     const favs = (s.favorites || []).map(id => Data.book(id)).filter(Boolean);
     const cur = Data.book(s.profile.currentBookId);
@@ -344,7 +382,7 @@ class ProfileScreen extends Screen {
         cur ? [sect("Reading now"), h("button.row.gap12.pad", { style: { width: "100%", textAlign: "left" }, onclick: () => Nav.push(new BookScreen(cur.id)) }, cover(cur, 44), h("div.grow", h("div.strong", cur.title), h("div.mt6", bar(S.progressFor(s, cur.id).currentPage / cur.pages)), h("div.xs.faint.mt4.num", `Page ${S.progressFor(s, cur.id).currentPage} of ${cur.pages}`)))] : null,
         [sect("Achievements", `${Data.achievements().filter(a => a.got).length} of ${Data.achievements().length}`), h("div.ach", Data.achievements().map(a => h("button.a" + (a.got ? ".got" : ""), { onclick: () => iosAlert(a.name, a.detail + (a.got ? "" : " You don't have it yet."), [{ label: "Close", bold: true }]) },
           h("div.medal", ACH_MARK[a.id] || a.name[0]), h("span.clamp2", a.name))))],
-        sect("Finished", "Diary", () => Nav.reset(new DiaryScreen(), "diary")),
+        sect("Finished", "Library", () => Nav.reset(new DiaryScreen(), "diary")),
         read.length ? h("div.hscroll", read.slice(0, 12).map(p => { const b = Data.book(p.bookId); return h("button.col", { style: { width: "72px" }, onclick: () => Nav.push(new BookScreen(b.id)) }, cover(b, 72), p.rating ? h("div.mt4", stars(p.rating, 11)) : null); }))
           : h("p.pad.small.faint", "Books you finish show up here."),
         sect("Ratings", `${read.filter(p => p.rating).length}`), h("div.row.gap8.pad", stars(0.5, 10), histogram(hist), stars(5, 10)),
@@ -356,3 +394,47 @@ class ProfileScreen extends Screen {
       Nav.stack.length === 1 ? tabbar("profile") : null);
   }
 }
+
+/* A real book creator's review from the web (Data/creators.json): who, a short quote, the book, the link. */
+function webCreatorCard(c, opts = {}) {
+  const b = Data.book(c.bookId);
+  return h("button.card.block", { style: { width: opts.full ? "calc(100% - 32px)" : "272px", margin: opts.full ? "8px 16px 0" : null, flex: "none", textAlign: "left", display: "flex", flexDirection: "column", gap: "10px" },
+    onclick: () => window.open(c.reviewUrl, "_blank", "noopener") },
+    h("div.row.gap10", avatar({ name: c.name, color: c.color || "#3E5C76" }, 36),
+      h("div.grow", { style: { minWidth: 0 } }, h("div.strong.small", c.name), h("div.xs.muted", `${c.handle} · ${c.platform}`))),
+    h("div", { style: { fontFamily: "var(--serif)", fontSize: "17px", lineHeight: "1.35", color: "var(--ink)" } }, `“${c.quote}”`),
+    c.quoteEn ? h("div.xs.muted", `In English: “${c.quoteEn}”`) : null,
+    h("span.grow"),
+    opts.full || !b ? null : h("div.row.gap8", cover(b, 44), h("div.xs.muted.clamp2", `On ${b.title}`)),
+    h("div.xs", { style: { color: "var(--accent)", fontWeight: 600 } }, c.platform === "YouTube" ? "Watch the review ›" : c.platform === "TikTok" || c.platform === "Instagram" ? `See it on ${c.platform} ›` : "Read the review ›"));
+}
+
+/* "Add books you've read": search the catalog, then say when (roughly) and how it was. */
+const LibraryAdd = {
+  open() {
+    const s = Data.state(), done = new Set([...Data.finished(s).map(p => p.bookId), s.profile.currentBookId]);
+    const list = h("div.list", { style: { margin: 0 } }, Catalog.data.books.filter(b => !done.has(b.id)).map(b =>
+      h("button.item", { "data-q": searchKey(b), onclick: () => this.details(b) }, cover(b, 44), h("div.grow", h("div.strong", b.title), h("div.small.muted", b.author)))));
+    Sheet.open("Add a book you've read", h("div", bookSearch("Search by title or author"), list));
+  },
+  details(b) {
+    const s = Data.state(), y = Clock.today().getFullYear();
+    let when = "earlier", rating = 0;
+    const whens = [["this", `In ${y}`], ["last", `In ${y - 1}`], ["earlier", "Before that"]];
+    const seg = h("div.seg.mt8", whens.map(([k, l]) => h("button" + (k === when ? ".on" : ""), { onclick: e => { when = k; seg.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === e.currentTarget)); } }, l)));
+    const mk = v => ratingInput(v, nv => { rating = nv; stars.replaceChildren(mk(nv)); });
+    const stars = h("div.mt8", mk(0));
+    const add = () => {
+      const pp = S.progressFor(s, b.id);
+      Object.assign(pp, { currentPage: b.pages, finished: true, finishedOn: when === "this" ? D.key(Clock.today()) : when === "last" ? `${y - 1}-07-01` : `${y - 3}-07-01` });
+      if (rating) pp.rating = rating;
+      s.want = s.want.filter(x => x !== b.id); s.dnf = s.dnf.filter(x => x !== b.id);
+      Data.save(); Sheet.close(); toast(`${b.title} is in your library.`); Nav.refresh();
+    };
+    Sheet.open(b.title, h("div",
+      h("div.row.gap12", cover(b, 56), h("div.grow", h("div.strong", b.title), h("div.small.muted", b.author))),
+      h("div.small.muted.mt20", "When did you read it?"), seg,
+      h("div.small.muted.mt20", "How was it? (optional)"), stars,
+      h("button.btn.accent.mt24", { onclick: add }, "Add to my library")));
+  },
+};

@@ -45,7 +45,6 @@ const S = { // AppState / ReadingGoals methods
 
 const Book = {
   chapterAt(b, page) { return b.chapters.find(c => page >= c.startPage && page <= c.endPage) || null; },
-  getChapter(b, n) { return b.chapters.find(c => c.number === n) || null; },
   hasQuiz(c) { return !!(c && c.quiz && c.quiz.questions && c.quiz.questions.length); },
 };
 
@@ -83,16 +82,6 @@ const HabitEngine = {
     let pages = 0;
     for (let i = 0; i < 7; i++) pages += S.pagesOn(state, D.add(start, i));
     return { weekStart: start, pagesRead: pages, target: S.weeklyTarget(state.profile.goals) };
-  },
-  headline(s, readToday, isReadingDay) {
-    if (readToday) return "You already read today. The rest can wait.";
-    if (!isReadingDay) return "Today is your rest day. If a book calls you, go ahead.";
-    switch (s.level) {
-      case Level.Kindling: return "Every reader started with one page.";
-      case Level.Steady: return "You are building a rhythm. A few pages today keep it going.";
-      case Level.Strong: return "Reading has become part of your days.";
-      default: return "You read like you breathe.";
-    }
   },
 };
 
@@ -211,6 +200,407 @@ const Recommender = {
   },
 };
 
+/* Taste quiz (port of Core/TasteQuiz.cs): ten quick, skippable questions that connect the catalog to the
+   reader's real life (field, life now, mood, films and series, reading habit) plus pace, length, era, region
+   and books they liked. A transparent weighted sum over the per-book metadata in books.json (moods, pace,
+   fields, life, screen, fieldNotes); every result says why, citing the reader's own answers. */
+const TasteQuiz = {
+  // Vocabularies of the per-book metadata (books.json). Same lists as Core/TasteQuiz.cs.
+  MoodVocab: ["thoughtful", "moving", "thrilling", "unsettling", "hopeful", "funny"],
+  PaceVocab: ["fast", "medium", "slow"],
+  FieldVocab: ["law", "health", "psychology", "tech", "business", "communication", "humanities", "arts", "education"],
+  LifeVocab: ["love", "family", "meaning", "pressure", "change", "friendship"],
+  ScreenVocab: ["scifi", "period", "horror", "crime", "epic", "latam"],
+
+  FieldWeight: 3.0, LifeWeight: 2.0, MoodWeight: 1.5, ScreenWeight: 1.25, PaceMatch: 1.5, PaceNear: 0.5,
+  LengthMatch: 2.0, LengthNear: 0.75, EraMatch: 2.0, RegionMatch: 2.0,
+  SeedTagWeight: 1.0, SeedShelfWeight: 0.5, SeedMoodWeight: 0.5, SeedMax: 4.0,
+  BeginnerShort: 2.0, BeginnerFast: 1.0, BeginnerLong: -1.5, CasualShort: 1.0, CasualFast: 0.5, CasualLong: -0.75, HomeBoost: 0.5,
+  ShortPages: 150, MediumPages: 300, ModernYear: 1990, MaxPerAuthor: 1, MaxPerShelf: 3, Questions: 10,
+  Any: "any", Both: "both", None: "none", Other: "other", World: "world",
+  GenericShelves: ["classics", "short-reads", "modern"], GenericTags: ["modern"],
+
+  Fields: [
+    { id: "law", label: "Law", reason: "You study Law" },
+    { id: "health", label: "Medicine or health", reason: "You're in health", hint: "Medicine, Nursing, Nutrition, Dentistry" },
+    { id: "psychology", label: "Psychology", reason: "You study Psychology" },
+    { id: "tech", label: "Engineering or tech", reason: "You're in engineering and tech", hint: "Engineering, Computer Science, Data" },
+    { id: "business", label: "Business or politics", reason: "You're in business and politics", hint: "Business, Economics, International Relations" },
+    { id: "communication", label: "Communication or marketing", reason: "You study Communication", hint: "Communication, Marketing, Journalism" },
+    { id: "humanities", label: "Humanities", reason: "You study the humanities", hint: "History, Philosophy, Literature, Languages" },
+    { id: "arts", label: "Arts or design", reason: "You're in arts and design", hint: "Architecture, Design, Music, Film" },
+    { id: "education", label: "Education", reason: "You study Education", hint: "Teaching, Pedagogy" },
+    { id: "other", label: "Something else", reason: null, hint: "Or not studying right now" },
+  ],
+  Levels: [
+    { id: "barely", label: "I barely read", reason: null, hint: "No problem: we'll start with short, gripping books" },
+    { id: "yearly", label: "About a book a year", reason: null },
+    { id: "several", label: "A few books a year", reason: null },
+    { id: "lots", label: "A lot", reason: null },
+  ],
+  Life: [
+    { id: "love", label: "Love and relationships", reason: "Love is on your mind, and it's at the heart of this one" },
+    { id: "family", label: "Family", reason: "Family is on your mind, and it's at the center of this book" },
+    { id: "meaning", label: "Looking for meaning or faith", reason: "You're looking for meaning, and so is this book" },
+    { id: "pressure", label: "Pressure and stress", reason: "Life feels heavy right now: this book knows that weight" },
+    { id: "change", label: "Moving or big changes", reason: "You're going through changes, and so does this story" },
+    { id: "friendship", label: "Friendship", reason: "Friendship matters to you right now: it's at the heart of this one" },
+    { id: "none", label: "Nothing special", reason: null },
+  ],
+  Moods: [
+    { id: "thoughtful", label: "Thoughtful", reason: "You want a book that makes you think" },
+    { id: "moving", label: "Moved", reason: "You want to be moved" },
+    { id: "thrilling", label: "On the edge of my seat", reason: "You want to be on the edge of your seat" },
+    { id: "unsettling", label: "Unsettled or scared", reason: "You want to be unsettled" },
+    { id: "hopeful", label: "Hopeful", reason: "You want something hopeful" },
+    { id: "funny", label: "Entertained", reason: "You want to be entertained" },
+  ],
+  Screens: [
+    { id: "scifi", label: "Sci-fi and dystopian series", reason: "You watch sci-fi and dystopias" },
+    { id: "period", label: "Period dramas and romance", reason: "You watch period dramas" },
+    { id: "horror", label: "Horror", reason: "You watch horror" },
+    { id: "crime", label: "Crime and thrillers", reason: "You watch crime and thrillers" },
+    { id: "epic", label: "Historical epics and adventure", reason: "You watch epics and adventure" },
+    { id: "latam", label: "Latin American films and telenovelas", reason: "You watch Latin American drama" },
+  ],
+  Paces: [
+    { id: "fast", label: "Quick and gripping", reason: "quick and gripping", hint: "You want to know what happens next" },
+    { id: "slow", label: "Slow and deep", reason: "slow and deep", hint: "You like to stop and think" },
+    { id: "any", label: "Either works", reason: null },
+  ],
+  Lengths: [
+    { id: "short", label: "Short", reason: "short", hint: "Up to 150 pages" },
+    { id: "medium", label: "Medium", reason: "medium length", hint: "151 to 300 pages" },
+    { id: "long", label: "Long", reason: "long", hint: "More than 300 pages" },
+    { id: "any", label: "I don't mind", reason: null, hint: "Any length" },
+  ],
+  Eras: [
+    { id: "classic", label: "Classics", reason: "a classic", hint: "From the ancient world to the 1980s" },
+    { id: "modern", label: "Recent books", reason: "recent", hint: "Published since 1990" },
+    { id: "both", label: "Both", reason: null },
+  ],
+  Regions: [
+    { id: "latam", label: "Mexico and Latin America", reason: "You asked for Mexico and Latin America" },
+    { id: "world", label: "Anywhere in the world", reason: null },
+  ],
+
+  find(options, id) { return id == null ? null : options.find(o => o.id === id) || null; },
+
+  // True when no answer changes the ranking (everything skipped or "I don't mind").
+  isEmpty(tastes) {
+    const t = this.clean(tastes);
+    return (t.field == null || t.field === this.Other)
+      && (t.level == null || t.level === "several" || t.level === "lots")
+      && t.life.every(x => x === this.None) && !t.feel.length && !t.screen.length
+      && (t.pace == null || t.pace === this.Any) && (t.length == null || t.length === this.Any)
+      && (t.era == null || t.era === this.Both) && (t.region == null || t.region === this.World)
+      && !t.liked.length;
+  },
+  // Drops unknown or repeated ids and migrates saves from the first quiz ({ feel: [themes], length, era }).
+  clean(t) {
+    const r = { field: null, level: null, life: [], feel: [], screen: [], pace: null, length: null, era: null, region: null, liked: [] };
+    if (!t) return r;
+    const id = (opts, x) => this.find(opts, x)?.id ?? null;
+    const addAll = (into, from, opts) => { for (const x of from || []) if (this.find(opts, x) && !into.includes(x)) into.push(x); };
+    r.field = id(this.Fields, t.field); r.level = id(this.Levels, t.level); r.pace = id(this.Paces, t.pace);
+    r.length = id(this.Lengths, t.length); r.region = id(this.Regions, t.region);
+    r.era = id(this.Eras, t.era) ?? ({ ancient: "classic", early: "classic", "19th": "classic", any: this.Both }[t.era] || null);
+    addAll(r.life, t.life, this.Life); addAll(r.screen, t.screen, this.Screens);
+    for (const f of t.feel || []) {
+      if (this.find(this.Moods, f)) { if (!r.feel.includes(f)) r.feel.push(f); continue; }
+      // Themes of the first quiz, mapped to the closest new answer. "theater" has none.
+      if (f === "ideas") addAll(r.feel, ["thoughtful"], this.Moods);
+      else if (f === "dark") addAll(r.feel, ["unsettling"], this.Moods);
+      else if (f === "love") addAll(r.life, ["love"], this.Life);
+      else if (f === "adventure") addAll(r.screen, ["epic"], this.Screens);
+      else if (f === "power") addAll(r.screen, ["scifi"], this.Screens);
+      else if (f === "mexico" && r.region == null) r.region = "latam";
+    }
+    // "Nothing special" can't go with anything else.
+    if (r.life.includes(this.None) && r.life.length > 1) r.life.splice(r.life.indexOf(this.None), 1);
+    for (const x of t.liked || []) if (x && !r.liked.includes(x)) r.liked.push(x);
+    return r;
+  },
+
+  isModern(b) { return (b.shelves || []).includes("modern") || b.year >= this.ModernYear; },
+  lengthOf(b) { return b.pages <= this.ShortPages ? "short" : b.pages <= this.MediumPages ? "medium" : "long"; },
+  lengthRank(id) { return id === "short" ? 0 : id === "medium" ? 1 : 2; },
+  shared(a, b, skip, ci) {
+    const r = [];
+    if (!a || !b) return r;
+    const n = x => ci ? x.toLowerCase() : x, bs = b.map(n), sk = skip.map(n);
+    for (const x of a) if (x != null && !sk.includes(n(x)) && bs.includes(n(x)) && !r.some(y => n(y) === n(x))) r.push(x);
+    return r;
+  },
+
+  /* Score and reason for one book: the strongest matching answer in the reader's own terms, then up to two
+     short facts that also matched. Reason is null when nothing matched. */
+  score(b, tastes, catalog = Catalog.data) {
+    const t = this.clean(tastes), has = (list, x) => !!list && list.includes(x);
+    let score = 0;
+    const clauses = []; // [weight, text], in priority order for ties
+
+    const field = this.find(this.Fields, t.field);
+    if (field && field.reason && has(b.fields, field.id)) {
+      score += this.FieldWeight;
+      const note = b.fieldNotes && b.fieldNotes[field.id];
+      clauses.push([this.FieldWeight, field.reason + ": " + (note || "it speaks to your field")]);
+    }
+
+    const life = t.life.filter(x => x !== this.None && has(b.life, x));
+    if (life.length) { score += this.LifeWeight * life.length; clauses.push([this.LifeWeight * life.length, this.find(this.Life, life[0]).reason]); }
+
+    let seed = 0, seedText = null;
+    if (catalog) for (const id of t.liked) {
+      const lb = (catalog.books || []).find(x => x.id === id);
+      if (!lb || lb.id === b.id) continue;
+      const tags = this.shared(lb.tags, b.tags, this.GenericTags, true);
+      let s = tags.length * this.SeedTagWeight + this.shared(lb.shelves, b.shelves, this.GenericShelves, false).length * this.SeedShelfWeight
+        + this.shared(lb.moods, b.moods, [], false).length * this.SeedMoodWeight;
+      if (lb.author && lb.author === b.author) s += this.SeedTagWeight;
+      s = Math.min(this.SeedMax, s);
+      if (s > seed) {
+        seed = s;
+        seedText = tags.length >= 2 ? `You liked ${lb.title}: this one also has ${tags[0]} and ${tags[1]}`
+          : tags.length === 1 ? `You liked ${lb.title}: this one also has ${tags[0]}` : `You liked ${lb.title}: this one has a similar feel`;
+      }
+    }
+    score += seed; clauses.push([seed, seedText]);
+
+    const moods = t.feel.filter(x => has(b.moods, x));
+    score += this.MoodWeight * moods.length; clauses.push([this.MoodWeight * moods.length, moods.length ? this.find(this.Moods, moods[0]).reason : null]);
+
+    const screens = t.screen.filter(x => has(b.screen, x));
+    score += this.ScreenWeight * screens.length; clauses.push([this.ScreenWeight * screens.length, screens.length ? this.find(this.Screens, screens[0]).reason : null]);
+
+    if (t.region === "latam" && (has(b.shelves, "mexican") || has(b.shelves, "latin-american"))) {
+      score += this.RegionMatch;
+      clauses.push([this.RegionMatch, this.find(this.Regions, "latam").reason + (has(b.shelves, "mexican") ? ": this one is Mexican" : ": this one is Latin American")]);
+    }
+
+    const facts = [], len = this.lengthOf(b);
+    if (t.length != null && t.length !== this.Any) {
+      if (len === t.length) { score += this.LengthMatch; facts.push(this.find(this.Lengths, len).reason); }
+      else if (this.lengthRank(len) < this.lengthRank(t.length)) score += this.LengthNear;
+    }
+    if (t.pace != null && t.pace !== this.Any && b.pace != null) {
+      if (b.pace === t.pace) { score += this.PaceMatch; facts.push(this.find(this.Paces, t.pace).reason); }
+      else if (b.pace === "medium") score += this.PaceNear;
+    }
+    if (t.era === "classic" || t.era === "modern") {
+      if (this.isModern(b) === (t.era === "modern")) { score += this.EraMatch; facts.push(this.find(this.Eras, t.era).reason); }
+    }
+    // Reading level: beginners get short, gripping books first.
+    if (t.level === "barely" || t.level === "yearly") {
+      const beginner = t.level === "barely";
+      if (len === "short") { score += beginner ? this.BeginnerShort : this.CasualShort; if (!facts.includes("short")) facts.push("short"); }
+      if (b.pace === "fast") { score += beginner ? this.BeginnerFast : this.CasualFast; if (!facts.includes("quick and gripping")) facts.push("quick and gripping"); }
+      if (len === "long") score += beginner ? this.BeginnerLong : this.CasualLong;
+    }
+
+    // The strongest clause wins; ties go to the earlier one (field, life, liked, mood, screen, region).
+    let main = null, best = 0;
+    for (const [w, text] of clauses) if (text != null && w > best) { best = w; main = text; }
+    const parts = main != null ? [main, ...facts.slice(0, 2)] : facts.slice(0, 3);
+    if (!parts.length) return { score, reason: null };
+    const reason = parts.join(" · ");
+    return { score, reason: reason[0].toUpperCase() + reason.slice(1) };
+  },
+  order(x, y) { return y.score - x.score || x.book.pages - y.book.pages || (x.book.id < y.book.id ? -1 : x.book.id > y.book.id ? 1 : 0); },
+
+  /* The best books for these answers, leaving out excluded ids (finished, current) and liked books. Sorted by
+     score, then shorter book, then id. Diversity: at most MaxPerAuthor per author and MaxPerShelf per distinctive
+     shelf, unless that leaves fewer than count; books that match come first. */
+  recommend(tastes, exclude, count = 5, catalog = Catalog.data) {
+    const t = this.clean(tastes), empty = this.isEmpty(t), seen = new Set(), ex = new Set(exclude || []), all = [];
+    if (!catalog || !catalog.books) return all;
+    for (const b of catalog.books) {
+      if (!b || !b.id || seen.has(b.id)) continue;
+      seen.add(b.id);
+      if (ex.has(b.id) || t.liked.includes(b.id)) continue;
+      let { score, reason } = this.score(b, t, catalog);
+      if (reason == null) reason = empty && b.pages <= this.ShortPages ? "Short: a good one to start with" : score > 0 ? "Close to your answers" : "From the Margin catalog";
+      all.push({ book: b, score, reason });
+    }
+    all.sort((x, y) => this.order(x, y));
+    const picked = [], authors = new Map(), shelves = new Map(), n = Math.max(0, count);
+    this.diverse(all.filter(r => r.score > 0), n, picked, authors, shelves);
+    this.diverse(all.filter(r => r.score <= 0), n, picked, authors, shelves);
+    return picked;
+  },
+  diverse(sorted, count, picked, authors, shelves) {
+    const skipped = [];
+    for (const r of sorted) {
+      if (picked.length >= count) break;
+      const a = r.book.author || "", own = [...new Set((r.book.shelves || []).filter(s => !this.GenericShelves.includes(s)))];
+      if ((authors.get(a) || 0) >= this.MaxPerAuthor || own.some(s => (shelves.get(s) || 0) >= this.MaxPerShelf)) { skipped.push(r); continue; }
+      picked.push(r);
+      authors.set(a, (authors.get(a) || 0) + 1);
+      for (const s of own) shelves.set(s, (shelves.get(s) || 0) + 1);
+    }
+    // Not enough variety: fill with the best of the skipped ones, in order.
+    for (const r of skipped) {
+      if (picked.length >= count) break;
+      picked.push(r);
+      const a = r.book.author || ""; authors.set(a, (authors.get(a) || 0) + 1);
+    }
+  },
+  // What the results screen shows: the books that match something (up to five), and never fewer than three.
+  results(tastes, exclude, catalog = Catalog.data) {
+    const recs = this.recommend(tastes, exclude, 5, catalog), shown = recs.filter(r => r.score > 0);
+    return shown.length >= 3 ? shown : recs.slice(0, 3);
+  },
+  // Home's "For you": reading-based recommendations with a share of the quiz score added (liked books left out).
+  boost(recs, tastes, count, catalog = Catalog.data) {
+    const t = this.clean(tastes);
+    if (!recs) return [];
+    if (this.isEmpty(t)) return recs.slice(0, count);
+    const r = [];
+    for (const x of recs) {
+      if (!x || !x.book || t.liked.includes(x.book.id)) continue;
+      const { score, reason } = this.score(x.book, t, catalog), add = score * this.HomeBoost;
+      r.push({ book: x.book, score: x.score + add, reason: add > x.score && reason != null ? reason : x.reason });
+    }
+    r.sort((x, y) => this.order(x, y));
+    return r.slice(0, Math.max(0, count));
+  },
+  // Books the reader shouldn't be offered: finished ones and the current one.
+  excludeFor(s) {
+    const r = new Set();
+    if (!s) return r;
+    for (const p of s.progress) if (p.finished) r.add(p.bookId);
+    if (s.profile && s.profile.currentBookId) r.add(s.profile.currentBookId);
+    return r;
+  },
+};
+
+/* "Find your next book" (port of Core/NextBook.cs): five questions for readers who already have a history.
+   Pure function: history (finished books and their ratings, current book, want-to-read, dropped books) becomes
+   an affinity per tag, shelf, mood and author; the answers add to that. Every weight is in NextBook.W. */
+const NextBook = {
+  W: {
+    RatingNeutral: 3, RatingSpan: 2,          // rating 5 -> +1, 3 -> 0, 1 -> -1
+    Unrated: 0.25, Current: 0.3, Want: 0.4, Dropped: -1,   // seed weights without a rating
+    Tag: 1.0, Shelf: 0.5, Mood: 0.5, Author: 1.0, AffinityCap: 4.0,
+    SameMult: 1.5, NewMult: 0.2, NewBonus: 1.5, // "like what I loved" / "something new" scale the history
+    WantBoost: 0.75, ReasonMin: 0.5,
+    MoodMatch: 2.5, LengthMatch: 2.0, LengthNear: 0.75, KindMatch: 2.5, RegionMatch: 3.0,
+  },
+  get GenericShelves() { return TasteQuiz.GenericShelves; }, // the same "too broad to mean much" shelves
+  Moods: [
+    { id: "thoughtful", label: "Something to think about", phrase: "thought-provoking" },
+    { id: "moving", label: "Something that moves me", phrase: "moving" },
+    { id: "thrilling", label: "Something gripping", phrase: "gripping" },
+    { id: "unsettling", label: "Something dark and unsettling", phrase: "unsettling" },
+    { id: "hopeful", label: "Something hopeful", phrase: "hopeful" },
+    { id: "funny", label: "Something funny", phrase: "funny" },
+  ],
+  Lengths: [
+    { id: "short", label: "A few evenings", hint: "Up to 150 pages", phrase: "short" },
+    { id: "medium", label: "A couple of weeks", hint: "151 to 300 pages", phrase: "mid-length" },
+    { id: "long", label: "I'm in for the long haul", hint: "More than 300 pages", phrase: "long" },
+    { id: "any", label: "No rush", hint: "Any length" },
+  ],
+  Novelties: [
+    { id: "same", label: "More like what I've loved" },
+    { id: "new", label: "Something new to me", phrase: "something new" },
+    { id: "either", label: "Either is fine" },
+  ],
+  Kinds: [
+    { id: "story", label: "A novel or a story", phrase: "a story" },
+    { id: "ideas", label: "Essays and ideas", phrase: "essays" },
+    { id: "play", label: "A play", phrase: "a play" },
+    { id: "any", label: "Surprise me" },
+  ],
+  Regions: [
+    { id: "mexican", label: "Mexican authors", phrase: "a Mexican author" },
+    { id: "latam", label: "Latin American voices", hint: "Mexico included", phrase: "Latin American voices" },
+    { id: "any", label: "Anywhere in the world" },
+  ],
+  Questions: [
+    { key: "mood", title: "What are you in the mood for?", sub: "Pick the feeling you want right now.", options: () => NextBook.Moods },
+    { key: "length", title: "How much time do you have?", sub: "Ten pages take about fifteen minutes.", options: () => NextBook.Lengths },
+    { key: "novelty", title: "Familiar or new?", sub: "We'll look at the books you've rated.", options: () => NextBook.Novelties },
+    { key: "kind", title: "What kind of read?", sub: "Stories, ideas or theater.", options: () => NextBook.Kinds },
+    { key: "region", title: "Where should the author be from?", sub: "Mexican and Latin American voices are in the catalog.", options: () => NextBook.Regions },
+  ],
+
+  has(list, x) { return !!list && list.includes(x); },
+  kindOf(b) { return this.has(b.shelves, "essays") ? "ideas" : this.has(b.shelves, "drama") ? "play" : "story"; },
+  isEmpty(a) { return !a || Object.values(a).every(v => v == null || ["any", "either"].includes(v)); },
+  joinList(xs) { return xs.length < 2 ? xs.join("") : xs.slice(0, -1).join(", ") + " and " + xs[xs.length - 1]; },
+
+  // What each book in the reader's history says about their taste: { book, weight, how } with weight -1..1.
+  seeds(state, catalog) {
+    const W = this.W, find = id => (catalog.books || []).find(b => b.id === id), cur = state.profile.currentBookId, out = [], seen = new Set();
+    const add = (id, weight, how, rating = 0) => { const book = find(id); if (book && !seen.has(id)) { seen.add(id); out.push({ book, weight, how, rating }); } };
+    for (const id of state.dnf || []) add(id, W.Dropped, "dropped");
+    for (const p of state.progress || []) {
+      if (!p.finished || p.bookId === cur) continue;
+      add(p.bookId, p.rating > 0 ? (p.rating - W.RatingNeutral) / W.RatingSpan : W.Unrated, "finished", p.rating);
+    }
+    add(cur, W.Current, "reading");
+    for (const id of state.want || []) add(id, W.Want, "want");
+    return out;
+  },
+  // How much a seed's tags, shelves, moods and author overlap a candidate.
+  overlap(seed, b) {
+    const W = this.W, T = TasteQuiz;
+    return T.shared(seed.tags, b.tags, [], true).length * W.Tag + T.shared(seed.shelves, b.shelves, this.GenericShelves, false).length * W.Shelf
+      + T.shared(seed.moods, b.moods, [], false).length * W.Mood + (seed.author && seed.author === b.author ? W.Author : 0);
+  },
+  historyPhrase(s) {
+    const t = s.book.title;
+    return s.how === "finished" ? (s.rating > 0 ? `you rated ${t} ${s.rating}★` : `you finished ${t}`) : s.how === "reading" ? `you're reading ${t}` : `${t} is on your want-to-read list`;
+  },
+
+  /* Ranked books for this reader, best first: [{ book, score, reason }]. Finished, current and dropped books
+     are left out. answers: { mood, length, novelty, kind, region } (ids above, null = skipped). */
+  recommend(state, answers, catalog = Catalog.data, count = 5) {
+    const W = this.W, a = answers || {}, seeds = this.seeds(state, catalog), want = new Set(state.want || []);
+    const ex = new Set([...(state.dnf || []), state.profile.currentBookId, ...(state.progress || []).filter(p => p.finished).map(p => p.bookId)]);
+    const results = [];
+    for (const b of catalog.books || []) {
+      if (ex.has(b.id)) continue;
+      let affinity = 0, best = null, bestVal = 0;
+      for (const s of seeds) {
+        if (s.book.id === b.id) continue;
+        const v = s.weight * this.overlap(s.book, b);
+        affinity += v;
+        if (v > bestVal) { bestVal = v; best = s; }
+      }
+      affinity = Math.max(-W.AffinityCap, Math.min(W.AffinityCap, affinity));
+      let score = affinity * (a.novelty === "same" ? W.SameMult : a.novelty === "new" ? W.NewMult : 1);
+      if (a.novelty === "new" && bestVal <= 0) score += W.NewBonus;
+      if (want.has(b.id)) score += W.WantBoost;
+
+      const adjectives = [], extras = [], len = TasteQuiz.lengthOf(b);
+      const mood = this.Moods.find(m => m.id === a.mood);
+      if (mood && this.has(b.moods, mood.id)) { score += W.MoodMatch; adjectives.push(mood.phrase); }
+      const length = this.Lengths.find(l => l.id === a.length);
+      if (length && length.phrase) {
+        if (len === length.id) { score += W.LengthMatch; adjectives.push(length.phrase); }
+        else if (TasteQuiz.lengthRank(len) < TasteQuiz.lengthRank(length.id)) score += W.LengthNear;
+      }
+      const kind = this.Kinds.find(k => k.id === a.kind);
+      if (kind && kind.phrase && this.kindOf(b) === kind.id) { score += W.KindMatch; if (kind.id !== "story") extras.push(kind.phrase); }
+      const mex = this.has(b.shelves, "mexican"), latam = mex || this.has(b.shelves, "latin-american");
+      if ((a.region === "mexican" && mex) || (a.region === "latam" && latam)) { score += W.RegionMatch; extras.push(this.Regions.find(r => r.id === a.region).phrase); }
+      const novel = a.novelty === "new" && bestVal <= 0;
+      if (novel) extras.push("something new");
+
+      const wanted = [adjectives.length ? "something " + this.joinList(adjectives) : null, ...extras].filter(Boolean);
+      const parts = [];
+      if (best && bestVal >= W.ReasonMin) parts.push(this.historyPhrase(best));
+      if (wanted.length) parts.push((parts.length ? "" : "you ") + "wanted " + this.joinList(wanted));
+      const reason = parts.length ? "Because " + this.joinList(parts) : "A classic to discover";
+      results.push({ book: b, score, reason });
+    }
+    results.sort((x, y) => TasteQuiz.order(x, y));
+    return results.slice(0, Math.max(0, count));
+  },
+};
+
 const ReminderPlanner = {
   WeeklyBudget: 4, IgnoredThreshold: 3,
   ignoredStreak(state, today) {
@@ -240,26 +630,54 @@ const ReminderPlanner = {
   },
 };
 
+/* The demo account ("Try a demo account" on Welcome): six weeks of a believable reader, so someone who scans the
+   QR at the pitch sees a full diary right away. Same plan and same numbers as Core/DemoData.cs. */
 const DemoData = {
-  seed(state, today, days = 14) {
-    const goals = state.profile.goals;
-    const bookId = state.profile.currentBookId || (Catalog.data.books[0] && Catalog.data.books[0].id);
-    if (!bookId) return;
-    state.logs = []; state.quizResults = []; state.remindersScheduled = [];
-    state.progress = state.progress.filter(p => p.bookId !== bookId);
-    state.profile.createdOn = D.key(D.add(today, -days));
-    ReadingService.setCurrentBook(state, bookId);
-    let seed = 451; // deterministic RNG (not the same as C# System.Random)
-    const rnd = (a, b) => { seed = (seed * 1103515245 + 12345) % 2147483648; return a + (seed % (b - a)); };
-    for (let i = days; i >= 1; i--) {
-      const day = D.add(today, -i);
-      if (!S.isReadingDay(goals, day) || i === 6) continue;
-      const pages = Math.max(3, goals.dailyPages + rnd(-5, 8));
-      const target = Math.min(Catalog.findBook(bookId).pages - 1, S.progressFor(state, bookId).currentPage + pages);
-      const r = ReadingService.checkIn(state, target, day);
-      if (r.pendingQuiz) QuizEngine.record(state, bookId, r.pendingQuiz.number,
-        { correct: rnd(2, 4), total: r.pendingQuiz.quiz.questions.length }, day);
-    }
+  DAYS: 42,
+  PLAN: [["the-little-prince", 42, 5], ["animal-farm", 33, 4], ["1984", 19, 0]], // id, day it was started (counting back), rating when finished
+  MISSED: [26, 9],
+  // Fills the diary; returns { bookId: "YYYY-MM-DD" } for the books it finished.
+  seed(state, today) {
+    const finished = {}, goals = state.profile.goals;
+    Object.assign(goals, { dailyPages: 15, readingDays: [1, 2, 3, 4, 5, 6], intention: "after dinner", remindersEnabled: false });
+    state.logs = []; state.quizResults = []; state.progress = [];
+    state.profile.createdOn = D.key(D.add(today, -this.DAYS - 1));
+    state.profile.onboardingComplete = true;
+    let seed = 451; // Park-Miller: exact in JS and C#
+    const rnd = (a, b) => { seed = (seed * 48271) % 2147483647; return a + seed % (b - a); };
+    this.PLAN.forEach(([id, start, rating], k) => {
+      const book = Catalog.findBook(id); if (!book) return;
+      const end = k + 1 < this.PLAN.length ? this.PLAN[k + 1][1] + 1 : 1;
+      ReadingService.setCurrentBook(state, id);
+      for (let i = start; i >= end; i--) {
+        const day = D.add(today, -i);
+        if (!S.isReadingDay(goals, day) || this.MISSED.includes(i)) continue;
+        const p = S.progressFor(state, id);
+        const last = rating > 0 && i === end;
+        const target = last ? book.pages : Math.min(rating > 0 ? book.pages : book.pages - 1, p.currentPage + rnd(9, 19));
+        if (target <= p.currentPage) continue;
+        const r = ReadingService.checkIn(state, target, day);
+        if (r.pendingQuiz) QuizEngine.record(state, id, r.pendingQuiz.number, { correct: rnd(2, 4), total: r.pendingQuiz.quiz.questions.length }, day);
+        if (r.finishedBook) { finished[id] = D.key(day); break; }
+      }
+      if (rating > 0) {
+        const p = S.progressFor(state, id);
+        Object.assign(p, { currentPage: book.pages, finished: true, rating });
+        if (!finished[id]) finished[id] = D.key(D.add(today, -end));
+        p.finishedOn = finished[id];
+      }
+    });
+    ReadingService.setCurrentBook(state, this.PLAN[this.PLAN.length - 1][0]);
+    return finished;
+  },
+  // The parts of the demo that live outside the core diary: want to read, a list, Focus sessions, the year goal.
+  extras(state, today, username) {
+    state.yearGoal = 12;
+    state.want = ["klara-and-the-sun", "hurricane-season", "the-great-gatsby"];
+    state.lists = [{ id: "demo-short", owner: username, title: "Short books for exam weeks", description: "Under 150 pages, one sitting each.",
+      books: ["the-little-prince", "animal-farm", "the-metamorphosis", "aura"], likes: 0, comments: 0, created: D.key(D.add(today, -20)) }];
+    state.focusSessions = state.logs.filter((l, i) => i % 2 === 0).slice(-9).map(l => ({ date: l.date, minutes: 25 }));
+    state.notifications = [{ at: D.stamp(Clock.now()), kind: "welcome", text: "This is a demo account with six weeks of reading. Log a page, take a quiz or start Focus mode." }];
   },
 };
 const store = {
@@ -299,7 +717,6 @@ const Fmt = {
   Months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
   dateLong(d) { return `${this.Days[d.getDay()]}, ${this.Months[d.getMonth()]} ${d.getDate()}`; },
   time(h, m) { return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`; },
-  pages(n) { return n === 1 ? "1 page" : `${F.n(n)} pages`; },
   plural(day) { return day + "s"; },
   dayList(days) {
     const set = [...new Set(days)].sort((a, b) => ((a + 6) % 7) - ((b + 6) % 7));

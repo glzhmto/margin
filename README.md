@@ -24,7 +24,8 @@ Mexican university students aged 18 to 25 who want to read more but lose to thei
 - Friends (from Home): search by @username or name, share an invite link (with a copy button), send and accept requests, see a friend's profile and read a book together. Friends see your current book and page, your momentum and your finished books. There are no rankings.
 - Creators: some readers post book lists, short texts or YouTube videos. You can follow them and their posts show up on Home.
 - Book page: reviews from Margin readers, real quotes from Goodreads reviews, and "Buy it" with real Gandhi prices for printed copies and links to other Mexican stores.
-- Explore, Diary and Profile: search books and readers, your reading diary with yearly stats and goals, achievements and lists.
+- Explore, Library and Profile: search books and readers; your library (reading now, want to read, read, and the books you read before Margin), your reading diary with yearly stats and goals; achievements and lists.
+- Choosing a book: a short quiz and "Find your next book", which learns from what you read and rated. Starting a book has its own screen, and finishing one shows the achievements it unlocked.
 - Import from Goodreads (your exported CSV), export your data, and delete your account (it is removed from the server).
 - A banner on Home for the FIL Guadalajara 2026 book fair. You can close it and it goes away after the fair.
 
@@ -65,10 +66,10 @@ For the demo: Settings › Simulate next day moves the app's clock one day ahead
 - `site/`: the Margin website, published at the root of the same link.
 
 ## Links
-- Figma: https://www.figma.com/design/xRbcsTimzkKMhNWUL2aVYl (page "Main flow" › Present)
+- Figma: https://www.figma.com/design/xRbcsTimzkKMhNWUL2aVYl (page "Lo-fi flow" › Present; the older high-fidelity version is on page "Main flow")
 - Website: https://marginreads.vercel.app/
 - Web app: https://marginreads.vercel.app/app/
 - Build: PENDING
 - Commercial: PENDING
 
-Other documents: [DesignJustification.md](DesignJustification.md), [UserResearch.md](UserResearch.md), [UserTesting.md](UserTesting.md), [AIUsage.md](AIUsage.md).
+Other documents: [TECHNICAL.md](TECHNICAL.md), [DesignJustification.md](DesignJustification.md), [UserResearch.md](UserResearch.md), [UserTesting.md](UserTesting.md), [AIUsage.md](AIUsage.md).

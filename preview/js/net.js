@@ -11,10 +11,12 @@ const sb = supabase.createClient(SB_URL, SB_KEY, {
   global: { fetch: (u, o = {}) => fetch(u, _keepalive && !(typeof o.body === "string" && o.body.length > 60000) ? { ...o, keepalive: true } : o) },
 });
 
-const PROFILE_COLS = "id,username,name,bio,university,color,is_creator,current_book_id,current_page,momentum_level,pages_this_week,books_read,favorites,created_at";
+// What a post or review needs to show its author.
+const AUTHOR_COLS = "username,name,color,avatar";
+const PROFILE_COLS = "id,username,name,bio,university,color,is_creator,current_book_id,current_page,momentum_level,pages_this_week,books_read,favorites,created_at,avatar";
 const pname = p => (p && (p.name || "").trim()) || (p ? "@" + p.username : "Reader");
 const pfirst = p => pname(p).replace(/^@/, "").split(" ")[0];
-const pav = p => ({ name: (p && p.name) || (p && p.username) || "?", color: p && p.color });
+const pav = p => ({ name: (p && p.name) || (p && p.username) || "?", color: p && p.color, avatar: p && p.avatar });
 function cleanQuery(q) { return (q || "").replace(/[%,()*\\:"']/g, " ").trim().slice(0, 40); }
 function netFail(e) { console.warn("[margin]", e && (e.message || e)); toast("Couldn't reach Margin. Check your connection and try again."); }
 function authMessage(e) {
@@ -63,8 +65,8 @@ const Net = {
     return { ok: true };
   },
   // Guest mode: an anonymous Supabase user with a real profile (username guestXXXXXX, made by the DB trigger).
-  async signInGuest() {
-    const { data, error } = await sb.auth.signInAnonymously({ options: { data: { name: "Guest" } } });
+  async signInGuest(name = "Guest") {
+    const { data, error } = await sb.auth.signInAnonymously({ options: { data: { name } } });
     if (error) {
       console.warn("[margin] guest", error.message);
       if (/anonymous/i.test(error.message || "")) return { error: "Guest mode is switched off right now. Sign up with email instead, it takes a minute.", disabled: true };
@@ -111,7 +113,7 @@ const Net = {
   async checkPassword(pw) { const { error } = await sb.auth.signInWithPassword({ email: this.acc.email, password: pw }); return !error; },
   async setPassword(pw) { const { error } = await sb.auth.updateUser({ password: pw }); return error ? authMessage(error) : null; },
   async setEmail(email) { const { error } = await sb.auth.updateUser({ email: email.trim() }, { emailRedirectTo: location.origin + location.pathname }); return error ? authMessage(error) : null; },
-  clear() { this.acc = null; this.uid = null; this._seen = null; this._dirty = false; clearTimeout(this._timer); Social.reset(); },
+  clear() { this.acc = null; this.uid = null; this._seen = null; this._dirty = false; clearTimeout(this._timer); Social.reset(); if (typeof ExploreScreen !== "undefined") ExploreScreen.last = null; },
 
   async loadAccount(user) {
     const [p, rs] = await Promise.all([
@@ -124,7 +126,7 @@ const Net = {
     const state = normalizeState(rs.data && rs.data.state, pr.name);
     const settings = { ...defaultSettings(), ...((rs.data && rs.data.settings) || {}) };
     this.uid = user.id;
-    this.acc = { id: user.id, username: pr.username, name: pr.name, email: user.email || "", bio: pr.bio || "", color: pr.color, university: pr.university || "",
+    this.acc = { id: user.id, username: pr.username, name: pr.name, email: user.email || "", bio: pr.bio || "", color: pr.color, avatar: pr.avatar || null, university: pr.university || "",
       isCreator: !!pr.is_creator, isGuest: !!(pr.is_guest || (user.is_anonymous && !user.email && !user.new_email)), created: (pr.created_at || "").slice(0, 10), state, settings };
     this._seen = this.snapshot(state);
     Social.start();
@@ -181,7 +183,7 @@ const Net = {
   async updateProfile(fields) {
     const { error } = await sb.from("profiles").update({ ...fields, updated_at: new Date().toISOString() }).eq("id", this.uid);
     if (error) { netFail(error); return error.message; }
-    const map = { name: "name", bio: "bio", username: "username", university: "university", is_creator: "isCreator", color: "color" };
+    const map = { name: "name", bio: "bio", username: "username", university: "university", is_creator: "isCreator", color: "color", avatar: "avatar" };
     for (const k in fields) if (map[k]) this.acc[map[k]] = fields[k];
     return null;
   },
@@ -265,7 +267,6 @@ const Social = {
     const pick = (list, kind) => { const x = list.find(i => i.p.id === uid); return x ? { kind, row: x.f } : null; };
     return pick(this.friends, "friend") || pick(this.incoming, "incoming") || pick(this.outgoing, "outgoing") || { kind: "none" };
   },
-  isFriend(uid) { return this.friends.some(x => x.p.id === uid); },
   async request(uid) {
     const me = Net.uid;
     const ex = await sb.from("friendships").select("*").or(`and(requester.eq.${me},addressee.eq.${uid}),and(requester.eq.${uid},addressee.eq.${me})`);
@@ -297,12 +298,12 @@ const Social = {
   async readerCount() { const { count, error } = await sb.from("profiles").select("id", { count: "exact", head: true }).not("username", "like", "deleted_*"); if (error) throw error; return count || 0; },
   async creators() { const { data, error } = await sb.from("profiles").select(PROFILE_COLS).eq("is_creator", true).order("updated_at", { ascending: false }).limit(30); if (error) throw error; return data; },
   async posts({ author, limit = 12, bookId } = {}) {
-    let q = sb.from("posts").select("*, profiles(username,name,color)").order("created_at", { ascending: false }).limit(limit);
+    let q = sb.from("posts").select(`*, profiles(${AUTHOR_COLS})`).order("created_at", { ascending: false }).limit(limit);
     if (author) q = q.eq("author", author);
     if (bookId) q = q.eq("kind", "list").contains("items", JSON.stringify([{ bookId }]));
     const { data, error } = await q; if (error) throw error; return data;
   },
-  async post(id) { const { data, error } = await sb.from("posts").select("*, profiles(username,name,color)").eq("id", id).maybeSingle(); if (error) throw error; return data; },
+  async post(id) { const { data, error } = await sb.from("posts").select(`*, profiles(${AUTHOR_COLS})`).eq("id", id).maybeSingle(); if (error) throw error; return data; },
   async publish(post) {
     const { data, error } = await sb.from("posts").insert({ author: Net.uid, ...post }).select().single();
     if (error) throw error;
@@ -316,7 +317,7 @@ const Social = {
     const { data, error } = await sb.from("profiles").select("current_book_id").not("current_book_id", "is", null).limit(2000);
     if (error) throw error; const c = {}; data.forEach(r => { c[r.current_book_id] = (c[r.current_book_id] || 0) + 1; }); return c;
   },
-  async bookReviews(bookId) { const { data, error } = await sb.from("reviews").select("*, profiles(username,name,color)").eq("book_id", bookId).order("created_at", { ascending: false }).limit(200); if (error) throw error; return data; },
+  async bookReviews(bookId) { const { data, error } = await sb.from("reviews").select(`*, profiles(${AUTHOR_COLS})`).eq("book_id", bookId).order("created_at", { ascending: false }).limit(200); if (error) throw error; return data; },
   async saveReview(bookId, rating, body) {
     const { error } = await sb.from("reviews").upsert({ user_id: Net.uid, book_id: bookId, rating, body }, { onConflict: "user_id,book_id" });
     if (error) throw error;
@@ -326,9 +327,11 @@ const Social = {
 };
 
 /* Async data for a screen: loads once, then re-renders the screen if it is still on top. */
-function screenLoad(scr, fn) {
+/* Loads a screen's data once (scr.d). When it arrives the screen is redrawn, or onDone() runs instead
+   (Explore redraws only its results so the search field keeps focus). */
+function screenLoad(scr, fn, onDone) {
   if (scr._loaded || scr._loading) return;
   scr._loading = true;
   fn().then(d => { scr.d = d; scr.err = null; }).catch(e => { console.warn("[margin]", e && (e.message || e)); scr.err = "Couldn't load this. Check your connection."; })
-    .finally(() => { scr._loading = false; scr._loaded = true; if (Nav.current() === scr) Nav.refresh(); });
+    .finally(() => { scr._loading = false; scr._loaded = true; if (Nav.current() === scr) onDone ? onDone() : Nav.refresh(); });
 }

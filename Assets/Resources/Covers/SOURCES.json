@@ -75,5 +75,787 @@
  "the-stranger": {
   "coverId": 15270408,
   "source": "https://covers.openlibrary.org/b/id/15270408-L.jpg"
+ },
+ "the-odyssey": {
+  "coverId": 104341,
+  "edition": "/books/OL3702623M",
+  "source": "https://openlibrary.org/books/OL3702623M",
+  "printEdition": {
+   "publisher": "Penguin Classics",
+   "isbn": "9780140449112",
+   "pages": 416,
+   "contributors": "Translated by E. V. Rieu, revised by D. C. H. Rieu, introduction by Peter Jones",
+   "source": "https://www.penguin.co.uk/books/35467/the-odyssey-by-homer-trans--e-v-rieu-revised-by--dominic-rieu-intro-peter-jones/9780140449112"
+  }
+ },
+ "the-theban-plays": {
+  "coverId": 103598,
+  "edition": "/books/OL7355027M",
+  "source": "https://openlibrary.org/books/OL7355027M",
+  "printEdition": {
+   "publisher": "Penguin Classics",
+   "isbn": "9780140440034",
+   "pages": 176,
+   "contributors": "Translated by E. F. Watling",
+   "source": "https://www.penguin.co.uk/books/34661/the-theban-plays-by-sophoclestranslated-with-an-introduction-by-ef-watling/9780140440034"
+  }
+ },
+ "meditations": {
+  "coverId": 15256763,
+  "edition": "/books/OL62588651M",
+  "source": "https://openlibrary.org/books/OL62588651M",
+  "printEdition": {
+   "publisher": "Penguin Classics",
+   "isbn": "9780140449334",
+   "pages": 304,
+   "contributors": "Translated by Martin Hammond, introduction by Diskin Clay",
+   "source": "https://www.penguin.co.uk/books/35489/meditations-by-aurelius-marcus/9780140449334"
+  }
+ },
+ "the-last-days-of-socrates": {
+  "coverId": 14929446,
+  "edition": "/books/OL3702864M",
+  "source": "https://openlibrary.org/books/OL3702864M",
+  "printEdition": {
+   "publisher": "Penguin Classics",
+   "isbn": "9780140449280",
+   "pages": 304,
+   "contributors": "Translated by Hugh Tredennick and Harold Tarrant",
+   "source": "https://www.penguin.co.uk/books/35484/the-last-days-of-socrates-by-plato-trans-hugh-tredennick-trans-harold-tarrant-intro-harold-tarrant/9780140449280"
+  }
+ },
+ "the-symposium": {
+  "coverId": 14409980,
+  "edition": "/books/OL7355485M",
+  "source": "https://openlibrary.org/books/OL7355485M",
+  "printEdition": {
+   "publisher": "Penguin Classics",
+   "isbn": "9780140449273",
+   "pages": 144,
+   "contributors": "Translated by Christopher Gill",
+   "source": "https://www.penguin.co.uk/books/35483/the-symposium-by-plato-trans-christopher-gill-intro-christopher-gill/9780140449273"
+  }
+ },
+ "confessions": {
+  "coverId": 6399343,
+  "edition": "/books/OL24275647M",
+  "source": "https://openlibrary.org/books/OL24275647M",
+  "printEdition": {
+   "publisher": "Penguin Classics",
+   "isbn": "9780140441147",
+   "pages": 352,
+   "contributors": "Translated by R. S. Pine-Coffin",
+   "source": "https://www.penguin.co.uk/books/34771/confessions-by-augustine-saint/9780140441147"
+  }
+ },
+ "siddhartha": {
+  "coverId": 110549,
+  "edition": "/books/OL7360996M",
+  "source": "https://openlibrary.org/books/OL7360996M",
+  "printEdition": {
+   "publisher": "Penguin Classics (Deluxe Edition)",
+   "isbn": "9780142437186",
+   "pages": 176,
+   "contributors": "Translated by Joachim Neugroschel, introduction by Ralph Freedman",
+   "source": "https://www.penguinrandomhouse.com/books/286568/siddhartha-by-hermann-hesse-translated-by-joachim-neugroschel-introduction-by-ralph-freedman/"
+  }
+ },
+ "poems-protest-and-a-dream": {
+  "coverId": 104224,
+  "edition": "/books/OL7355382M",
+  "source": "https://openlibrary.org/books/OL7355382M",
+  "printEdition": {
+   "publisher": "Penguin Classics",
+   "isbn": "9780140447033",
+   "pages": 304,
+   "contributors": "Translated by Margaret Sayers Peden, introduction by Ilan Stavans",
+   "source": "https://www.penguinrandomhouse.com/books/296531/poems-protest-and-a-dream-by-sor-juana-ines-de-la-cruz/"
+  }
+ },
+ "pride-and-prejudice": {
+  "coverId": 12645114,
+  "edition": "/books/OL37076991M",
+  "source": "https://openlibrary.org/books/OL37076991M",
+  "printEdition": {
+   "publisher": "Penguin Classics",
+   "isbn": "9780141439518",
+   "pages": 448,
+   "contributors": "Edited by Vivien Jones, introduction by Tony Tanner",
+   "source": "https://www.penguin.co.uk/books/55905/pride-and-prejudice-by-austen-jane/9780141439518"
+  }
+ },
+ "wuthering-heights": {
+  "coverId": 109038,
+  "edition": "/books/OL7359924M",
+  "source": "https://openlibrary.org/books/OL7359924M",
+  "printEdition": {
+   "publisher": "Penguin Classics",
+   "isbn": "9780141439556",
+   "pages": 416,
+   "contributors": "Edited by Pauline Nestor",
+   "source": "https://www.penguin.co.uk/books/55507/wuthering-heights-by-bronte-emily/9780141439556"
+  }
+ },
+ "the-picture-of-dorian-gray": {
+  "coverId": 15259210,
+  "edition": "/books/OL3701357M",
+  "source": "https://openlibrary.org/books/OL3701357M",
+  "printEdition": {
+   "publisher": "Penguin Classics",
+   "isbn": "9780141439570",
+   "pages": 304,
+   "contributors": "Edited by Robert Mighall",
+   "source": "https://www.penguin.co.uk/books/60339/the-picture-of-dorian-gray-by-wilde-oscar/9780141439570"
+  }
+ },
+ "dracula": {
+  "coverId": 10541361,
+  "edition": "/books/OL10416488M",
+  "source": "https://openlibrary.org/books/OL10416488M",
+  "printEdition": {
+   "publisher": "Penguin Classics",
+   "isbn": "9780141439846",
+   "pages": 512,
+   "source": "https://www.penguin.co.uk/books/55632/dracula-by-bram-stoker/9780141439846"
+  }
+ },
+ "heart-of-darkness": {
+  "coverId": 2324953,
+  "edition": "/books/OL10099492M",
+  "source": "https://openlibrary.org/books/OL10099492M",
+  "printEdition": {
+   "publisher": "Penguin Classics",
+   "isbn": "9780141441672",
+   "pages": 192,
+   "contributors": "Edited by Owen Knowles and Robert Hampson",
+   "source": "https://www.penguin.co.uk/books/60414/heart-of-darkness-by-joseph-conrad-series-editor--j-h-stape-ed--robert-hampson-ed--owen-knowles/9780141441672"
+  }
+ },
+ "candide": {
+  "coverId": 12736203,
+  "edition": "/books/OL26113661M",
+  "source": "https://openlibrary.org/books/OL26113661M",
+  "printEdition": {
+   "publisher": "Penguin Classics",
+   "isbn": "9780140455106",
+   "pages": 208,
+   "contributors": "Translated by Theo Cuffe, introduction by Michael Wood",
+   "source": "https://www.penguin.co.uk/books/35265/candide-or-optimism-by-francois-voltaire-intro-mr-michael-wood-trans--theo-cuffe/9780140455106"
+  }
+ },
+ "the-great-gatsby": {
+  "coverId": 107804,
+  "edition": "/books/OL7358908M",
+  "source": "https://openlibrary.org/books/OL7358908M",
+  "printEdition": {
+   "publisher": "Penguin Classics (UK)",
+   "isbn": "9780141182636",
+   "pages": 192,
+   "contributors": "Introduction by William Blazek, notes by Tony Tanner",
+   "source": "https://www.penguin.co.uk/books/56606/the-great-gatsby-by-fitzgerald-f-scott/9780141182636"
+  }
+ },
+ "things-fall-apart": {
+  "coverId": 13143235,
+  "edition": "/books/OL7359183M",
+  "source": "https://openlibrary.org/books/OL7359183M",
+  "printEdition": {
+   "publisher": "Penguin Classics (UK)",
+   "isbn": "9780141186887",
+   "pages": 176,
+   "source": "https://www.penguin.co.uk/books/55499/things-fall-apart-by-chinua-achebe-introduction-by-biyi-bandele/9780141186887"
+  }
+ },
+ "fever-dream": {
+  "coverId": 8826783,
+  "edition": "/books/OL27363656M",
+  "source": "https://openlibrary.org/books/OL27363656M",
+  "printEdition": {
+   "publisher": "Riverhead Books",
+   "isbn": "9780399184604",
+   "pages": 192,
+   "contributors": "Translated by Megan McDowell",
+   "source": "https://openlibrary.org/books/OL27363656M"
+  }
+ },
+ "hurricane-season": {
+  "coverId": 10354466,
+  "edition": "/books/OL28742447M",
+  "source": "https://openlibrary.org/books/OL28742447M",
+  "printEdition": {
+   "publisher": "New Directions",
+   "isbn": "9780811230735",
+   "pages": 224,
+   "contributors": "Translated by Sophie Hughes",
+   "source": "https://www.ndbooks.com/book/hurricane-season/"
+  }
+ },
+ "things-we-lost-in-the-fire": {
+  "coverId": 14435003,
+  "edition": "/books/OL46310499M",
+  "source": "https://openlibrary.org/books/OL46310499M",
+  "printEdition": {
+   "publisher": "Hogarth",
+   "isbn": "9780451495129",
+   "pages": 224,
+   "contributors": "Translated by Megan McDowell",
+   "source": "https://openlibrary.org/books/OL46310499M"
+  }
+ },
+ "never-let-me-go": {
+  "coverId": 13160732,
+  "edition": "/books/OL16198255M",
+  "source": "https://openlibrary.org/books/OL16198255M",
+  "printEdition": {
+   "publisher": "Vintage",
+   "isbn": "9781400078776",
+   "pages": 304,
+   "source": "https://www.penguinrandomhouse.com/books/85609/never-let-me-go-by-kazuo-ishiguro-with-a-new-introduction/"
+  }
+ },
+ "klara-and-the-sun": {
+  "coverId": 10648686,
+  "work": "/works/OL20883297W",
+  "source": "https://openlibrary.org/works/OL20883297W",
+  "printEdition": {
+   "publisher": "Vintage",
+   "isbn": "9780593311295",
+   "pages": 320,
+   "source": "https://www.penguinrandomhouse.com/books/653825/klara-and-the-sun-a-gma-book-club-pick-by-kazuo-ishiguro/"
+  }
+ },
+ "the-road": {
+  "coverId": 14818095,
+  "edition": "/books/OL9495967M",
+  "source": "https://openlibrary.org/books/OL9495967M",
+  "printEdition": {
+   "publisher": "Vintage",
+   "isbn": "9780307387899",
+   "pages": 304,
+   "source": "https://www.penguinrandomhouse.com/books/110490/the-road-by-cormac-mccarthy/"
+  }
+ },
+ "normal-people": {
+  "coverId": 9854488,
+  "edition": "/books/OL28119565M",
+  "source": "https://openlibrary.org/books/OL28119565M",
+  "printEdition": {
+   "publisher": "Crown",
+   "isbn": "9781984822185",
+   "pages": 304,
+   "source": "https://www.penguinrandomhouse.com/books/592625/normal-people-by-sally-rooney/"
+  }
+ },
+ "convenience-store-woman": {
+  "coverId": 10286242,
+  "edition": "/books/OL28337601M",
+  "source": "https://openlibrary.org/books/OL28337601M",
+  "printEdition": {
+   "publisher": "Grove Press",
+   "isbn": "9780802129628",
+   "pages": 176,
+   "contributors": "Translated by Ginny Tapley Takemori",
+   "source": "https://openlibrary.org/books/OL28337601M"
+  }
+ },
+ "pedro-paramo": {
+  "coverId": 15269114,
+  "edition": "/books/OL62697460M",
+  "source": "https://openlibrary.org/books/OL62697460M"
+ },
+ "like-water-for-chocolate": {
+  "coverId": 8372632,
+  "work": "/works/OL953162W",
+  "source": "https://openlibrary.org/works/OL953162W"
+ },
+ "the-burning-plain": {
+  "coverId": 15104442,
+  "edition": "/books/OL33450597M",
+  "source": "https://openlibrary.org/books/OL33450597M"
+ },
+ "recollections-of-things-to-come": {
+  "coverId": 13678197,
+  "edition": "/books/OL47236759M",
+  "source": "https://openlibrary.org/books/OL47236759M"
+ },
+ "balun-canan": {
+  "coverId": 1053897,
+  "work": "/works/OL1752050W",
+  "source": "https://openlibrary.org/works/OL1752050W"
+ },
+ "the-death-of-artemio-cruz": {
+  "coverId": 14942075,
+  "work": "/works/OL37522756W",
+  "source": "https://openlibrary.org/works/OL37522756W"
+ },
+ "signs-preceding-the-end-of-the-world": {
+  "coverId": 8953794,
+  "work": "/works/OL17616831W",
+  "source": "https://openlibrary.org/works/OL17616831W"
+ },
+ "faces-in-the-crowd": {
+  "coverId": 8551960,
+  "work": "/works/OL19638097W",
+  "source": "https://openlibrary.org/works/OL19638097W"
+ },
+ "one-hundred-years-of-solitude": {
+  "coverId": 15185412,
+  "work": "/works/OL43108828W",
+  "source": "https://openlibrary.org/works/OL43108828W"
+ },
+ "ficciones": {
+  "coverId": 10832290,
+  "work": "/works/OL110971W",
+  "source": "https://openlibrary.org/works/OL110971W"
+ },
+ "the-house-of-the-spirits": {
+  "coverId": 15122742,
+  "edition": "/books/OL26335176M",
+  "source": "https://openlibrary.org/books/OL26335176M"
+ },
+ "the-tunnel": {
+  "coverId": 14953103,
+  "edition": "/books/OL46947677M",
+  "source": "https://openlibrary.org/books/OL46947677M"
+ },
+ "love-in-the-time-of-cholera": {
+  "coverId": 10518348,
+  "work": "/works/OL23624225W",
+  "source": "https://openlibrary.org/works/OL23624225W"
+ },
+ "no-one-writes-to-the-colonel": {
+  "coverId": 6786365,
+  "work": "/works/OL14944256W",
+  "source": "https://openlibrary.org/works/OL14944256W"
+ },
+ "the-invention-of-morel": {
+  "coverId": 859087,
+  "work": "/works/OL14944456W",
+  "source": "https://openlibrary.org/works/OL14944456W"
+ },
+ "brave-new-world": {
+  "coverId": 8231823,
+  "work": "/works/OL64365W",
+  "source": "https://openlibrary.org/works/OL64365W"
+ },
+ "the-handmaids-tale": {
+  "coverId": 8231851,
+  "work": "/works/OL675783W",
+  "source": "https://openlibrary.org/works/OL675783W"
+ },
+ "lord-of-the-flies": {
+  "coverId": 8684447,
+  "work": "/works/OL455327W",
+  "source": "https://openlibrary.org/works/OL455327W"
+ },
+ "we": {
+  "coverId": 15202898,
+  "edition": "/books/OL55960330M",
+  "source": "https://openlibrary.org/books/OL55960330M"
+ },
+ "of-mice-and-men": {
+  "coverId": 14319003,
+  "work": "/works/OL23204W",
+  "source": "https://openlibrary.org/works/OL23204W"
+ },
+ "to-kill-a-mockingbird": {
+  "coverId": 14351077,
+  "work": "/works/OL3140822W",
+  "source": "https://openlibrary.org/works/OL3140822W"
+ },
+ "crime-and-punishment": {
+  "coverId": 15183762,
+  "work": "/works/OL45018229W",
+  "source": "https://openlibrary.org/works/OL45018229W"
+ },
+ "the-catcher-in-the-rye": {
+  "coverId": 9273490,
+  "work": "/works/OL3335245W",
+  "source": "https://openlibrary.org/works/OL3335245W"
+ },
+ "the-old-man-and-the-sea": {
+  "coverId": 463307,
+  "work": "/works/OL63073W",
+  "source": "https://openlibrary.org/works/OL63073W"
+ },
+ "slaughterhouse-five": {
+  "coverId": 12727001,
+  "work": "/works/OL98459W",
+  "source": "https://openlibrary.org/works/OL98459W"
+ },
+ "macbeth": {
+  "coverId": 15009838,
+  "edition": "/books/OL47780369M",
+  "source": "https://openlibrary.org/books/OL47780369M"
+ },
+ "romeo-and-juliet": {
+  "coverId": 8257991,
+  "work": "/works/OL362427W",
+  "source": "https://openlibrary.org/works/OL362427W"
+ },
+ "a-dolls-house": {
+  "coverId": 879914,
+  "work": "/works/OL16249343W",
+  "source": "https://openlibrary.org/works/OL16249343W"
+ },
+ "waiting-for-godot": {
+  "coverId": 376471,
+  "work": "/works/OL15164672W",
+  "source": "https://openlibrary.org/works/OL15164672W"
+ },
+ "death-of-a-salesman": {
+  "coverId": 9254686,
+  "work": "/works/OL66346W",
+  "source": "https://openlibrary.org/works/OL66346W"
+ },
+ "life-is-a-dream": {
+  "coverId": 6806982,
+  "work": "/works/OL15725930W",
+  "source": "https://openlibrary.org/works/OL15725930W"
+ },
+ "blood-wedding": {
+  "coverId": 14074500,
+  "edition": "/books/OL47468082M",
+  "source": "https://openlibrary.org/books/OL47468082M"
+ },
+ "nada": {
+  "coverId": 14561632,
+  "edition": "/books/OL22746399M",
+  "source": "https://openlibrary.org/books/OL22746399M"
+ },
+ "platero-and-i": {
+  "coverId": 1160632,
+  "work": "/works/OL9105267W",
+  "source": "https://openlibrary.org/works/OL9105267W"
+ },
+ "inferno": {
+  "coverId": 6387077,
+  "work": "/works/OL93227W",
+  "source": "https://openlibrary.org/works/OL93227W"
+ },
+ "invisible-cities": {
+  "coverId": 11712445,
+  "edition": "/books/OL21148363M",
+  "source": "https://openlibrary.org/books/OL21148363M"
+ },
+ "the-leopard": {
+  "coverId": 13172427,
+  "work": "/works/OL34309320W",
+  "source": "https://openlibrary.org/works/OL34309320W"
+ },
+ "a-room-of-ones-own": {
+  "coverId": 6559057,
+  "work": "/works/OL39379W",
+  "source": "https://openlibrary.org/works/OL39379W"
+ },
+ "mans-search-for-meaning": {
+  "coverId": 15257391,
+  "edition": "/books/OL58936271M",
+  "source": "https://openlibrary.org/books/OL58936271M"
+ },
+ "letters-to-a-young-poet": {
+  "coverId": 15160943,
+  "edition": "/books/OL61097115M",
+  "source": "https://openlibrary.org/books/OL61097115M"
+ },
+ "the-myth-of-sisyphus": {
+  "coverId": 12726570,
+  "work": "/works/OL1230690W",
+  "source": "https://openlibrary.org/works/OL1230690W"
+ },
+ "the-iliad": {
+  "coverId": 15270077,
+  "edition": "/books/OL62698206M",
+  "source": "https://openlibrary.org/books/OL62698206M"
+ },
+ "medea": {
+  "coverId": 12519140,
+  "edition": "/books/OL23144693M",
+  "source": "https://openlibrary.org/books/OL23144693M"
+ },
+ "on-the-shortness-of-life": {
+  "coverId": 9199824,
+  "work": "/works/OL20557860W",
+  "source": "https://openlibrary.org/works/OL20557860W"
+ },
+ "jane-eyre": {
+  "coverId": 8235363,
+  "work": "/works/OL1095427W",
+  "source": "https://openlibrary.org/works/OL1095427W"
+ },
+ "the-turn-of-the-screw": {
+  "coverId": 181493,
+  "work": "/works/OL276386W",
+  "source": "https://openlibrary.org/works/OL276386W"
+ },
+ "rebecca": {
+  "coverId": 15204750,
+  "edition": "/books/OL29900765M",
+  "source": "https://openlibrary.org/books/OL29900765M"
+ },
+ "kafka-on-the-shore": {
+  "coverId": 15266440,
+  "edition": "/books/OL8363016M",
+  "source": "https://openlibrary.org/books/OL8363016M"
+ },
+ "the-vegetarian": {
+  "coverId": 8469702,
+  "edition": "/books/OL26811912M",
+  "source": "https://openlibrary.org/books/OL26811912M"
+ },
+ "piranesi": {
+  "coverId": 10226290,
+  "work": "/works/OL20893680W",
+  "source": "https://openlibrary.org/works/OL20893680W"
+ },
+ "the-count-of-monte-cristo": {
+  "coverId": 14564948,
+  "edition": "/books/OL7360149M",
+  "source": "https://openlibrary.org/books/OL7360149M"
+ },
+ "anna-karenina": {
+  "coverId": 14918157,
+  "edition": "/books/OL51004799M",
+  "source": "https://openlibrary.org/books/OL51004799M"
+ },
+ "the-brothers-karamazov": {
+  "coverId": 8272323,
+  "edition": "/books/OL7355252M",
+  "source": "https://openlibrary.org/books/OL7355252M"
+ },
+ "notes-from-underground": {
+  "coverId": 15156035,
+  "edition": "/books/OL60893671M",
+  "source": "https://openlibrary.org/books/OL60893671M"
+ },
+ "the-death-of-ivan-ilyich": {
+  "coverId": 14831465,
+  "edition": "/books/OL28587988M",
+  "source": "https://openlibrary.org/books/OL28587988M"
+ },
+ "madame-bovary": {
+  "coverId": 13995591,
+  "edition": "/books/OL47397884M",
+  "source": "https://openlibrary.org/books/OL47397884M"
+ },
+ "great-expectations": {
+  "coverId": 15091105,
+  "edition": "/books/OL24627022M",
+  "source": "https://openlibrary.org/books/OL24627022M"
+ },
+ "a-tale-of-two-cities": {
+  "coverId": 15091107,
+  "edition": "/books/OL46921887M",
+  "source": "https://openlibrary.org/books/OL46921887M"
+ },
+ "a-christmas-carol": {
+  "coverId": 106174,
+  "edition": "/books/OL7357646M",
+  "source": "https://openlibrary.org/books/OL7357646M"
+ },
+ "emma": {
+  "coverId": 15171745,
+  "edition": "/books/OL61352545M",
+  "source": "https://openlibrary.org/books/OL61352545M"
+ },
+ "persuasion": {
+  "coverId": 14621274,
+  "edition": "/books/OL51678715M",
+  "source": "https://openlibrary.org/books/OL51678715M"
+ },
+ "middlemarch": {
+  "coverId": 12721547,
+  "edition": "/books/OL29267222M",
+  "source": "https://openlibrary.org/books/OL29267222M"
+ },
+ "tess-of-the-durbervilles": {
+  "coverId": 14524639,
+  "edition": "/books/OL28453258M",
+  "source": "https://openlibrary.org/books/OL28453258M"
+ },
+ "the-scarlet-letter": {
+  "coverId": 12370624,
+  "edition": "/books/OL35665016M",
+  "source": "https://openlibrary.org/books/OL35665016M"
+ },
+ "moby-dick": {
+  "coverId": 7726864,
+  "edition": "/books/OL26101044M",
+  "source": "https://openlibrary.org/books/OL26101044M"
+ },
+ "the-adventures-of-huckleberry-finn": {
+  "coverId": 14322457,
+  "edition": "/books/OL47806804M",
+  "source": "https://openlibrary.org/books/OL47806804M"
+ },
+ "little-women": {
+  "coverId": 13995616,
+  "edition": "/books/OL47397905M",
+  "source": "https://openlibrary.org/books/OL47397905M"
+ },
+ "the-awakening": {
+  "coverId": 8834904,
+  "edition": "/books/OL27371714M",
+  "source": "https://openlibrary.org/books/OL27371714M"
+ },
+ "the-call-of-the-wild": {
+  "coverId": 14721948,
+  "edition": "/books/OL48277373M",
+  "source": "https://openlibrary.org/books/OL48277373M"
+ },
+ "the-time-machine": {
+  "coverId": 13102624,
+  "edition": "/books/OL28428416M",
+  "source": "https://openlibrary.org/books/OL28428416M"
+ },
+ "the-war-of-the-worlds": {
+  "coverId": 15117869,
+  "edition": "/books/OL28704835M",
+  "source": "https://openlibrary.org/books/OL28704835M"
+ },
+ "treasure-island": {
+  "coverId": 14673605,
+  "edition": "/books/OL40387470M",
+  "source": "https://openlibrary.org/books/OL40387470M"
+ },
+ "robinson-crusoe": {
+  "coverId": 15182505,
+  "edition": "/books/OL61409362M",
+  "source": "https://openlibrary.org/books/OL61409362M"
+ },
+ "gullivers-travels": {
+  "coverId": 14133758,
+  "edition": "/books/OL34069972M",
+  "source": "https://openlibrary.org/books/OL34069972M"
+ },
+ "don-quixote": {
+  "coverId": 6828541,
+  "edition": "/books/OL24774615M",
+  "source": "https://openlibrary.org/books/OL24774615M"
+ },
+ "the-betrothed": {
+  "coverId": 103833,
+  "edition": "/books/OL7355188M",
+  "source": "https://openlibrary.org/books/OL7355188M"
+ },
+ "the-aeneid": {
+  "coverId": 6908612,
+  "edition": "/books/OL2866588M",
+  "source": "https://openlibrary.org/books/OL2866588M"
+ },
+ "the-oresteia": {
+  "coverId": 13357177,
+  "edition": "/books/OL3175043M",
+  "source": "https://openlibrary.org/books/OL3175043M"
+ },
+ "the-republic": {
+  "coverId": 14393972,
+  "edition": "/books/OL49215971M",
+  "source": "https://openlibrary.org/books/OL49215971M"
+ },
+ "the-art-of-war": {
+  "coverId": 10287713,
+  "edition": "/books/OL28339128M",
+  "source": "https://openlibrary.org/books/OL28339128M"
+ },
+ "the-communist-manifesto": {
+  "coverId": 14770271,
+  "edition": "/books/OL34449946M",
+  "source": "https://openlibrary.org/books/OL34449946M"
+ },
+ "the-epic-of-gilgamesh": {
+  "coverId": 104232,
+  "edition": "/books/OL7355386M",
+  "source": "https://openlibrary.org/books/OL7355386M"
+ },
+ "beowulf": {
+  "coverId": 14652216,
+  "edition": "/books/OL7457254M",
+  "source": "https://openlibrary.org/books/OL7457254M"
+ },
+ "the-canterbury-tales": {
+  "coverId": 11555187,
+  "edition": "/books/OL32935681M",
+  "source": "https://openlibrary.org/books/OL32935681M"
+ },
+ "the-trial": {
+  "coverId": 15082914,
+  "edition": "/books/OL46919838M",
+  "source": "https://openlibrary.org/books/OL46919838M"
+ },
+ "fathers-and-sons": {
+  "coverId": 13376163,
+  "edition": "/books/OL7355123M",
+  "source": "https://openlibrary.org/books/OL7355123M"
+ },
+ "the-age-of-innocence": {
+  "coverId": 10386724,
+  "edition": "/books/OL5246802M",
+  "source": "https://openlibrary.org/books/OL5246802M"
+ },
+ "mrs-dalloway": {
+  "coverId": 13103184,
+  "edition": "/books/OL19845827M",
+  "source": "https://openlibrary.org/books/OL19845827M"
+ },
+ "the-sorrows-of-young-werther": {
+  "coverId": 104048,
+  "edition": "/books/OL1791149M",
+  "source": "https://openlibrary.org/books/OL1791149M"
+ },
+ "dead-souls": {
+  "coverId": 14650569,
+  "edition": "/books/OL37044593M",
+  "source": "https://openlibrary.org/books/OL37044593M"
+ },
+ "the-importance-of-being-earnest": {
+  "coverId": 10251934,
+  "edition": "/books/OL28322474M",
+  "source": "https://openlibrary.org/books/OL28322474M"
+ },
+ "king-lear": {
+  "coverId": 14996521,
+  "edition": "/books/OL50981875M",
+  "source": "https://openlibrary.org/books/OL50981875M"
+ },
+ "walden": {
+  "coverId": 14823499,
+  "edition": "/books/OL54791499M",
+  "source": "https://openlibrary.org/books/OL54791499M"
+ },
+ "narrative-of-the-life-of-frederick-douglass": {
+  "coverId": 13822112,
+  "edition": "/books/OL28561534M",
+  "source": "https://openlibrary.org/books/OL28561534M"
+ },
+ "the-hound-of-the-baskervilles": {
+  "coverId": 13422849,
+  "edition": "/books/OL47070448M",
+  "source": "https://openlibrary.org/books/OL47070448M"
+ },
+ "the-fall-of-the-house-of-usher": {
+  "coverId": 106213,
+  "edition": "/books/OL7357701M",
+  "source": "https://openlibrary.org/books/OL7357701M"
+ },
+ "kokoro": {
+  "coverId": 12197397,
+  "edition": "/books/OL35355452M",
+  "source": "https://openlibrary.org/books/OL35355452M"
+ },
+ "rashomon-and-seventeen-other-stories": {
+  "coverId": 13602032,
+  "edition": "/books/OL47181644M",
+  "source": "https://openlibrary.org/books/OL47181644M"
+ },
+ "the-master-and-margarita": {
+  "coverId": 12075604,
+  "edition": "/books/OL28595250M",
+  "source": "https://openlibrary.org/books/OL28595250M"
+ },
+ "the-conquest-of-new-spain": {
+  "coverId": 12708260,
+  "edition": "/books/OL14297529M",
+  "source": "https://openlibrary.org/books/OL14297529M"
  }
 }

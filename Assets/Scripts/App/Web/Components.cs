@@ -15,6 +15,8 @@ namespace Margin.App.Web
         public string Name;
         public string Color;
         public string Id;
+        /// <summary>Profile photo (JPEG data URL) or null.</summary>
+        public string Photo;
         public AvatarUser() { }
         public AvatarUser(string name, string color, string id = null) { Name = name; Color = color; Id = id; }
     }
@@ -128,11 +130,30 @@ namespace Margin.App.Web
             else { a.style.width = size; a.style.height = size; a.style.fontSize = Mathf.Round(size * 0.36f); }
             a.style.backgroundColor = Theme.Color(string.IsNullOrEmpty(user?.Color) ? "#5B554C" : user.Color);
             a.pickingMode = PickingMode.Ignore;
+            var tex = Photo(user?.Photo);
+            if (tex != null) { a.Clear(); a.style.backgroundImage = new StyleBackground(tex); a.style.unityBackgroundScaleMode = ScaleMode.ScaleAndCrop; }
             return a;
         }
 
+        static readonly Dictionary<string, Texture2D> _photos = new Dictionary<string, Texture2D>();
+
+        /// <summary>Decodes a profile photo data URL once and caches it.</summary>
+        static Texture2D Photo(string dataUrl)
+        {
+            const string head = "data:image/jpeg;base64,";
+            if (string.IsNullOrEmpty(dataUrl) || !dataUrl.StartsWith(head)) return null;
+            if (_photos.TryGetValue(dataUrl, out var t)) return t;
+            try
+            {
+                t = new Texture2D(2, 2);
+                if (!t.LoadImage(Convert.FromBase64String(dataUrl.Substring(head.Length)))) t = null;
+            }
+            catch (FormatException) { t = null; }
+            return _photos[dataUrl] = t;
+        }
+
         public static VisualElement Avatar(Profile p, int size = 36) => Avatar(Pav(p), size);
-        public static VisualElement Avatar(MeInfo me, int size = 36) => Avatar(me == null ? null : new AvatarUser(me.Name, me.Color, me.Id), size);
+        public static VisualElement Avatar(MeInfo me, int size = 36) => Avatar(me == null ? null : new AvatarUser(me.Name, me.Color, me.Id) { Photo = me.Avatar }, size);
 
         /// <summary>sect(title, more, onMore): small caps title, a rule and an optional "See all".</summary>
         public static VisualElement Sect(string title, string more = null, Action onMore = null) =>
@@ -203,7 +224,7 @@ namespace Margin.App.Web
                 T("home", "Home", "home", () => new HomeScreen()),
                 T("explore", "Explore", "search", () => new ExploreScreen()),
                 Btn("button.tab.plus", () => LogSheet.Open(), Aria("Log reading"), El("span.ring", Icon("plus-bold")), El("span.tab-label", "Log")),
-                T("diary", "Diary", "diary", () => new DiaryScreen()),
+                T("diary", "Library", "diary", () => new DiaryScreen()),
                 T("profile", "Profile", "user", () => new ProfileScreen()));
         }
 
@@ -252,6 +273,51 @@ namespace Margin.App.Web
             _toastHide = _toast.schedule.Execute(() => _toast.RemoveFromClassList("on")).StartingIn(2400);
         }
 
+        /// <summary>
+        /// celebrate(): a short burst of confetti over the whole app, for a real decision (starting a book).
+        /// The web uses CSS keyframes; here each piece falls on a ~60 fps schedule. Off with reduced motion.
+        /// </summary>
+        public static void Celebrate()
+        {
+            if (App.Root == null || App.ReduceMotion) return;
+            string[] colors = { "#C23E29", "#B97C10", "#2F6B47", "#1C1A17", "#E9B44C" };
+            var box = new VisualElement { pickingMode = PickingMode.Ignore };
+            box.style.position = Position.Absolute;
+            box.style.left = 0; box.style.right = 0; box.style.top = 0; box.style.bottom = 0;
+            box.style.overflow = Overflow.Hidden;
+            float w = App.Root.resolvedStyle.width, hgt = App.Root.resolvedStyle.height;
+            var rnd = new System.Random();
+            var pieces = new List<(VisualElement el, float x, float dx, float spin, float dur, float delay)>();
+            for (int i = 0; i < 80; i++)
+            {
+                var p = new VisualElement { pickingMode = PickingMode.Ignore };
+                p.style.position = Position.Absolute;
+                p.style.width = 8; p.style.height = 12;
+                p.style.borderTopLeftRadius = p.style.borderTopRightRadius = p.style.borderBottomLeftRadius = p.style.borderBottomRightRadius = 2;
+                ColorUtility.TryParseHtmlString(colors[i % colors.Length], out var c);
+                p.style.backgroundColor = c;
+                box.Add(p);
+                pieces.Add((p, (float)rnd.NextDouble() * w, ((float)rnd.NextDouble() - .5f) * 200, 360 + (float)rnd.NextDouble() * 720,
+                    2.2f + (float)rnd.NextDouble() * 1.2f, (float)rnd.NextDouble() * .5f));
+            }
+            App.Root.Add(box);
+            box.BringToFront();
+            float start = Time.realtimeSinceStartup;
+            IVisualElementScheduledItem tick = null;
+            tick = box.schedule.Execute(() =>
+            {
+                float now = Time.realtimeSinceStartup - start;
+                foreach (var (el, x, dx, spin, dur, delay) in pieces)
+                {
+                    float t = Mathf.Clamp01((now - delay) / dur), e = t * t * (3 - 2 * t); // smoothstep: eases in and out
+                    el.style.left = x + dx * e;
+                    el.style.top = -12 + (hgt * 1.05f + 12) * e;
+                    el.style.rotate = new Rotate(spin * e);
+                }
+                if (now > 4.2f) { tick.Pause(); box.RemoveFromHierarchy(); }
+            }).Every(16);
+        }
+
         /// <summary>banner(title, body): the in-app notification banner (as iOS shows it), gone after 4.2 s.</summary>
         public static void Banner(string title, string body)
         {
@@ -284,7 +350,7 @@ namespace Margin.App.Web
         public static string Pfirst(AuthorRef a) => Pname(a).TrimStart('@').Split(' ')[0];
 
         /// <summary>pav(p): what the avatar needs.</summary>
-        public static AvatarUser Pav(Profile p) => new AvatarUser(p?.name ?? p?.username ?? "?", p?.color, p?.id);
+        public static AvatarUser Pav(Profile p) => new AvatarUser(p?.name ?? p?.username ?? "?", p?.color, p?.id) { Photo = p?.avatar };
         public static AvatarUser Pav(AuthorRef a) => new AvatarUser(a?.name ?? a?.username ?? "?", a?.color);
 
         /// <summary>cleanQuery(q): text safe to put inside a PostgREST filter.</summary>

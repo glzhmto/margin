@@ -16,13 +16,14 @@ function reviewCard(r, opts = {}) {
       h("span.grow"), reviewLang(r) !== "en" ? h("span.lang", reviewLang(r).toUpperCase()) : null),
     body,
     h("div.foot", h("span.human", "Written by a human"),
-      h("span.grow", { style: { whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" } }, own ? F.date(r.date) : `${r.source}, ${MES[D.parse(r.date).getMonth()]} ${D.parse(r.date).getFullYear()}`),
+      h("span.grow", { style: { whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" } }, own ? F.date(r.date) : `${MES[D.parse(r.date).getMonth()]} ${D.parse(r.date).getFullYear()}`),
       null));
   return el;
 }
 
 class BookScreen extends Screen {
-  constructor(id) { super(); this.id = id; this.revMode = "recent"; }
+  // opts.onboarding: a first-time reader choosing a book. Shows one "Read this" button (opts.onPick) instead of the status split.
+  constructor(id, opts = {}) { super(); this.id = id; this.opts = opts; this.revMode = "recent"; }
   onShow() {
     screenLoad(this, async () => {
       const [reviews, readers, lists] = await Promise.all([Social.bookReviews(this.id), Social.bookCounts(), Social.posts({ bookId: this.id, limit: 5 })]);
@@ -40,15 +41,18 @@ class BookScreen extends Screen {
     const b = Data.book(this.id), s = Data.state(), st = this.stats();
     const p = s.progress.find(x => x.bookId === b.id), isCur = s.profile.currentBookId === b.id;
     const want = s.want.includes(b.id), dnf = s.dnf.includes(b.id);
-    const status = p?.finished ? "Read" : isCur ? `Reading · p. ${p ? p.currentPage : 0}` : dnf ? "You dropped it" : want ? "On your want-to-read list" : "Want to read";
+    // Nothing being read: the main action is to start this one (accent, like every main action).
+    const canStart = !s.profile.currentBookId && !p?.finished;
+    const status = p?.finished ? "Read" : isCur ? `Reading · p. ${p ? p.currentPage : 0}` : canStart ? "Start reading" : dnf ? "You dropped it" : want ? "On your want-to-read list" : "Want to read";
     const myRating = p?.rating || 0;
 
     const hero = h("div.hero", h("div.bg", { style: Data.coverUrl(b.id) ? { backgroundImage: `url(${Data.coverUrl(b.id)})` } : { backgroundColor: "var(--ink-2)" } }), h("div.shade"));
     const head = h("div.bookhead", cover(b, 110), h("div.grow", { style: { paddingBottom: "4px" } },
       h("div.h1", { style: { fontSize: b.title.length > 28 ? "22px" : "27px" } }, b.title), h("div.mt4", b.author), h("div.small.muted.mt2.num", `${b.year < 0 ? -b.year + " BC" : b.year}`, h("span.dotsep"), `${b.pages} pp.`, h("span.dotsep"), `${b.chapters.length} ${b.chapters.length === 1 ? "part" : "parts"}`)));
 
-    const actions = h("div.pad.mt16",
-      h("div.split" + (p?.finished ? ".done" : ""), h("button", { onclick: () => this.primary() }, p?.finished ? [icon("check"), " Read"] : status), h("button", { "aria-label": "Change status", onclick: () => this.statusSheet() }, icon("down"))),
+    const onb = this.opts.onboarding;
+    const actions = onb ? h("div.pad.mt16", h("button.btn.accent", { onclick: () => this.opts.onPick() }, "Read this")) : h("div.pad.mt16",
+      h("div.split" + (p?.finished ? ".done" : canStart ? ".start" : ""), h("button", { onclick: () => this.primary() }, p?.finished ? [icon("check"), " Read"] : status), h("button", { "aria-label": "Change status", onclick: () => this.statusSheet() }, icon("down"))),
       h("div.row.mt12", { style: { justifyContent: "space-between" } },
         h("div", h("div.xs.faint", myRating ? "Your rating" : "Rate it"), this.rateInput(myRating)),
         h("div.row.gap6", isCur ? h("button.btn.sm.accent", { onclick: () => LogSheet.open() }, "Log reading") : null,
@@ -82,10 +86,12 @@ class BookScreen extends Screen {
         : h("div.pad.mt8", h("button.btn.sm.secondary", { style: { width: "100%" }, onclick: () => ReviewSheet.open(b.id, null, () => this.reload()) }, "Write your review")),
       others.slice(0, 5).map(r => marginReviewCard(r)),
       this.d && !others.length ? h("p.pad.small.faint.mt8", "No other Margin reader has reviewed it yet.") : null,
-      reviews.length ? [h("div.sect", h("span.caps", "From Goodreads"), h("span.more.num", F.n(reviews.length))),
+      reviews.length ? [h("div.sect", h("span.caps", "Reviews"), h("span.more.num", F.n(reviews.length))),
         reviews.slice(0, 3).map(r => reviewCard(r)),
-        reviews.length > 3 ? h("div.pad.mt8", h("button.btn.sm.secondary", { style: { width: "100%" }, onclick: () => Nav.push(new ReviewsScreen(b.id)) }, `See all ${reviews.length} Goodreads reviews`)) : null,
-        h("p.pad.xs.faint.mt8", "Reader reviews posted on Goodreads, quoted with their author. Margin doesn't summarize them or rewrite them with AI.")] : null];
+        reviews.length > 3 ? h("div.pad.mt8", h("button.btn.sm.secondary", { style: { width: "100%" }, onclick: () => Nav.push(new ReviewsScreen(b.id)) }, `See all ${reviews.length} reviews`)) : null,
+        h("p.pad.xs.faint.mt8", "Real reader reviews, quoted with their author. Margin doesn't summarize them or rewrite them with AI.")] : null,
+      Data.creatorsFor(b.id).length ? [h("div.sect", h("span.caps", "From book creators")), Data.creatorsFor(b.id).map(c => webCreatorCard(c, { full: true })),
+        h("p.pad.xs.faint.mt8", "Quoted with a link to the original review.")] : null];
 
     const chapters = [sect("Chapters and quizzes"), h("div.pad", b.chapters.map(c => {
       const q = s.quizResults.find(x => x.bookId === b.id && x.chapterNumber === c.number);
@@ -112,23 +118,13 @@ class BookScreen extends Screen {
     const scroller = h("div.scroll.under-nav", { style: { paddingTop: 0 } }, hero, head, actions, sect("Synopsis"), h("p.pad.serif", b.synopsis),
       sect("Ratings"), ratings, social, revSect, chapters, lists, facts, Shop.section(b), paper, h("div.bottom-space"));
     const nav = h("div.navbar.transparent", h("button.iconbtn.round", { "aria-label": "Back", onclick: () => Nav.stack.length > 1 ? Nav.back() : Nav.reset(new ExploreScreen(), "explore") }, icon("back")), h("div.title", b.title),
-      h("button.iconbtn.round", { "aria-label": "More options", onclick: () => this.statusSheet() }, icon("more")));
-    scroller.addEventListener("scroll", () => { const solid = scroller.scrollTop > 190; nav.classList.toggle("solid", solid); App.status.classList.toggle("on-dark", !solid); });
+      onb ? h("div", { style: { width: "44px" } }) : h("button.iconbtn.round", { "aria-label": "More options", onclick: () => this.statusSheet() }, icon("more")));
+    scroller.addEventListener("scroll", () => { const solid = scroller.scrollTop > 190; nav.classList.toggle("solid", solid); });
     return h("div", scroller, nav);
   }
-  rateInput(val) {
-    const wrap = h("div.row", { style: { gap: "2px" } });
-    for (let i = 1; i <= 5; i++) {
-      const b = h("button", { style: { width: "30px", height: "30px", position: "relative" }, "aria-label": `${i} stars` }, stars(Math.max(0, Math.min(1, val - (i - 1))) * 5, 26));
-      b.firstChild.style.width = "26px"; b.querySelectorAll(".base svg").forEach((x, k) => { if (k) x.style.display = "none"; }); b.querySelectorAll(".fill svg").forEach((x, k) => { if (k) x.style.display = "none"; });
-      b.querySelector(".fill").style.width = `${Math.max(0, Math.min(1, val - (i - 1))) * 100}%`;
-      b.addEventListener("click", e => { const half = e.offsetX < 13; this.rate(val === i - (half ? .5 : 0) ? 0 : i - (half ? .5 : 0)); });
-      wrap.append(b);
-    }
-    return wrap;
-  }
+  rateInput(val) { return ratingInput(val, v => this.rate(v)); }
   rate(v) { const s = Data.state(), p = S.progressFor(s, this.id); p.rating = v; Data.save(); Nav.refresh(); if (v) toast(`You rated it ${v} ${v === 1 ? "star" : "stars"}`); }
-  primary() { const s = Data.state(), p = s.progress.find(x => x.bookId === this.id); if (s.profile.currentBookId === this.id && !p?.finished) LogSheet.open(); else this.statusSheet(); }
+  primary() { const s = Data.state(), p = s.progress.find(x => x.bookId === this.id); if (s.profile.currentBookId === this.id && !p?.finished) LogSheet.open(); else if (!s.profile.currentBookId && !p?.finished) Nav.push(new StartBookScreen(this.id)); else this.statusSheet(); }
   statusSheet() {
     const s = Data.state(), id = this.id, b = Data.book(id);
     const opt = (label, sub, fn, on) => h("button.item", { onclick: () => { Sheet.close(); fn(); Data.save(); Nav.refresh(); } }, h("div.grow", h("div", label), sub ? h("div.xs.faint", sub) : null), on ? icon("check") : null);
@@ -136,7 +132,7 @@ class BookScreen extends Screen {
     const clear = () => { s.want = s.want.filter(x => x !== id); s.dnf = s.dnf.filter(x => x !== id); };
     Sheet.open(b.title, h("div.list", { style: { margin: 0 } },
       opt("Want to read", "We save it to your want-to-read list", () => { clear(); s.want.push(id); toast("Added to Want to read"); }, s.want.includes(id)),
-      opt("Reading now", s.profile.currentBookId && s.profile.currentBookId !== id ? `Replaces ${Data.book(s.profile.currentBookId).title} as your current book` : null, () => { clear(); ReadingService.setCurrentBook(s, id); toast(`Now reading ${b.title}.`); }, s.profile.currentBookId === id),
+      opt("Reading now", s.profile.currentBookId && s.profile.currentBookId !== id ? `Replaces ${Data.book(s.profile.currentBookId).title} as your current book` : null, () => { if (s.profile.currentBookId !== id) Nav.push(new StartBookScreen(id)); }, s.profile.currentBookId === id),
       opt("Read", "Mark it as finished", () => { clear(); const pp = S.progressFor(s, id); pp.currentPage = b.pages; pp.finished = true; pp.finishedOn = D.key(Clock.today()); if (s.profile.currentBookId === id) s.profile.currentBookId = null; toast("Marked as read"); }, p?.finished),
       opt("Dropped it", "Doesn't count in your stats", () => { clear(); s.dnf.push(id); if (s.profile.currentBookId === id) s.profile.currentBookId = null; }, s.dnf.includes(id))));
   }
@@ -161,7 +157,7 @@ class ReviewsScreen extends Screen {
     const all = Data.reviewsFor(this.id).slice().sort((a, b) => (b.date || "").localeCompare(a.date || ""));
     const list = all.filter(r => this.lang === "all" || reviewLang(r) === this.lang);
     return h("div", navbar(Data.book(this.id).title), h("div.row.gap6.pad", { style: { paddingBottom: "8px" } }, [["all", "All"], ["en", "English"], ["es", "Spanish"]].map(([k, l]) => h("button.pillbtn" + (this.lang === k ? ".on" : ""), { onclick: () => { this.lang = k; Nav.refresh(); } }, l))),
-      h("div.scroll.under-nav", { style: { borderTop: "1px solid var(--rule)" } }, list.map(r => reviewCard(r)), h("p.pad.xs.faint", { style: { padding: "16px" } }, "Source: public Goodreads pages. Tap a review to see the original link.")));
+      h("div.scroll.under-nav", { style: { borderTop: "1px solid var(--rule)" } }, list.map(r => reviewCard(r)), h("p.pad.xs.faint", { style: { padding: "16px" } }, "Tap a review to see where it was first posted.")));
   }
 }
 
@@ -172,14 +168,14 @@ class ReviewScreen extends Screen {
     return h("div", navbar("Review"), h("div.scroll.under-nav",
       h("button.row.gap12.pad", { style: { width: "100%", textAlign: "left", paddingBottom: "12px", borderBottom: "1px solid var(--rule)" }, onclick: () => Nav.push(new BookScreen(b.id)) }, cover(b, 56), h("div.grow", h("div.h3", b.title), h("div.small.muted", b.author))),
       reviewCard(r, { full: true }),
-      r.own ? null : h("div.pad.mt8", h("button.btn.secondary", { onclick: () => window.open(r.pageUrl || r.url, "_blank") }, icon("link"), "See original on Goodreads"),
+      r.own ? null : h("div.pad.mt8", h("button.btn.secondary", { onclick: () => window.open(r.pageUrl || r.url, "_blank") }, icon("link"), "See the original"),
         reviewLang(r) !== "en" ? h("p.xs.faint.mt8", `Translated from ${LANG_NAMES[reviewLang(r)] || reviewLang(r).toUpperCase()}. The link above has the reader's words exactly as they wrote them.`) : null)));
   }
 }
 
 /* A review by a Margin reader (stored in the reviews table). */
 function marginReviewCard(r, opts = {}) {
-  const p = r.profiles || {}, who = { username: p.username, name: p.name, color: p.color, id: r.user_id };
+  const p = r.profiles || {}, who = { username: p.username, name: p.name, color: p.color, avatar: p.avatar, id: r.user_id };
   return h("div.review",
     h("div.meta", h("button", { onclick: () => opts.own ? Nav.push(new ProfileScreen()) : Nav.push(new UserScreen(p.username)), "aria-label": pname(who) }, avatar(pav(who), 28)),
       h("span.strong", { style: { color: "var(--ink)" } }, opts.own ? "Your review" : pname(who)), stars(Number(r.rating), 11), h("span.grow"),
@@ -196,7 +192,7 @@ const ReviewSheet = {
     ta.value = existing ? existing.body || "" : "";
     const counter = h("div.help"), err = h("div.help.bad");
     const starsBox = h("div");
-    const drawStars = () => starsBox.replaceChildren(BookScreen.prototype.rateInput.call({ id: bookId, rate: v => { rating = v; drawStars(); upd(); } }, rating));
+    const drawStars = () => starsBox.replaceChildren(ratingInput(rating, v => { rating = v; drawStars(); upd(); }));
     const upd = () => { const w = ta.value.trim().split(/\s+/).filter(Boolean).length; counter.textContent = `${w} ${w === 1 ? "word" : "words"}`; save.disabled = w < 3 || !rating; err.textContent = rating ? "" : "Tap the stars to rate it."; };
     ta.addEventListener("input", upd);
     const save = h("button.textbtn", { style: { color: "var(--link)", fontWeight: 600, height: "44px", padding: "0 10px" }, onclick: async () => {

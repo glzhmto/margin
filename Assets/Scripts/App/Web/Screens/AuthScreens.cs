@@ -1,5 +1,5 @@
 // Port of preview/js/screens-auth.js: welcome, sign up, log in and first-time setup.
-// Owner: porter 1. Accounts are real (Supabase Auth through Net / AccountService).
+// Accounts are real (Supabase Auth through Net / AccountService).
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,7 +44,7 @@ namespace Margin.App.Web.Screens
                         El("div.small.muted.mt8", !string.IsNullOrEmpty(add) ? $"@{add} invited you. Sign up or log in to add them as a friend." : "Read with your friends, at your own pace."),
                         El("div.col.gap10.mt24",
                             Btn("button.btn.primary", () => Nav.Push(new SignupScreen()), Disabled(Busy), "Sign up with email"),
-                            Btn("button.btn.secondary", () => App.TryGuest(this), Disabled(Busy), Busy ? "Opening Margin…" : "Try it without an account"),
+                            Btn("button.btn.secondary", () => App.TryGuest(this), Disabled(Busy), Busy ? "Opening the demo…" : "Try a demo account"),
                             Btn("button.btn.ghost", () => Nav.Push(new LoginScreen()), Disabled(Busy), "I already have an account")),
                         Err != null ? El("p.small.center.mt8", Err).Fg("error") : null,
                         El("p.xs.faint.center.mt12", "By continuing you accept the Terms of Use and the Privacy Notice.")));
@@ -138,6 +138,20 @@ namespace Margin.App.Web.Screens
         /// <summary>The web's \d (ASCII digits only).</summary>
         static bool IsDigit(char c) => c >= '0' && c <= '9';
 
+        /// <summary>What would make a password stronger, in words (the bars alone weren't clear in user testing, T5).</summary>
+        public static string StrengthTip(string p)
+        {
+            p = p ?? "";
+            if (p.Length == 0) return "";
+            if (p.Length < 8) return "Use at least 8 characters.";
+            if (!p.Any(IsDigit)) return "Add a number.";
+            if (!(p.Any(c => c >= 'A' && c <= 'Z') && p.Any(c => c >= 'a' && c <= 'z'))) return "Mix uppercase and lowercase to make it stronger.";
+            if (Strength(p) < 4) return "Add a symbol or make it longer to make it stronger.";
+            return "Good to go.";
+        }
+
+        public static readonly string[] StrengthWords = { "Too weak", "Weak", "Okay", "Good", "Strong" };
+
         public static string Password(string p) =>
             (p ?? "").Length < 8 ? "At least 8 characters." : !(p ?? "").Any(IsDigit) ? "Add at least one number." : null;
     }
@@ -158,7 +172,7 @@ namespace Margin.App.Web.Screens
                 return El("div.card.block.guestnote", El("p.small", $"Open the link we sent to {a.PendingEmail} to finish saving your account."))
                     .M(compact ? 8 : 12, 16, 0, 16);
             return El("div.card.block.guestnote" + (compact ? "" : ".mt12"),
-                    El("p.small", "You're trying Margin as a guest. Save your account to keep your reading."),
+                    El("p.small", "This is a demo account with six weeks of sample reading. Save it to keep it, or log out and sign up to start fresh."),
                     Btn("button.btn.sm.primary.mt8", () => Nav.Push(new SaveAccountScreen()), "Save your account"))
                 .M(compact ? 8 : 12, 16, 0, 16);
         }
@@ -346,12 +360,17 @@ namespace Margin.App.Web.Screens
             if (meter)
             {
                 var bars = Enumerable.Range(0, 4).Select(_ => El("i")).ToList();
-                strength = El("div.strength", bars);
+                var word = Text("b", ""); var tip = Text("span", "");
+                var label = El("div.strength-label", word, tip);
+                strength = El("div", El("div.strength", bars), label);
+                var meterBars = strength.Q(className: "strength");
                 live.Add(() =>
                 {
                     int st = V.Strength(v.password);
-                    strength.EnableInClassList("weak", st <= 1);
-                    strength.EnableInClassList("mid", st == 2);
+                    bool any = !string.IsNullOrEmpty(v.password);
+                    word.text = any ? V.StrengthWords[st] : ""; tip.text = V.StrengthTip(v.password); label.Show(any);
+                    meterBars.EnableInClassList("weak", st <= 1);
+                    meterBars.EnableInClassList("mid", st == 2);
                     for (int i = 0; i < 4; i++) bars[i].EnableInClassList("on", i < st);
                 });
             }
@@ -366,16 +385,49 @@ namespace Margin.App.Web.Screens
             return l;
         }
 
-        /// <summary>The accent button: disabled until the form is valid, with the busy label.</summary>
+        /// <summary>The accent button: dimmed until the form is valid, with the busy label. Tapping it early
+        /// marks every field and shows a short toast with what is still missing (no blocking alert).</summary>
         protected VisualElement SubmitButton(string label, string busyLabel)
         {
-            var b = Btn("button.btn.accent.mt24", () => { if (FormOk()) Submit(); }, label);
+            var b = Btn("button.btn.accent.mt24", () =>
+            {
+                if (busy) return;
+                if (FormOk()) { Submit(); return; }
+                Nudge();
+            }, label);
             live.Add(() =>
             {
-                b.SetEnabled(FormOk());
+                b.EnableInClassList("soft", !FormOk() && !busy);
+                b.SetEnabled(!busy);
                 if (b is Label l) l.text = busy ? busyLabel : label;
             });
             return b;
+        }
+
+        /// <summary>nudge(): touch every field so its error shows, then say what is left.</summary>
+        protected void Nudge()
+        {
+            foreach (var k in new[] { "name", "email", "username", "password" }) touched.Add(k);
+            UpdateForm();
+            var t = MissingText();
+            if (t != null) Toast(t);
+        }
+
+        /// <summary>missingText(): what the form still needs, as one short sentence.</summary>
+        protected string MissingText()
+        {
+            var errs = Errs();
+            var a = Avail(out var has);
+            var m = new List<string>();
+            if (errs["name"] != null) m.Add("your name");
+            if (errs["email"] != null) m.Add("a valid email");
+            if (string.IsNullOrEmpty(v.username) || V.Username(v.username) != null) m.Add("a username");
+            else if (has && a == false) m.Add("a different username");
+            if (errs["password"] != null) m.Add("a password (8+ characters, one number)");
+            if (NeedsTerms && !terms) m.Add("accepting the terms");
+            if (m.Count == 0) return has ? null : "Still checking your username. Try again in a second.";
+            var list = m.Count == 1 ? m[0] : string.Join(", ", m.Take(m.Count - 1)) + " and " + m[m.Count - 1];
+            return "Still missing: " + list + ".";
         }
 
         // ---------- Screen ----------
@@ -566,6 +618,10 @@ namespace Margin.App.Web.Screens
     /// <summary>First-time setup after creating the account (or entering as a guest).</summary>
     public class SetupScreen : WebScreen
     {
+        /// <summary>The text typed in the book step's search, kept when picking a cover rebuilds the step.</summary>
+        string bookQuery = "";
+        /// <summary>Pages a day, days, time, book, year goal, reminders, all set.</summary>
+        const int Steps = 7;
         public Acc acc;
         public int step;
 
@@ -577,33 +633,32 @@ namespace Margin.App.Web.Screens
             public int hour = 22, min = 0;
             public string intention = "";
             public string book;
+            /// <summary>"I'm not reading anything right now".</summary>
+            public bool noBook;
             public int year = 12;
             public bool? notif;
         }
 
         readonly Plan g = new Plan();
-        readonly int[] order;
-
-        bool IsGuest => acc != null && acc.IsGuest;
 
         public SetupScreen(Acc acc)
         {
             this.acc = acc;
-            // Guests see three screens (pages a day, book, summary) with the rest filled in; all of it changes later in Settings.
-            order = IsGuest ? new[] { 0, 3, 6 } : new[] { 0, 1, 2, 3, 4, 5, 6 };
-            if (IsGuest) { g.book = "the-little-prince"; g.daily = 10; g.notif = false; }
         }
 
         static int Round(double x) => (int)Math.Round(x, MidpointRounding.AwayFromZero);
 
         public override VisualElement Build()
         {
-            int N = order.Length - 1;
+            int N = Steps - 1;
             var steps = El("div.row.gap4.pad.mt8", Enumerable.Range(0, N).Select(i => El("div.grow").Hgt(3).Radius(2).Bg(i <= step ? "ink" : "rule")));
             object[] content;
             string cta = "Next";
             Action ctaDo = Next;
-            switch (order[step])
+            // The text button under the main one. On optional steps it skips with the defaults (laterDo).
+            string later = "Skip for now";
+            Action laterDo = null;
+            switch (step)
             {
                 case 0:
                     content = new object[]
@@ -612,6 +667,7 @@ namespace Margin.App.Web.Screens
                         El("div.row.wrap.gap8.mt20", new[] { 5, 10, 15, 20, 30, 50 }.Select(n => Btn("button.chip" + (g.daily == n ? ".on" : ""), () => { g.daily = n; Nav.Refresh(); }, n))),
                         El("p.small.faint.mt12", $"{g.daily} pages, about {Round(g.daily * 1.5)} minutes."),
                     };
+                    later = "Set up later"; laterDo = Later;
                     break;
                 case 1:
                     content = new object[]
@@ -624,6 +680,7 @@ namespace Margin.App.Web.Screens
                         }, Aria(Fmt.Days[d]), Copy.DayLetters[d]))),
                         El("p.small.faint.mt12", g.days.Count > 0 ? $"{F.Pages(g.daily * g.days.Count)} a week, {Fmt.DayList(g.days)}." : "Pick at least one day."),
                     };
+                    laterDo = () => { g.days = new List<int> { 1, 2, 3, 4, 5 }; Skip(); };
                     break;
                 case 2:
                 {
@@ -640,16 +697,20 @@ namespace Margin.App.Web.Screens
                         El("label.field.mt24", El("span.lab", "When I... (optional)"), intent),
                         El("div.row.wrap.gap6.mt8", Copy.IntentionSuggestions.Select(s => Btn("button.pillbtn" + (g.intention == s ? ".on" : ""), () => { g.intention = s; Nav.Refresh(); }, s))),
                     };
+                    laterDo = () => { g.hour = 22; g.min = 0; g.intention = ""; Skip(); };
                     break;
                 }
                 case 3:
                     content = new object[]
                     {
                         El("div.h1", "What are you reading?"), El("p.muted.mt8", "Pick one. If you already started it, you can enter the page later."),
-                        El("div.grid3.mt16", Data.Books.Select(b => El("div.col.gap4", On(() => { g.book = b.id; Err = null; Nav.Refresh(); }),
+                        NoBookCheck(),
+                        g.noBook ? El("p.small.muted.mt8", "No problem. You can choose your first book from Home: a few quick questions match you with one from the catalog.") : null,
+                        BookSearch.Grid(Data.Books, "div.grid3.mt16", b => El("div.col.gap4", On(() => { g.book = b.id; g.noBook = false; Err = null; Nav.Refresh(); }),
                             PickCover(b, g.book == b.id),
-                            El("div.xs.clamp2" + (g.book == b.id ? ".strong" : ".muted"), b.title)))),
+                            El("div.xs.clamp2" + (g.book == b.id ? ".strong" : ".muted"), b.title)), bookQuery, q => bookQuery = q),
                     };
+                    later = "Choose later"; laterDo = ChooseLater;
                     break;
                 case 4:
                 {
@@ -660,6 +721,7 @@ namespace Margin.App.Web.Screens
                         El("div.row.wrap.gap8.mt20", new[] { 4, 6, 12, 24, 52 }.Select(n => Btn("button.chip" + (g.year == n ? ".on" : ""), () => { g.year = n; Nav.Refresh(); }, n))),
                         El("p.small.faint.mt12", g.year >= 24 ? $"{g.year} books is about {Round(52.0 / g.year * 7)} days per book." : $"One book every {Round(52.0 / g.year)} weeks."),
                     };
+                    laterDo = () => { g.year = 12; Skip(); };
                     break;
                 }
                 case 5:
@@ -672,6 +734,7 @@ namespace Margin.App.Web.Screens
                         g.notif == false ? El("p.small.mt12", "Without permission we can't remind you. You can turn it on later in iPhone Settings.").Fg("error") : null,
                     };
                     cta = g.notif == null ? "Turn on reminders" : "Next";
+                    if (g.notif == null) laterDo = () => { g.notif = false; Skip(); };
                     ctaDo = () => { if (g.notif == null) AskNotifications(); else Next(); };
                     break;
                 default:
@@ -680,13 +743,14 @@ namespace Margin.App.Web.Screens
                     var first = (acc?.Name ?? "").Split(' ')[0];
                     content = new object[]
                     {
-                        El("div.h1", IsGuest ? "All set" : $"All set, {first}"), El("p.muted.mt8", "Here is your plan. You can change all of it in Settings."),
+                        El("div.h1", $"All set, {first}"), El("p.muted.mt8", "Here is your plan. You can change all of it in Settings."),
                         El("div.list.mt20",
                             El("div.item", El("span.grow", "Daily goal"), El("span.val", F.Pages(g.daily))),
                             El("div.item", El("span.grow", "Days"), El("span.val", Fmt.DayList(g.days))),
                             El("div.item", El("span.grow", "Reminder"), El("span.val", g.notif == true ? Fmt.Time(g.hour, g.min) : "Off")),
                             El("div.item", El("span.grow", "Yearly goal"), El("span.val", F.Books(g.year))),
-                            b != null ? El("div.item", Cover(b, 44), El("div.grow", El("div.small.faint", "Reading"), El("div.strong", b.title))) : null)
+                            b != null ? El("div.item", Cover(b, 44), El("div.grow", El("div.small.faint", "Reading"), El("div.strong", b.title)))
+                                : El("div.item", El("span.grow", "Reading"), El("span.val", "Choose it on Home")))
                             .M(20, 0, 0),
                     };
                     cta = "Start"; ctaDo = () => Finish(false);
@@ -698,12 +762,13 @@ namespace Margin.App.Web.Screens
                 Navbar("", new NavOpts { OnBack = Back }),
                 steps,
                 El("div.scroll.under-nav", El("div.pad.mt20", content)),
-                El("div.pad", El("div.help.bad", Err ?? ""), Btn("button.btn.accent", ctaDo, cta))
+                El("div.pad", El("div.help.bad", Err ?? ""), Btn("button.btn.accent", ctaDo, cta),
+                        laterDo != null ? Btn("button.btn.ghost.mt4", laterDo, later) : null)
                     .P(12, 16, Mathf.Max(40, Safe.Bottom + 6), 16).BorderTop(1, "rule"));
         }
 
         /// <summary>cover(b, 110) at full width with the 3 px accent outline (outline-offset 2 px) when picked.</summary>
-        static VisualElement PickCover(Book b, bool on)
+        internal static VisualElement PickCover(Book b, bool on)
         {
             var wrap = El("div", Cover(b, 110).W("100%")).Relative();
             wrap.pickingMode = PickingMode.Ignore;
@@ -717,19 +782,54 @@ namespace Margin.App.Web.Screens
             return wrap;
         }
 
+        /// <summary>"I'm not reading anything right now": the same check box as the terms in sign up.</summary>
+        VisualElement NoBookCheck()
+        {
+            var check = Btn("button.check.mt16" + (g.noBook ? ".on" : ""), () =>
+                {
+                    g.noBook = !g.noBook;
+                    if (g.noBook) g.book = null;
+                    Err = null; Nav.Refresh();
+                },
+                El("span.box", g.noBook ? Icon("check") : null),
+                El("span", "I'm not reading anything right now").Flex1());
+            check.style.alignSelf = Align.Stretch;
+            return check;
+        }
+
+        /// <summary>Optional step left for later: its defaults are already set, move on.</summary>
+        void Skip() { Err = null; step++; Nav.Refresh(); }
+
+        /// <summary>"Set up later" on the first step: the same defaults as the guest flow, no book yet, straight to Home.</summary>
+        void Later()
+        {
+            g.daily = 10; g.days = new List<int> { 1, 2, 3, 4, 5 }; g.hour = 22; g.min = 0; g.intention = ""; g.year = 12; g.notif = false;
+            g.book = null; g.noBook = true;
+            Finish(true);
+            Toast("You can set your goals any time in Settings");
+        }
+
+        /// <summary>"Choose later" on the book step: no book, the defaults for whatever is left, straight to Home.</summary>
+        void ChooseLater()
+        {
+            g.book = null; g.noBook = true;
+            Finish(true);
+            Toast("Choose your first book from Home whenever you're ready");
+        }
+
         void Back()
         {
             if (step == 0)
-                IosAlert("Leave setup?", IsGuest ? "We'll use these settings. You can change them later." : "Your account is already created. You can finish this later.",
-                    Act("Stay here"), Act("Leave", () => Finish(true)));
+                IosAlert("Leave setup?", "Your account is already created. You can finish this later.",
+                    Act("Stay here"), Act("Leave", () => { g.book = null; g.noBook = true; Finish(true); }));
             else { step--; Nav.Refresh(); }
         }
 
         void Next()
         {
-            int k = order[step];
+            int k = step;
             if (k == 1 && g.days.Count == 0) { Err = "Pick at least one reading day."; Nav.Refresh(); return; }
-            if (k == 3 && g.book == null) { Err = "Pick a book. You can change it any time."; Nav.Refresh(); return; }
+            if (k == 3 && g.book == null && !g.noBook) { Err = "Pick a book, or tap Choose later."; Nav.Refresh(); return; }
             Err = null;
             step++; Nav.Refresh();
         }
@@ -769,7 +869,7 @@ namespace Margin.App.Web.Screens
             goals.remindersEnabled = g.notif == true;
             goals.intention = string.IsNullOrEmpty(g.intention) ? null : g.intention;
             Data.X.yearGoal = g.year;
-            ReadingService.SetCurrentBook(s, g.book ?? "the-little-prince");
+            if (g.book != null) ReadingService.SetCurrentBook(s, g.book); // no book: Home shows "Choose your first book"
             Data.X.notifications = new List<WebNotification>
             {
                 new WebNotification { at = D.Stamp(Clock.Now), kind = "welcome", text = "Your diary starts today. Log your first reading with the + button." },
@@ -778,7 +878,293 @@ namespace Margin.App.Web.Screens
             Net.Log("joined"); // also flushes the diary to the server (Net.flush)
             MarginApp.Instance?.RescheduleReminders(); // the real local reminders for the new plan
             App.Start();
-            if (!skip) Toast(IsGuest ? "You're in as a guest" : "Account created");
+            if (!skip) Toast("Account created");
+        }
+    }
+
+    // ---------------- Taste quiz ----------------
+
+    /// <summary>One screen of the taste quiz.</summary>
+    public class QuizQuestionDef
+    {
+        public string Key, Kind, Title, Sub;   // Kind: "one" (tap advances), "many" (chips) or "books" (covers)
+        public TasteOption[] Options;
+        public QuizQuestionDef(string key, string kind, string title, string sub, TasteOption[] options = null)
+        {
+            Key = key; Kind = kind; Title = title; Sub = sub; Options = options;
+        }
+    }
+
+    /// <summary>
+    /// Ten quick questions, one per screen, then books from the catalog (Core TasteQuiz). Opened from Home while
+    /// there is no current book ("Choose your first book"). Every question can be skipped, and saved answers
+    /// open straight on the results, where "Change my answers" edits them.
+    /// </summary>
+    public class TasteQuizScreen : WebScreen
+    {
+        public static readonly QuizQuestionDef[] Questions =
+        {
+            new QuizQuestionDef("field", "one", "What do you study or do?", "We'll look for books that speak to your field.", TasteQuiz.Fields),
+            new QuizQuestionDef("level", "one", "How much do you read these days?", "Be honest: it helps us pick the right first book.", TasteQuiz.Levels),
+            new QuizQuestionDef("life", "many", "What's going on in your life right now?", "Pick any that fit. A book can keep you company.", TasteQuiz.Life),
+            new QuizQuestionDef("feel", "many", "How do you want to feel when you read?", "Pick as many as you like.", TasteQuiz.Moods),
+            new QuizQuestionDef("screen", "many", "What do you like to watch?", "Films and series are a good bridge to books.", TasteQuiz.Screens),
+            new QuizQuestionDef("pace", "one", "Quick and gripping, or slow and deep?", "How you like a story to move.", TasteQuiz.Paces),
+            new QuizQuestionDef("length", "one", "How long a book?", "Ten pages take about fifteen minutes.", TasteQuiz.Lengths),
+            new QuizQuestionDef("era", "one", "Classics or recent books?", "The catalog has both, from Homer to 2021.", TasteQuiz.Eras),
+            new QuizQuestionDef("region", "one", "Stories from Mexico and Latin America?", "Mexican and Latin American classics and new voices.", TasteQuiz.Regions),
+            new QuizQuestionDef("liked", "books", "Already read any of these and liked it?", "We'll look for books like them and won't suggest them again."),
+        };
+
+        readonly Tastes t;
+        int step;
+        int sel;            // spotlighted match
+        bool finding;       // "Finding your match…" interstitial
+
+        public TasteQuizScreen(bool edit = false)
+        {
+            var saved = Data.X?.tastes;
+            t = TasteQuiz.Clean(saved);
+            // Saved answers open on the results; a first visit (or answers that were all skipped) starts at question 1.
+            step = saved != null && !TasteQuiz.IsEmpty(t) && !edit ? Questions.Length : 0;
+        }
+
+        string One(string key)
+        {
+            switch (key)
+            {
+                case "field": return t.field;
+                case "level": return t.level;
+                case "pace": return t.pace;
+                case "length": return t.length;
+                case "era": return t.era;
+                case "region": return t.region;
+                default: return null;
+            }
+        }
+
+        void SetOne(string key, string v)
+        {
+            switch (key)
+            {
+                case "field": t.field = v; break;
+                case "level": t.level = v; break;
+                case "pace": t.pace = v; break;
+                case "length": t.length = v; break;
+                case "era": t.era = v; break;
+                case "region": t.region = v; break;
+            }
+        }
+
+        List<string> Many(string key) => key == "life" ? t.life : key == "feel" ? t.feel : key == "screen" ? t.screen : t.liked;
+
+        public override VisualElement Build()
+        {
+            int last = Questions.Length;
+            var q = step < last ? Questions[step] : null;
+            object[] content, foot;
+            if (finding)
+                return El("div", Navbar("", new NavOpts { OnBack = () => { finding = false; step = last - 1; Nav.Refresh(); } }), MatchUI.Finding());
+            if (q != null)
+            {
+                bool answered = q.Kind == "one" ? One(q.Key) != null : Many(q.Key).Count > 0;
+                VisualElement body;
+                if (q.Kind == "one")
+                {
+                    body = El("div.list", q.Options.Select(o => Btn("button.item", () => { SetOne(q.Key, o.id); Go(step + 1); },
+                        El("div.grow", El("div", o.label), o.hint != null ? El("div.xs.faint", o.hint) : null),
+                        One(q.Key) == o.id ? Icon("check") : Icon("chev", "chev")))).M(20, 0, 0);
+                }
+                else if (q.Kind == "many")
+                {
+                    body = El("div.row.wrap.gap8.mt20", q.Options.Select(o => Btn("button.chip" + (Many(q.Key).Contains(o.id) ? ".on" : ""), () => Toggle(q.Key, o.id), o.label)));
+                }
+                else
+                {
+                    body = El("div.grid3.mt20", Data.Books.Select(b =>
+                    {
+                        bool on = t.liked.Contains(b.id);
+                        return El("div.col.gap4", On(() => Toggle("liked", b.id)),
+                            SetupScreen.PickCover(b, on),
+                            El("div.xs.clamp2" + (on ? ".strong" : ".muted"), b.title));
+                    }));
+                }
+                content = new object[] { El("div.caps", $"Question {step + 1} of {last}"), El("div.h1.mt6", q.Title), El("p.muted.mt8", q.Sub), body };
+                string next = step == last - 1 ? "See my books" : "Next";
+                foot = answered
+                    ? new object[] { Btn("button.btn.accent", () => Go(step + 1), next) }
+                    : new object[] { Btn("button.btn.secondary", () => { if (q.Kind == "one") SetOne(q.Key, null); Go(step + 1); }, "Skip this question") };
+            }
+            else
+            {
+                var shown = TasteQuiz.Results(Data.Catalog, t, TasteQuiz.ExcludeFor(Data.State));
+                content = new object[] { El("div.caps", "Your match"), MatchUI.List(shown, sel, k => { sel = k; Nav.Refresh(); }, Open, onStart: b => Start(b.id)) };
+                foot = new object[] { Btn("button.btn.secondary", () => { step = 0; Nav.Refresh(); }, "Change my answers") };
+            }
+            var progress = q != null ? El("div.pad.mt8", Bar((step + 1) / (double)last, "ink")) : null;
+            return El("div",
+                Navbar("", new NavOpts { OnBack = () => { if (step > 0 && q != null) { step--; Nav.Refresh(); } else Nav.Back(); } }),
+                progress,
+                El("div.scroll.under-nav", El("div.pad.mt20", content, El("div.bottom-space"))),
+                El("div.pad", foot).P(12, 16, Mathf.Max(40, Safe.Bottom + 6), 16).BorderTop(1, "rule"));
+        }
+
+        /// <summary>Multiple choice: "Nothing special" clears the other life answers, and any other answer clears it.</summary>
+        void Toggle(string key, string id)
+        {
+            var list = Many(key);
+            if (list.Contains(id)) list.Remove(id);
+            else
+            {
+                if (key == "life" && id == TasteQuiz.None) list.Clear();
+                if (key == "life" && id != TasteQuiz.None) list.Remove(TasteQuiz.None);
+                list.Add(id);
+            }
+            Nav.Refresh();
+        }
+
+        /// <summary>The first book (nothing finished yet) opens the book page in onboarding mode: just "Read this".</summary>
+        void Open(Book b)
+        {
+            bool first = !Data.State.progress.Any(p => p.finished);
+            Nav.Push(first ? new BookScreen(b.id, true, () => Start(b.id)) : new BookScreen(b.id));
+        }
+
+        void Go(int n)
+        {
+            step = n;
+            // The answers are saved with the diary (state.tastes) once the reader sees the results.
+            if (n == Questions.Length)
+            {
+                if (Data.X != null) { Data.X.tastes = TasteQuiz.Clean(t); Data.Save(); }
+                sel = 0; finding = true;
+                App.Root.schedule.Execute(() => { if (!finding) return; finding = false; if (IsCurrent) Nav.Refresh(); }).StartingIn(MatchUI.FindingMs);
+            }
+            Nav.Refresh();
+        }
+
+        void Start(string id) => Nav.Push(new StartBookScreen(id));
+    }
+
+    /// <summary>Spotlight + compact list of matches, shared by the first-book flow and "Find your next book".</summary>
+    public static class MatchUI
+    {
+        /// <summary>How long "Finding your match…" shows: a short pause so the match feels considered.</summary>
+        public const int FindingMs = 2000;
+
+        /// <summary>Calm "Finding your match…" interstitial.</summary>
+        public static VisualElement Finding()
+        {
+            var dots = El("div.dots", El("i.dot"), El("i.dot"), El("i.dot"));
+            dots.schedule.Execute(() => dots.ToggleInClassList("on")).Every(600);
+            return El("div.finding", dots, El("div.h2", "Finding your match…"), El("p.small.muted", "Looking through the catalog"));
+        }
+
+        /// <summary>One short real review (4+ stars and brief when possible), or null.</summary>
+        public static ReaderReview ShortReview(string bookId)
+        {
+            var rv = Data.ReviewsFor(bookId).Where(r => !string.IsNullOrEmpty(r.text) && r.text.Length <= 260).ToList();
+            return rv.FirstOrDefault(r => r.rating >= 4.0 * (r.ratingScale > 0 ? r.ratingScale : 5) / 5) ?? rv.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// recs[sel] is the spotlight (cover, title, author, one review); the rest are small rows that swap in on tap.
+        /// onStart adds the main call to action, "Start reading this", under the spotlight.
+        /// </summary>
+        public static object[] List(List<Recommendation> recs, int sel, Action<int> onSwap, Action<Book> onOpen, bool why = false, Action<Book> onStart = null)
+        {
+            if (recs.Count == 0) return new object[] { El("p.small.muted.mt12", "No matches left in the catalog. Try other answers.") };
+            int i = Math.Min(sel, recs.Count - 1);
+            var top = recs[i];
+            var b = top.Book;
+            var rv = ShortReview(b.id);
+            var spot = Btn("button.spot", () => onOpen(b),
+                Cover(b, 128), El("div.h1.mt16", b.title).FontSize(24), El("div.muted.mt4", b.author),
+                rv != null ? Btn("button.spotq", () => Nav.Push(new ReviewsScreen(b.id)), El("div.serif.italic", $"“{rv.text}”"), El("div.xs.faint.mt6", $"{rv.author} · See reviews")) : null,
+                rv == null || why ? El("div.small.accent.mt12", top.Reason) : null);
+            var rows = recs.Select((r, k) => (r, k)).Where(x => x.k != i).Select(x =>
+                Btn("button.item", () => onSwap(x.k), Cover(x.r.Book, 44),
+                    El("div.grow", El("div.strong.clamp2", x.r.Book.title), El("div.small.muted", x.r.Book.author))));
+            var cta = onStart != null ? new object[] { Btn("button.btn.accent.mt16", () => onStart(b), "Start reading this"), Btn("button.btn.ghost.mt4", () => onOpen(b), "See the book") } : null;
+            return new object[] { spot, cta, El("div.caps.mt24", "More matches"), El("div.list", rows).M(8, 0, 0) };
+        }
+    }
+
+    /// <summary>
+    /// "Find your next book": five questions for readers with a history (Core NextBook). The ranking also learns
+    /// from what they finished, rated, dropped and want to read. Results reuse MatchUI.
+    /// </summary>
+    public class NextBookScreen : WebScreen
+    {
+        public class Q
+        {
+            public string Key, Title, Sub; public TasteOption[] Options;
+        }
+        static readonly Q[] Questions =
+        {
+            new Q { Key = "mood", Title = "What are you in the mood for?", Sub = "Pick the feeling you want right now.", Options = NextBook.Moods },
+            new Q { Key = "length", Title = "How much time do you have?", Sub = "Ten pages take about fifteen minutes.", Options = NextBook.Lengths },
+            new Q { Key = "novelty", Title = "Familiar or new?", Sub = "We'll look at the books you've rated.", Options = NextBook.Novelties },
+            new Q { Key = "kind", Title = "What kind of read?", Sub = "Stories, ideas or theater.", Options = NextBook.Kinds },
+            new Q { Key = "region", Title = "Where should the author be from?", Sub = "Mexican and Latin American voices are in the catalog.", Options = NextBook.Regions },
+        };
+
+        readonly NextBookAnswers a = new NextBookAnswers();
+        int step, sel;
+
+        void Set(string key, string v)
+        {
+            switch (key)
+            {
+                case "mood": a.mood = v; break;
+                case "length": a.length = v; break;
+                case "novelty": a.novelty = v; break;
+                case "kind": a.kind = v; break;
+                case "region": a.region = v; break;
+            }
+        }
+
+        bool finding;
+
+        /// <summary>After the last answer: "Finding your match…" for a moment, then the results (same as the first-book quiz).</summary>
+        void Think()
+        {
+            sel = 0; finding = true;
+            App.Root.schedule.Execute(() => { if (!finding) return; finding = false; if (IsCurrent) Nav.Refresh(); }).StartingIn(MatchUI.FindingMs);
+        }
+
+        public override VisualElement Build()
+        {
+            if (finding) return El("div", Navbar("", new NavOpts { OnBack = () => { finding = false; step--; Nav.Refresh(); } }), MatchUI.Finding());
+            var q = step < Questions.Length ? Questions[step] : null;
+            object[] content;
+            VisualElement foot;
+            if (q != null)
+            {
+                void Pick(string id) { Set(q.Key, id); step++; if (step == Questions.Length) Think(); Nav.Refresh(); }
+                content = new object[]
+                {
+                    El("div.caps", $"Question {step + 1} of {Questions.Length}"), El("div.h1.mt6", q.Title), El("p.muted.mt8", q.Sub),
+                    El("div.list", q.Options.Select(o => Btn("button.item", () => Pick(o.id),
+                        El("div.grow", El("div", o.label), o.hint != null ? El("div.xs.faint", o.hint) : null), Icon("chev", "chev")))).M(20, 0, 0),
+                };
+                foot = El("div.pad", Btn("button.btn.secondary", () => Pick(null), "Skip this question"));
+            }
+            else
+            {
+                var recs = NextBook.Recommend(Data.Catalog, Data.State, a, Data.X.want, Data.X.dnf, 5);
+                content = new object[]
+                {
+                    El("div.caps", "Your next book"),
+                    MatchUI.List(recs, sel, k => { sel = k; Nav.Refresh(); }, b => Nav.Push(new BookScreen(b.id)), true, b => Nav.Push(new StartBookScreen(b.id))),
+                };
+                foot = El("div.pad", Btn("button.btn.secondary", () => { step = 0; sel = 0; Nav.Refresh(); }, "Change my answers"));
+            }
+            return El("div",
+                Navbar("", new NavOpts { OnBack = () => { if (step > 0) { step--; sel = 0; Nav.Refresh(); } else Nav.Back(); } }),
+                q != null ? El("div.pad.mt8", Bar((step + 1) / (double)Questions.Length, "ink")) : null,
+                El("div.scroll.under-nav", El("div.pad.mt20", content, El("div.bottom-space"))),
+                foot.P(12, 16, Mathf.Max(40, Safe.Bottom + 6), 16).BorderTop(1, "rule"));
         }
     }
 
