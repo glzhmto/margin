@@ -1,9 +1,20 @@
-/* Data: catalog, quotes and real Goodreads reviews (static JSON), plus the signed-in account.
+/* Data: catalog, quotes and real reader reviews (static JSON), plus the signed-in account.
    Accounts, friends, creators and activity are real and live in Supabase (js/net.js). */
 "use strict";
 
-const TODAY_REAL = () => Clock.today();
 const APP_VERSION = "5.3.1";
+
+/* Defaults and choices that screens share, in one place (Unity reads the same values from Resources/Data/tuning.json). */
+const PLAN = {
+  days: [1, 2, 3, 4, 5],            // Monday to Friday
+  daily: 15, skipDaily: 10,         // pages a day: suggested in setup, and when setup is left for later
+  hour: 22, minute: 0,              // reminder time
+  year: 12,                         // books this year
+  dailyOptions: [5, 10, 15, 20, 30, 50],
+  yearOptions: [4, 6, 12, 24, 52],
+};
+const FOCUS = { minutes: [15, 25, 45, 60], silenced: ["instagram", "tiktok", "youtube"] };
+const TIMING = { findingMatchMs: 1500 };
 
 function hash(str) { let x = 2166136261; for (const c of str) { x ^= c.charCodeAt(0); x = Math.imul(x, 16777619); } return x >>> 0; }
 
@@ -22,16 +33,17 @@ const ACHIEVEMENTS = [
 ];
 
 const Data = {
-  quotes: [], reviews: [], covers: new Set(),
+  quotes: [], reviews: [], creators: [], covers: new Set(),
 
   async load() {
     const get = p => fetch(p).then(r => { if (!r.ok) throw new Error(p); return r.json(); });
     const base = "../Assets/Resources/";
-    const [books, quotes, reviews, covers] = await Promise.all([
+    const [books, quotes, reviews, covers, creators] = await Promise.all([
       get(base + "Data/books.json"), get(base + "Data/quotes.json"), get(base + "Data/reviews.json"),
-      get(base + "Covers/SOURCES.json").catch(() => ({})),
+      get(base + "Covers/SOURCES.json").catch(() => ({})), get(base + "Data/creators.json").catch(() => ({ creators: [] })),
     ]);
     Catalog.data = books; this.quotes = quotes.quotes; this.reviews = reviews.reviews;
+    this.creators = (creators.creators || []).filter(c => Catalog.findBook(c.bookId));
     Object.keys(covers).forEach(k => this.covers.add(k));
   },
   coverUrl(id) { return this.covers.has(id) ? `../Assets/Resources/Covers/${id}.jpg` : null; },
@@ -39,6 +51,8 @@ const Data = {
   list(id) { return (this.state().lists || []).find(l => l.id === id); },
   // Real reviews from Goodreads readers (quoted with author and link).
   reviewsFor(id) { return this.reviews.filter(r => r.bookId === id); },
+  // Real book creators (BookTube, blogs) and what they said about a catalog book, with a link to the source.
+  creatorsFor(id) { return this.creators.filter(c => c.bookId === id); },
   quoteOfDay(d) { const q = this.quotes; return q.length ? q[(d.getFullYear() * 400 + Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 864e5)) % q.length] : null; },
 
   /* ---- Session ---- */
@@ -47,7 +61,7 @@ const Data = {
     const a = Accounts.current();
     if (!a) return null;
     const s = a.state;
-    return { id: a.username, uid: a.id, name: a.name || a.username, bio: a.bio, color: a.color, joined: s.profile.createdOn || a.created, isMe: true,
+    return { id: a.username, uid: a.id, name: a.name || a.username, bio: a.bio, color: a.color, avatar: a.avatar, joined: s.profile.createdOn || a.created, isMe: true,
       read: s.progress.filter(p => p.finished).map(p => p.bookId), favorites: s.favorites || [] };
   },
   save() { Net.save(); },
@@ -58,7 +72,6 @@ const Data = {
       .sort((a, b) => (b.finishedOn || "").localeCompare(a.finishedOn || ""));
   },
   lastLogDate(state, bookId) { let k = null; for (const l of state.logs) if (l.bookId === bookId && (!k || l.date > k)) k = l.date; return k; },
-  pagesInYear(state, y) { return state.logs.reduce((t, l) => t + (l.date.startsWith(String(y)) ? l.toPage - l.fromPage : 0), 0); },
   booksInYear(state, y) { return this.finished(state).filter(p => (p.finishedOn || "").startsWith(String(y))).length; },
   weeksMeetingGoal(state, today) {
     const target = S.weeklyTarget(state.profile.goals);
@@ -111,7 +124,8 @@ const Accounts = {
 function normalizeState(s, name) {
   if (!s || !s.profile) { s = newState(); s.profile.name = (name || "").split(" ")[0]; }
   const def = { lists: [], social: { likedLists: [], likedReviews: [] }, want: [], dnf: [], focusSessions: [], reviews: [], favorites: [],
-    yearGoal: 12, notifications: [], nightLogs: 0 };
+    yearGoal: 12, notifications: [], nightLogs: 0,
+    tastes: null }; // taste quiz answers (TasteQuiz.clean: field, level, life, feel, screen, pace, length, era, region, liked); null until the quiz is taken
   for (const k in def) if (s[k] == null) s[k] = JSON.parse(JSON.stringify(def[k]));
   for (const k of ["logs", "progress", "quizResults", "reflections", "remindersScheduled"]) if (!Array.isArray(s[k])) s[k] = [];
   if (!s.profile.goals) s.profile.goals = newGoals();

@@ -114,7 +114,8 @@ function stars(value, size = 12) {
 function avatar(user, size = 36) {
   const name = user.name || user.id || "?";
   const ini = name.split(/\s+/).filter(Boolean).slice(0, 2).map(p => p[0]).join("").toUpperCase();
-  return h(`div.avatar.av${size}`, { style: { background: user.color || "#5B554C" } }, ini);
+  // A profile photo (a small JPEG data URL from Settings › Profile) replaces the initials.
+  return h(`div.avatar.av${size}`, { style: { background: user.color || "#5B554C" } }, user.avatar ? h("img", { src: user.avatar, alt: "" }) : ini);
 }
 
 function sect(title, more, onMore) {
@@ -132,6 +133,26 @@ function switchEl(on, onchange) {
   const s = h("button.switch" + (on ? ".on" : ""), { role: "switch", "aria-checked": on ? "true" : "false" });
   s.addEventListener("click", e => { e.stopPropagation(); const v = !s.classList.contains("on"); s.classList.toggle("on", v); s.setAttribute("aria-checked", v); onchange(v); });
   return s;
+}
+
+
+/* Updates an existing tree to match a freshly built one, in place. Inputs are kept (never recreated),
+   so typing, focus, the cursor and the phone keyboard are not interrupted. Used by forms that redraw
+   while the user types. */
+function morph(oldEl, newEl) {
+  if (oldEl.nodeType !== newEl.nodeType || oldEl.nodeName !== newEl.nodeName) { oldEl.replaceWith(newEl); return; }
+  if (oldEl.nodeType === 3) { if (oldEl.textContent !== newEl.textContent) oldEl.textContent = newEl.textContent; return; }
+  if (oldEl.nodeType !== 1) return;
+  if (oldEl.namespaceURI === "http://www.w3.org/2000/svg") { if (oldEl.innerHTML !== newEl.innerHTML) oldEl.replaceWith(newEl); return; }
+  const isInput = oldEl.nodeName === "INPUT" || oldEl.nodeName === "TEXTAREA";
+  for (const { name } of [...oldEl.attributes]) if (!newEl.hasAttribute(name) && !(isInput && name === "value")) oldEl.removeAttribute(name);
+  for (const { name, value } of [...newEl.attributes]) { if (isInput && name === "value") continue; if (oldEl.getAttribute(name) !== value) oldEl.setAttribute(name, value); }
+  if (oldEl.nodeName === "BUTTON") oldEl.disabled = newEl.disabled;
+  if (isInput) { if (document.activeElement !== oldEl && oldEl.value !== newEl.value) oldEl.value = newEl.value; return; }
+  oldEl.style.cssText = newEl.style.cssText;
+  const a = [...oldEl.childNodes], b = [...newEl.childNodes];
+  for (let i = 0; i < b.length; i++) { if (i < a.length) morph(a[i], b[i]); else oldEl.append(b[i]); }
+  for (let i = b.length; i < a.length; i++) a[i].remove();
 }
 
 /* ---------- Navigation ---------- */
@@ -155,14 +176,13 @@ const Nav = {
     if (sc != null) { const s = el.querySelector(".scroll"); if (s) s.scrollTop = sc; }
     const navbar = el.querySelector(".navbar"); const s = el.querySelector(".scroll");
     if (navbar && s) s.addEventListener("scroll", () => navbar.classList.toggle("scrolled", s.scrollTop > 4));
-    App.updateStatusBar(el);
     scr.onShow();
   },
   push(scr) { this.current()?.onHide(); this.stack.push(scr); this.render(scr, "push"); },
   replace(scr) { this.stack.pop()?.onHide(); this.stack.push(scr); this.render(scr, "push"); },
   back() { if (this.stack.length < 2) return; this.stack.pop().onHide(); this.render(this.current()); },
   reset(scr, tab) { this.stack.forEach(s => s.onHide()); this.stack = [scr]; if (tab) this.tab = tab; this.render(scr); },
-  refresh() { const c = this.current(); if (c) this.render(c); },
+  refresh() { const c = this.current(); if (c) this.render(c, "still"); },
   current() { return this.stack[this.stack.length - 1]; },
 };
 
@@ -180,7 +200,7 @@ function tabbar(active) {
     t("home", "Home", "home", () => new HomeScreen()),
     t("explore", "Explore", "search", () => new ExploreScreen()),
     h("button.tab.plus", { onclick: () => LogSheet.open(), "aria-label": "Log reading" }, h("span.ring", icon("plus")), "Log"),
-    t("diary", "Diary", "diary", () => new DiaryScreen()),
+    t("diary", "Library", "diary", () => new DiaryScreen()),
     t("profile", "Profile", "user", () => new ProfileScreen(Data.me())));
 }
 
@@ -189,7 +209,7 @@ const Sheet = {
   open(title, body, opts = {}) {
     this.close(true);
     const scrim = h("div.scrim", { onclick: () => !opts.locked && this.close() });
-    const left = opts.left || h("button.navbar-btn.textbtn", { style: { color: "var(--link)", height: "44px", padding: "0 10px" }, onclick: () => this.close() }, "Cancel");
+    const left = opts.left || h("button.navbar-btn.textbtn", { style: { color: "var(--ink-2)", height: "44px", padding: "0 10px" }, onclick: () => this.close() }, "Cancel");
     const sheet = h("div.sheet", h("div.grab"), h("div.shead", left, h("div.title", title), opts.right || h("div", { style: { width: "76px" } })), h("div.sbody", body));
     App.root.append(scrim, sheet);
     this.cur = { scrim, sheet, onClose: opts.onClose };
@@ -221,4 +241,102 @@ function toast(msg) {
 function banner(title, body) {
   const b = h("div.banner", h("div.appic", "m"), h("div.grow", h("div.row", h("span.strong.small.grow", "Margin"), h("span.xs", { style: { color: "#888" } }, "now")), h("div.small.strong", title), h("div.small", body)));
   App.root.append(b); setTimeout(() => b.remove(), 4200);
+}
+
+/* One short, real Goodreads review for a book (4+ stars and brief when possible), or null. */
+function shortReview(bookId) {
+  const rv = Data.reviewsFor(bookId).filter(r => r.text && r.text.length <= 260);
+  return rv.find(r => r.rating >= 4 * (r.ratingScale || 5) / 5) || rv[0] || null;
+}
+
+/* Calm "Finding your match…" interstitial. */
+function findingView() {
+  return h("div.finding", h("div.dots", h("i"), h("i"), h("i")), h("div.h2", "Finding your match…"), h("p.small.muted", "Looking through the catalog"));
+}
+
+/* Spotlight + compact list of matches, shared by the first-book flow and "Find your next book".
+   owner.sel is the spotlighted index; tapping a row swaps it in, tapping the spotlight calls onOpen(book).
+   opts.why also shows the reason under a review ("Because you rated ..."). opts.onStart(book) adds the main
+   call to action, "Start reading", under the spotlight; the spotlight itself still opens the book page. */
+function matchList(owner, recs, onOpen, opts = {}) {
+  if (!recs.length) return h("p.small.muted.mt12", "No matches left in the catalog. Try other answers.");
+  const i = Math.min(owner.sel || 0, recs.length - 1), top = recs[i], b = top.book, rv = shortReview(b.id);
+  const spot = h("button.spot", { onclick: () => onOpen(b) },
+    cover(b, 128), h("div.h1.mt16", { style: { fontSize: "24px" } }, b.title), h("div.muted.mt4", b.author),
+    rv ? h("div.spotq", { role: "button", onclick: e => { e.stopPropagation(); Nav.push(new ReviewsScreen(b.id)); } },
+      h("div.serif.italic", `“${rv.text}”`), h("div.xs.faint.mt6", `${rv.author} · See reviews`)) : null,
+    !rv || opts.why ? h("div.small.accent.mt12", top.reason) : null);
+  const cta = opts.onStart ? [h("button.btn.accent.mt16", { onclick: () => opts.onStart(b) }, "Start reading this"),
+    h("button.btn.ghost.mt4", { onclick: () => onOpen(b) }, "See the book")] : null;
+  const rest = recs.map((r, k) => [r, k]).filter(([, k]) => k !== i);
+  return [spot, cta, h("div.caps.mt24", "More matches"),
+    h("div.list", { style: { margin: "8px 0 0" } }, rest.map(([r, k]) => h("button.item", { onclick: () => { owner.sel = k; Nav.refresh(); } },
+      cover(r.book, 44), h("div.grow", h("div.strong.clamp2", r.book.title), h("div.small.muted", r.book.author)))))];
+}
+
+/* A short burst of confetti over the whole app, for a real decision (starting a book).
+   It lives inside #app, so the in-app Reduce motion setting (.reduce-motion) hides it too. */
+const CONFETTI = { pieces: 80, ms: 4300 };
+function celebrate() {
+  const colors = ["var(--accent)", "var(--star)", "var(--ok)", "var(--ink)", "#E9B44C"];
+  const box = h("div.confetti", { "aria-hidden": "true" });
+  for (let i = 0; i < CONFETTI.pieces; i++) {
+    const c = h("i"), r = Math.random;
+    c.style.left = `${r() * 100}%`; c.style.background = colors[i % colors.length];
+    // Custom properties need setProperty (Object.assign on style ignores them).
+    [["--x", `${(r() - .5) * 200}px`], ["--r", `${360 + r() * 720}deg`], ["--d", `${2.2 + r() * 1.2}s`], ["--delay", `${r() * .5}s`]]
+      .forEach(([k, v]) => c.style.setProperty(k, v));
+    box.append(c);
+  }
+  App.root.append(box);
+  setTimeout(() => box.remove(), CONFETTI.ms);
+}
+
+/* Search a book by title or author, filtering in place (no re-render, so the keyboard stays open).
+   Elements with data-q in the same parent's next sibling grid/list are shown or hidden. */
+const norm = s => (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+function searchKey(b) { return norm(`${b.title} ${b.author}`); }
+function bookSearch(placeholder) {
+  const empty = h("p.small.faint.mt12", { style: { display: "none" } }, "No book matches. Try another word.");
+  const input = h("input.input", { type: "search", placeholder, autocomplete: "off", "aria-label": placeholder });
+  input.addEventListener("input", () => {
+    const q = norm(input.value).trim();
+    const grid = wrap.nextElementSibling; if (!grid) return;
+    let shown = 0;
+    grid.querySelectorAll("[data-q]").forEach(el => { const on = !q || el.dataset.q.includes(q); el.style.display = on ? "" : "none"; shown += on; });
+    empty.style.display = shown ? "none" : "";
+  });
+  const wrap = h("div.mt16", input, empty);
+  return wrap;
+}
+
+/* Profile photo: pick an image, crop it square and shrink it to a 160 px JPEG (small enough to live in the profile row). */
+function pickPhoto(onDone) {
+  const input = h("input", { type: "file", accept: "image/*", style: { display: "none" } });
+  input.addEventListener("change", () => {
+    const f = input.files && input.files[0]; input.remove(); if (!f) return;
+    const img = new Image(), url = URL.createObjectURL(f);
+    img.onload = () => {
+      const n = 160, c = document.createElement("canvas"), side = Math.min(img.width, img.height);
+      c.width = c.height = n;
+      c.getContext("2d").drawImage(img, (img.width - side) / 2, (img.height - side) / 2, side, side, 0, 0, n, n);
+      URL.revokeObjectURL(url); onDone(c.toDataURL("image/jpeg", .82));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); toast("That file isn't an image we can read."); };
+    img.src = url;
+  });
+  document.body.append(input); input.click();
+}
+
+/* Stars to rate a book, in half stars (tap the left half of a star for .5). Tapping the current value clears it. */
+function ratingInput(val, onRate) {
+  const wrap = h("div.row", { style: { gap: "2px" } });
+  for (let i = 1; i <= 5; i++) {
+    const b = h("button", { style: { width: "30px", height: "30px", position: "relative" }, "aria-label": `${i} stars` }, stars(Math.max(0, Math.min(1, val - (i - 1))) * 5, 26));
+    b.firstChild.style.width = "26px"; b.querySelectorAll(".base svg").forEach((x, k) => { if (k) x.style.display = "none"; }); b.querySelectorAll(".fill svg").forEach((x, k) => { if (k) x.style.display = "none"; });
+    b.querySelector(".fill").style.width = `${Math.max(0, Math.min(1, val - (i - 1))) * 100}%`;
+    b.addEventListener("click", e => { const half = e.offsetX < 13; onRate(val === i - (half ? .5 : 0) ? 0 : i - (half ? .5 : 0)); });
+    wrap.append(b);
+  }
+  return wrap;
 }

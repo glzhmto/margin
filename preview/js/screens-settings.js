@@ -73,7 +73,11 @@ class SettingsDetail extends Screen {
         const bio = h("textarea.input", { maxlength: 160, style: { minHeight: "90px", fontFamily: "var(--sans)", fontSize: "15px" } }); bio.value = a.bio || "";
         const cnt = h("div.help", `${(a.bio || "").length}/160`); bio.addEventListener("input", () => { cnt.textContent = `${bio.value.length}/160`; });
         const fins = Data.finished(s);
-        body = [h("div.col.pad.mt12", { style: { alignItems: "center" } }, avatar(Data.me(), 88)),
+        const setPhoto = async v => { if (!(await Net.updateProfile({ avatar: v }))) { toast(v ? "Photo updated" : "Photo removed"); Nav.refresh(); } };
+        body = [h("div.col.pad.mt12", { style: { alignItems: "center" } },
+          h("button", { "aria-label": "Change profile photo", onclick: () => pickPhoto(setPhoto) }, avatar(Data.me(), 88)),
+          h("div.row.gap8.mt8", h("button.btn.sm.secondary", { onclick: () => pickPhoto(setPhoto) }, a.avatar ? "Change photo" : "Add a photo"),
+            a.avatar ? h("button.btn.sm.ghost", { onclick: () => setPhoto(null) }, "Remove") : null)),
           h("div.pad.mt16", h("span.small.muted", "Bio"), h("div.mt6", bio), cnt, h("button.btn.sm.primary.mt8", { onclick: async () => { if (!(await Net.updateProfile({ bio: bio.value.trim() }))) toast("Bio saved"); } }, "Save")),
           group("Creator", [row("Creator account", { sub: "Publish book lists, notes and videos. Readers can follow you.", control: switchEl(!!a.isCreator, async v => { const e = await Net.updateProfile({ is_creator: v }); if (!e) { toast(v ? "You're a creator now. Publish from your profile." : "Creator account turned off"); Social.refresh(); } }) })],
             "Your posts are public to every Margin reader. Followers see them in their feed. No like counts, no autoplay."),
@@ -91,10 +95,10 @@ class SettingsDetail extends Screen {
           h("p.groupfoot", "Your diary stays private. Friends see your current book, page, momentum level, finished books and favorites. Your private notes and reflections are never shared. Margin doesn't sell your data or use your writing to train AI models.")];
         break;
       case "reading":
-        body = [h("div.grouphead", "Pages a day"), h("div.row.wrap.gap8.pad", [5, 10, 15, 20, 30, 50].map(n => h("button.chip" + (g.dailyPages === n ? ".on" : ""), { onclick: () => { g.dailyPages = n; save(); } }, n))),
+        body = [h("div.grouphead", "Pages a day"), h("div.row.wrap.gap8.pad", PLAN.dailyOptions.map(n => h("button.chip" + (g.dailyPages === n ? ".on" : ""), { onclick: () => { g.dailyPages = n; save(); } }, n))),
           h("div.grouphead", "Reading days"), h("div.row.gap6.pad", [1, 2, 3, 4, 5, 6, 0].map(d => h("button.chip.day" + (g.readingDays.includes(d) ? ".on" : ""), { "aria-label": Fmt.Days[d], onclick: () => { if (g.readingDays.includes(d)) { if (g.readingDays.length === 1) return toast("You need at least one reading day."); g.readingDays.splice(g.readingDays.indexOf(d), 1); } else g.readingDays.push(d); save(); } }, Copy.DayLetters[d]))),
           h("p.groupfoot", `${F.pages(S.weeklyTarget(g))} a week, ${Fmt.dayList(g.readingDays)}.`),
-          h("div.grouphead", `Book goal for ${Clock.today().getFullYear()}`), h("div.row.wrap.gap8.pad", [4, 6, 12, 24, 52].map(n => h("button.chip" + (s.yearGoal === n ? ".on" : ""), { onclick: () => { s.yearGoal = n; save(); } }, n))),
+          h("div.grouphead", `Book goal for ${Clock.today().getFullYear()}`), h("div.row.wrap.gap8.pad", PLAN.yearOptions.map(n => h("button.chip" + (s.yearGoal === n ? ".on" : ""), { onclick: () => { s.yearGoal = n; save(); } }, n))),
           group("", [row("Count rereads", { control: switchEl(st.countRereads, v => { st.countRereads = v; Data.save(); }) }),
             row("Favorite shelf", { value: Catalog.findShelf(g.favoriteShelfId)?.name || "None", onclick: () => Nav.push(new ChoiceScreen("Favorite shelf", [["", "None"], ...Catalog.data.shelves.map(x => [x.id, x.name])], () => g.favoriteShelfId || "", v => { g.favoriteShelfId = v || null; }, "It gets priority in your recommendations.")) })])];
         break;
@@ -111,8 +115,8 @@ class SettingsDetail extends Screen {
             group("", [row("Try a reminder", { noChev: true, onclick: () => App.demoBanner() })])] : null];
         break;
       case "focus":
-        body = [h("div.grouphead", "Default length"), h("div.list", [15, 25, 45, 60].map(m => row(`${m} minutes`, { noChev: true, control: st.focusMinutes === m ? icon("check") : null, onclick: () => { st.focusMinutes = m; save(); } }))),
-          group("", [row("Silenced apps", { value: st.screenTime ? `${(st.silenced || ["instagram", "tiktok", "youtube"]).length}` : "No permission", onclick: () => Nav.push(new AppPickerScreen()) })])];
+        body = [h("div.grouphead", "Default length"), h("div.list", FOCUS.minutes.map(m => row(`${m} minutes`, { noChev: true, control: st.focusMinutes === m ? icon("check") : null, onclick: () => { st.focusMinutes = m; save(); } }))),
+          group("", [row("Silenced apps", { value: st.screenTime ? `${(st.silenced || FOCUS.silenced).length}` : "No permission", onclick: () => Nav.push(new AppPickerScreen()) })])];
         break;
       case "appearance":
         body = [h("div.grouphead", "Theme"), h("div.list", ["System", "Light", "Dark"].map(o => row(o, { noChev: true, control: st.theme === o ? icon("check") : null, onclick: () => { st.theme = o; Data.save(); App.applySettings(); Nav.refresh(); } }))),

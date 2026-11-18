@@ -16,7 +16,7 @@ class WelcomeScreen extends Screen {
         h("div.small.muted.mt8", add ? `@${add} invited you. Sign up or log in to add them as a friend.` : "Read with your friends, at your own pace."),
         h("div.col.gap10.mt24",
           h("button.btn.primary", { disabled: this.busy, onclick: () => Nav.push(new SignupScreen()) }, "Sign up with email"),
-          h("button.btn.secondary", { disabled: this.busy, onclick: () => App.tryGuest(this) }, this.busy ? "Opening Margin…" : "Try it without an account"),
+          h("button.btn.secondary", { disabled: this.busy, onclick: () => App.tryGuest(this) }, this.busy ? "Opening the demo…" : "Try a demo account"),
           h("button.btn.ghost", { disabled: this.busy, onclick: () => Nav.push(new LoginScreen()) }, "I already have an account")),
         this.err ? h("p.small.center.mt8", { role: "alert", style: { color: "var(--error)" } }, this.err) : null,
         h("p.xs.faint.center.mt12", "By continuing you accept the Terms of Use and the Privacy Notice.")));
@@ -38,6 +38,20 @@ const V = {
 };
 
 function field(label, input, help) { return h("label.field.mt16", h("span.lab", label), input, help); }
+
+/* What the sign up form still needs, as one short sentence for a toast. */
+function missingText(v, errs, avail, terms) {
+  const m = [];
+  if (errs.name) m.push("your name");
+  if (errs.email) m.push("a valid email");
+  if (!v.username || V.username(v.username)) m.push("a username");
+  else if (avail === false) m.push("a different username");
+  if (errs.password) m.push("a password (8+ characters, one number)");
+  if (terms === false) m.push("accepting the terms");
+  if (!m.length) return avail === undefined ? "Still checking your username. Try again in a second." : null;
+  const list = m.length === 1 ? m[0] : m.slice(0, -1).join(", ") + " and " + m[m.length - 1];
+  return "Still missing: " + list + ".";
+}
 
 class SignupScreen extends Screen {
   constructor() { super(); this.v = { name: "", email: "", username: "", password: "", university: "" }; this.terms = false; this.show = false; this.touched = {}; this.avail = {}; this.busy = false; this.err = null; this.sent = false; }
@@ -87,11 +101,22 @@ class SignupScreen extends Screen {
       h("button.check.mt20" + (this.terms ? ".on" : ""), { onclick: () => { this.terms = !this.terms; this.update(); } },
         h("span.box", this.terms ? icon("check") : null), h("span", "I accept the ", h("span.link", "Terms of Use"), " and the ", h("span.link", "Privacy Notice"), ". I am 13 or older.")),
       this.err ? h("div.help.bad.mt12", this.err) : null,
-      h("button.btn.accent.mt24", { disabled: !ok, onclick: () => this.submit() }, this.busy ? "Creating…" : "Create account"),
+      h("button.btn.accent.mt24" + (ok ? "" : ".soft"), { disabled: this.busy, onclick: () => this.trySubmit() }, this.busy ? "Creating…" : "Create account"),
       h("div.bottom-space"));
     return h("div", navbar(""), h("div.scroll.under-nav", body));
   }
-  update() { const a = document.activeElement; const ph = a && a.getAttribute("placeholder"); const pos = a && a.selectionStart; Nav.refresh(); if (ph != null) { const e = [...Nav.current().el.querySelectorAll("input")].find(i => i.getAttribute("placeholder") === ph); if (e) { e.focus(); try { e.setSelectionRange(pos, pos); } catch {} } } }
+  update() { if (Nav.current() !== this || !this.el) return; const fresh = this.build(); const a = [...this.el.childNodes], b = [...fresh.childNodes]; b.forEach((n, j) => j < a.length ? morph(a[j], n) : this.el.append(n)); a.slice(b.length).forEach(n => n.remove()); }
+  // Read at tap time: the button element is kept between updates, so it must not rely on values from build().
+  trySubmit() {
+    if (this.busy) return;
+    const v = this.v, a = this.avail[v.username], needTerms = !(this instanceof SaveAccountScreen);
+    const errs = { name: v.name.trim().length < 2 ? "x" : null, email: V.email(v.email), username: V.username(v.username) || (a === false ? "x" : null), password: V.password(v.password) };
+    if (!Object.values(errs).some(Boolean) && (!needTerms || this.terms) && a === true) return this.submit();
+    // Not complete yet: mark every field and say what is left, without blocking.
+    ["name", "email", "username", "password"].forEach(k => { this.touched[k] = true; });
+    this.update();
+    const t = missingText(v, errs, a, needTerms ? this.terms : null); if (t) toast(t);
+  }
   async submit() {
     this.busy = true; this.err = null; this.update();
     let r;
@@ -163,25 +188,26 @@ class NewPasswordScreen extends Screen {
 }
 
 /* ---- First-time setup (after creating the account) ---- */
+const SETUP_STEPS = 7; // pages a day, days, time, book, year goal, reminders, all set
 class SetupScreen extends Screen {
-  constructor(acc) { super(); this.acc = acc; this.step = 0; this.g = { daily: 15, days: [1, 2, 3, 4, 5], hour: 22, min: 0, intention: "", book: null, year: 12, notif: null }; this.err = null;
-    // Guests see three screens (pages a day, book, summary) with the rest filled in; all of it changes later in Settings.
-    this.order = acc.isGuest ? [0, 3, 6] : [0, 1, 2, 3, 4, 5, 6];
-    if (acc.isGuest) { this.g.book = "the-little-prince"; this.g.daily = 10; this.g.notif = false; } }
+  constructor(acc) { super(); this.acc = acc; this.step = 0; this.g = { daily: PLAN.daily, days: [...PLAN.days], hour: PLAN.hour, min: PLAN.minute, intention: "", book: null, noBook: false, year: PLAN.year, notif: null }; this.err = null; }
   build() {
-    const g = this.g, N = this.order.length - 1;
+    const g = this.g, N = SETUP_STEPS - 1;
     const steps = h("div.row.gap4.pad.mt8", Array.from({ length: N }, (_, i) => h("div.grow", { style: { height: "3px", borderRadius: "2px", background: i <= this.step ? "var(--ink)" : "var(--rule)" } })));
-    let content, cta = "Next", ctaDo = () => this.next();
-    switch (this.order[this.step]) {
+    // later: the text button under the main one. On optional steps it skips with the defaults (laterDo).
+    let content, cta = "Next", ctaDo = () => this.next(), later = "Skip for now", laterDo = null;
+    switch (this.step) {
       case 0:
         content = [h("div.h1", "How many pages a day?"), h("p.muted.mt8", "You can change it any time. Ten pages take about fifteen minutes."),
-          h("div.row.wrap.gap8.mt20", [5, 10, 15, 20, 30, 50].map(n => h("button.chip" + (g.daily === n ? ".on" : ""), { onclick: () => { g.daily = n; Nav.refresh(); } }, n))),
+          h("div.row.wrap.gap8.mt20", PLAN.dailyOptions.map(n => h("button.chip" + (g.daily === n ? ".on" : ""), { onclick: () => { g.daily = n; Nav.refresh(); } }, n))),
           h("p.small.faint.mt12", `${g.daily} pages, about ${Math.round(g.daily * 1.5)} minutes.`)];
+        later = "Set up later"; laterDo = () => this.later();
         break;
       case 1:
         content = [h("div.h1", "Which days will you read?"), h("p.muted.mt8", "The days you leave out are planned rest. They don't count against you."),
           h("div.row.gap6.mt20", [1, 2, 3, 4, 5, 6, 0].map(d => h("button.chip.day" + (g.days.includes(d) ? ".on" : ""), { "aria-label": Fmt.Days[d], onclick: () => { g.days.includes(d) ? g.days.splice(g.days.indexOf(d), 1) : g.days.push(d); this.err = null; Nav.refresh(); } }, Copy.DayLetters[d]))),
           h("p.small.faint.mt12", g.days.length ? `${F.pages(g.daily * g.days.length)} a week, ${Fmt.dayList(g.days)}.` : "Pick at least one day.")];
+        laterDo = () => { g.days = [...PLAN.days]; this.skip(); };
         break;
       case 2: {
         const intent = h("input.input", { value: g.intention, placeholder: "finish dinner", maxlength: 50 }); intent.addEventListener("input", () => { g.intention = intent.value; });
@@ -192,18 +218,25 @@ class SetupScreen extends Screen {
           h("div.row.gap8.mt12", { style: { justifyContent: "center" } }, [0, 15, 30, 45].map(m => h("button.chip" + (g.min === m ? ".on" : ""), { onclick: () => { g.min = m; Nav.refresh(); } }, ":" + String(m).padStart(2, "0")))),
           h("label.field.mt24", h("span.lab", "When I... (optional)"), intent),
           h("div.row.wrap.gap6.mt8", Copy.IntentionSuggestions.map(s => h("button.pillbtn" + (g.intention === s ? ".on" : ""), { onclick: () => { g.intention = s; Nav.refresh(); } }, s)))];
+        laterDo = () => { g.hour = 22; g.min = 0; g.intention = ""; this.skip(); };
         break;
       }
       case 3:
         content = [h("div.h1", "What are you reading?"), h("p.muted.mt8", "Pick one. If you already started it, you can enter the page later."),
-          h("div.grid3.mt16", Catalog.data.books.map(b => h("div.col.gap4", { onclick: () => { g.book = b.id; this.err = null; Nav.refresh(); } },
+          h("button.check.mt16" + (g.noBook ? ".on" : ""), { onclick: () => { g.noBook = !g.noBook; if (g.noBook) g.book = null; this.err = null; Nav.refresh(); } },
+            h("span.box", g.noBook ? icon("check") : null), h("span", "I'm not reading anything right now")),
+          g.noBook ? h("p.small.muted.mt8", "No problem. You can choose your first book from Home: a few quick questions match you with one from the catalog.") : null,
+          bookSearch("Search by title or author"),
+          h("div.grid3.mt16", Catalog.data.books.map(b => h("div.col.gap4", { "data-q": searchKey(b), onclick: e => this.pickBook(b.id, e.currentTarget) },
             cover(b, 110, { style: { width: "100%", outline: g.book === b.id ? "3px solid var(--accent)" : "none", outlineOffset: "2px" } }),
             h("div.xs.clamp2" + (g.book === b.id ? ".strong" : ".muted"), b.title))))];
+        later = "Choose later"; laterDo = () => this.chooseLater();
         break;
       case 4:
         content = [h("div.h1", "How many books this year?"), h("p.muted.mt8", `${12 - Clock.today().getMonth()} months of ${Clock.today().getFullYear()} left. The goal only shows in your diary.`),
-          h("div.row.wrap.gap8.mt20", [4, 6, 12, 24, 52].map(n => h("button.chip" + (g.year === n ? ".on" : ""), { onclick: () => { g.year = n; Nav.refresh(); } }, n))),
+          h("div.row.wrap.gap8.mt20", PLAN.yearOptions.map(n => h("button.chip" + (g.year === n ? ".on" : ""), { onclick: () => { g.year = n; Nav.refresh(); } }, n))),
           h("p.small.faint.mt12", g.year >= 24 ? `${g.year} books is about ${Math.round(52 / g.year * 7)} days per book.` : `One book every ${Math.round(52 / g.year)} weeks.`)];
+        laterDo = () => { g.year = 12; this.skip(); };
         break;
       case 5:
         content = [h("div.h1", "Reminders"), h("p.muted.mt8", "Four a week at most, with a line from the book you are reading. If you ignore them, we write less."),
@@ -211,40 +244,182 @@ class SetupScreen extends Screen {
             h("div.grow", h("div.small.strong", g.intention ? Copy.whenI(g.intention) : "Your book is waiting"), h("div.small.muted", "“Let others boast of the pages they have written; I am proud of those I have read.” Borges")))),
           g.notif === false ? h("p.small.mt12", { style: { color: "var(--error)" } }, "Without permission we can't remind you. You can turn it on later in iPhone Settings.") : null];
         cta = g.notif == null ? "Turn on reminders" : "Next";
+        laterDo = g.notif == null ? () => { g.notif = false; this.skip(); } : null;
         ctaDo = () => g.notif == null ? iosAlert("“Margin” Would Like to Send You Notifications", "Notifications may include alerts and sounds. You can change this in Settings.", [
           { label: "Don’t Allow", do: () => { g.notif = false; Nav.refresh(); } }, { label: "Allow", bold: true, do: () => { g.notif = true; this.next(); } }]) : this.next();
         break;
       default: {
         const b = Data.book(g.book);
-        content = [h("div.h1", this.acc.isGuest ? "All set" : `All set, ${this.acc.name.split(" ")[0]}`), h("p.muted.mt8", "Here is your plan. You can change all of it in Settings."),
+        content = [h("div.h1", `All set, ${this.acc.name.split(" ")[0]}`), h("p.muted.mt8", "Here is your plan. You can change all of it in Settings."),
           h("div.list.mt20", { style: { margin: "20px 0 0" } },
             h("div.item", h("span.grow", "Daily goal"), h("span.val", F.pages(g.daily))),
             h("div.item", h("span.grow", "Days"), h("span.val", Fmt.dayList(g.days))),
             h("div.item", h("span.grow", "Reminder"), h("span.val", g.notif ? Fmt.time(g.hour, g.min) : "Off")),
             h("div.item", h("span.grow", "Yearly goal"), h("span.val", F.books(g.year))),
-            h("div.item", cover(b, 44), h("div.grow", h("div.small.faint", "Reading"), h("div.strong", b.title))))];
+            b ? h("div.item", cover(b, 44), h("div.grow", h("div.small.faint", "Reading"), h("div.strong", b.title)))
+              : h("div.item", h("span.grow", "Reading"), h("span.val", "Choose it on Home")))];
         cta = "Start"; ctaDo = () => this.finish();
       }
     }
-    return h("div", navbar("", { onBack: () => { if (this.step === 0) { iosAlert("Leave setup?", this.acc.isGuest ? "We'll use these settings. You can change them later." : "Your account is already created. You can finish this later.", [{ label: "Stay here" }, { label: "Leave", do: () => this.finish(true) }]); } else { this.step--; Nav.refresh(); } } }),
+    return h("div", navbar("", { onBack: () => { if (this.step === 0) { iosAlert("Leave setup?", "Your account is already created. You can finish this later.", [{ label: "Stay here" }, { label: "Leave", do: () => { this.g.book = null; this.g.noBook = true; this.finish(true); } }]); } else { this.step--; Nav.refresh(); } } }),
       steps, h("div.scroll.under-nav", h("div.pad.mt20", content)),
-      h("div.pad", { style: { padding: "12px 16px 40px", borderTop: "1px solid var(--rule)" } }, h("div.help.bad", this.err || ""), h("button.btn.accent", { onclick: ctaDo }, cta)));
+      h("div.footbar.ruled", h("div.help.bad", this.err || ""), h("button.btn.accent", { onclick: ctaDo }, cta),
+        laterDo ? h("button.btn.ghost.mt4", { onclick: laterDo }, later) : null));
+  }
+  // Optional step left for later: its defaults are already set, move on.
+  skip() { this.err = null; this.step++; Nav.refresh(); }
+  // "Set up later" on the first step: the same defaults as the guest flow, no book yet, straight to Home.
+  later() {
+    const g = this.g;
+    Object.assign(g, { daily: PLAN.skipDaily, days: [...PLAN.days], hour: PLAN.hour, min: PLAN.minute, intention: "", year: PLAN.year, notif: false, book: null, noBook: true });
+    this.finish(true);
+    toast("You can set your goals any time in Settings");
+  }
+  // Book step: marks the picked cover in place (no rebuild), so a typed search and the scroll stay.
+  pickBook(id, el) {
+    const g = this.g, rebuild = g.noBook || this.err;
+    g.book = id; g.noBook = false; this.err = null;
+    if (rebuild) return Nav.refresh();
+    el.parentNode.querySelectorAll("[data-q]").forEach(x => {
+      const on = x === el;
+      x.firstChild.style.outline = on ? "3px solid var(--accent)" : "none";
+      x.lastChild.classList.toggle("strong", on); x.lastChild.classList.toggle("muted", !on);
+    });
+  }
+  // "Choose later" on the book step: no book, the defaults for whatever is left, straight to Home.
+  chooseLater() {
+    const g = this.g;
+    g.book = null; g.noBook = true;
+    this.finish(true);
+    toast("Choose your first book from Home whenever you're ready");
   }
   next() {
     const g = this.g;
-    const k = this.order[this.step];
+    const k = this.step;
     if (k === 1 && !g.days.length) { this.err = "Pick at least one reading day."; return Nav.refresh(); }
-    if (k === 3 && !g.book) { this.err = "Pick a book. You can change it any time."; return Nav.refresh(); }
+    if (k === 3 && !g.book && !g.noBook) { this.err = "Pick a book, or tap Choose later."; return Nav.refresh(); }
     this.step++; Nav.refresh();
   }
   finish(skip) {
     const s = this.acc.state, g = this.g;
     s.profile.createdOn = D.key(Clock.today()); s.profile.onboardingComplete = true;
-    Object.assign(s.profile.goals, { dailyPages: g.daily, readingDays: g.days.length ? g.days : [1, 2, 3, 4, 5], reminderHour: g.hour, reminderMinute: g.min, remindersEnabled: !!g.notif, intention: g.intention || null });
+    Object.assign(s.profile.goals, { dailyPages: g.daily, readingDays: g.days.length ? g.days : [...PLAN.days], reminderHour: g.hour, reminderMinute: g.min, remindersEnabled: !!g.notif, intention: g.intention || null });
     s.yearGoal = g.year;
-    ReadingService.setCurrentBook(s, g.book || "the-little-prince");
+    if (g.book) ReadingService.setCurrentBook(s, g.book); // no book: Home shows "Choose your first book"
     s.notifications = [{ at: D.stamp(Clock.now()), kind: "welcome", text: "Your diary starts today. Log your first reading with the + button." }];
-    Net.log({ kind: "joined" }); Data.save(); Net.flush(); App.start(); if (!skip) toast(this.acc.isGuest ? "You're in as a guest" : "Account created");
+    Net.log({ kind: "joined" }); Data.save(); Net.flush(); App.start(); if (!skip) toast("Account created");
+  }
+}
+
+/* ---- Taste quiz: ten quick questions, one per screen, then books from the catalog (TasteQuiz in core.js) ----
+   Opened from Home while there is no current book ("Choose your first book") and from Explore. Every question
+   can be skipped, and saved answers open straight on the results, where
+   "Change my answers" edits them. */
+const QUIZ_QUESTIONS = [
+  { key: "field", kind: "one", title: "What do you study or do?", sub: "We'll look for books that speak to your field.", options: () => TasteQuiz.Fields },
+  { key: "level", kind: "one", title: "How much do you read these days?", sub: "Be honest: it helps us pick the right first book.", options: () => TasteQuiz.Levels },
+  { key: "life", kind: "many", title: "What's going on in your life right now?", sub: "Pick any that fit. A book can keep you company.", options: () => TasteQuiz.Life },
+  { key: "feel", kind: "many", title: "How do you want to feel when you read?", sub: "Pick as many as you like.", options: () => TasteQuiz.Moods },
+  { key: "screen", kind: "many", title: "What do you like to watch?", sub: "Films and series are a good bridge to books.", options: () => TasteQuiz.Screens },
+  { key: "pace", kind: "one", title: "Quick and gripping, or slow and deep?", sub: "How you like a story to move.", options: () => TasteQuiz.Paces },
+  { key: "length", kind: "one", title: "How long a book?", sub: "Ten pages take about fifteen minutes.", options: () => TasteQuiz.Lengths },
+  { key: "era", kind: "one", title: "Classics or recent books?", sub: "The catalog has both, from Homer to 2021.", options: () => TasteQuiz.Eras },
+  { key: "region", kind: "one", title: "Stories from Mexico and Latin America?", sub: "Mexican and Latin American classics and new voices.", options: () => TasteQuiz.Regions },
+  { key: "liked", kind: "books", title: "Already read any of these and liked it?", sub: "We'll look for books like them and won't suggest them again." },
+];
+
+class TasteQuizScreen extends Screen {
+  constructor(opts = {}) {
+    super(); this.opts = opts;
+    const s = Data.state(), saved = s && s.tastes;
+    this.t = TasteQuiz.clean(saved);
+    // Saved answers open on the results; a first visit (or answers that were all skipped) starts at question 1.
+    this.step = saved && !TasteQuiz.isEmpty(this.t) && !opts.edit ? QUIZ_QUESTIONS.length : 0;
+  }
+  build() {
+    const t = this.t, last = QUIZ_QUESTIONS.length, q = QUIZ_QUESTIONS[this.step];
+    let content, foot;
+    if (this.finding) return h("div", navbar("", { onBack: () => { this.finding = false; this.step = last - 1; Nav.refresh(); } }), findingView());
+    if (q) {
+      const answered = q.kind === "one" ? t[q.key] != null : t[q.key].length > 0;
+      let body;
+      if (q.kind === "one") {
+        body = h("div.list", { style: { margin: "20px 0 0" } }, q.options().map(o => h("button.item", { onclick: () => { t[q.key] = o.id; this.go(this.step + 1); } },
+          h("div.grow", h("div", o.label), o.hint ? h("div.xs.faint", o.hint) : null), t[q.key] === o.id ? icon("check") : icon("chev", "chev"))));
+      } else if (q.kind === "many") {
+        body = h("div.row.wrap.gap8.mt20", q.options().map(o => h("button.chip" + (t[q.key].includes(o.id) ? ".on" : ""), { onclick: () => this.toggle(q.key, o.id) }, o.label)));
+      } else {
+        body = h("div.grid3.mt20", Catalog.data.books.map(b => {
+          const on = t.liked.includes(b.id);
+          return h("div.col.gap4", { onclick: () => this.toggle("liked", b.id) },
+            cover(b, 110, { style: { width: "100%", outline: on ? "3px solid var(--accent)" : "none", outlineOffset: "2px" } }),
+            h("div.xs.clamp2" + (on ? ".strong" : ".muted"), b.title));
+        }));
+      }
+      content = [h("div.caps", `Question ${this.step + 1} of ${last}`), h("div.h1.mt6", q.title), h("p.muted.mt8", q.sub), body];
+      const next = this.step === last - 1 ? "See my books" : "Next";
+      foot = answered ? [h("button.btn.accent", { onclick: () => this.go(this.step + 1) }, next)]
+        : [h("button.btn.secondary", { onclick: () => { if (q.kind === "one") t[q.key] = null; this.go(this.step + 1); } }, "Skip this question")];
+    } else {
+      const shown = TasteQuiz.results(t, TasteQuiz.excludeFor(Data.state()));
+      content = [h("div.caps", "Your match"), matchList(this, shown, b => this.open(b), { onStart: b => this.start(b.id) })];
+      foot = [h("button.btn.secondary", { onclick: () => { this.step = 0; Nav.refresh(); } }, "Change my answers")];
+    }
+    const progress = q ? h("div.pad.mt8", bar((this.step + 1) / last, "ink")) : null;
+    return h("div", navbar("", { onBack: () => { if (this.step > 0 && q) { this.step--; Nav.refresh(); } else Nav.back(); } }),
+      progress, h("div.scroll.under-nav", h("div.pad.mt20", content, h("div.bottom-space"))),
+      h("div.footbar.ruled", foot));
+  }
+  // Multiple choice: "Nothing special" clears the other life answers, and any other answer clears it.
+  toggle(key, id) {
+    const list = this.t[key];
+    if (list.includes(id)) list.splice(list.indexOf(id), 1);
+    else {
+      if (key === "life" && id === TasteQuiz.None) list.length = 0;
+      if (key === "life" && id !== TasteQuiz.None && list.includes(TasteQuiz.None)) list.splice(list.indexOf(TasteQuiz.None), 1);
+      list.push(id);
+    }
+    Nav.refresh();
+  }
+  // The first book (nothing finished yet) opens the book page in onboarding mode: just "Read this".
+  open(b) {
+    const first = !Data.finished(Data.state()).length;
+    Nav.push(new BookScreen(b.id, first ? { onboarding: true, onPick: () => this.start(b.id) } : {}));
+  }
+  go(n) {
+    this.step = n;
+    // The answers are saved with the diary (state.tastes) once the reader sees the results.
+    if (n === QUIZ_QUESTIONS.length) {
+      const s = Data.state(); if (s) { s.tastes = TasteQuiz.clean(this.t); Data.save(); }
+      this.sel = 0; this.finding = true;
+      setTimeout(() => { if (!this.finding) return; this.finding = false; if (Nav.current() === this) Nav.refresh(); }, TIMING.findingMatchMs);
+    }
+    Nav.refresh();
+  }
+  start(id) { Nav.push(new StartBookScreen(id)); }
+}
+
+/* ---- "Find your next book": five new questions for readers with a history (NextBook in core.js).
+   The ranking also learns from what they finished, rated, dropped and want to read. Results reuse matchList. ---- */
+class NextBookScreen extends Screen {
+  constructor() { super(); this.a = {}; this.step = 0; this.sel = 0; }
+  build() {
+    const Q = NextBook.Questions, q = Q[this.step];
+    let content, foot = null;
+    if (q) {
+      const pick = id => { this.a[q.key] = id; this.step++; Nav.refresh(); };
+      content = [h("div.caps", `Question ${this.step + 1} of ${Q.length}`), h("div.h1.mt6", q.title), h("p.muted.mt8", q.sub),
+        h("div.list", { style: { margin: "20px 0 0" } }, q.options().map(o => h("button.item", { onclick: () => pick(o.id) },
+          h("div.grow", h("div", o.label), o.hint ? h("div.xs.faint", o.hint) : null), icon("chev", "chev"))))];
+      foot = h("div.footbar.ruled", h("button.btn.secondary", { onclick: () => pick(null) }, "Skip this question"));
+    } else {
+      const recs = NextBook.recommend(Data.state(), this.a, Catalog.data);
+      content = [h("div.caps", "Your next book"), matchList(this, recs, b => Nav.push(new BookScreen(b.id)), { why: true, onStart: b => Nav.push(new StartBookScreen(b.id)) })];
+      foot = h("div.footbar.ruled", h("button.btn.secondary", { onclick: () => { this.step = 0; this.sel = 0; Nav.refresh(); } }, "Change my answers"));
+    }
+    return h("div", navbar("", { onBack: () => { if (this.step > 0) { this.step--; this.sel = 0; Nav.refresh(); } else Nav.back(); } }),
+      q ? h("div.pad.mt8", bar((this.step + 1) / Q.length, "ink")) : null,
+      h("div.scroll.under-nav", h("div.pad.mt20", content, h("div.bottom-space"))), foot);
   }
 }
 
@@ -279,7 +454,7 @@ class SaveAccountScreen extends SignupScreen {
         h("button.iconbtn.trail", { type: "button", "aria-label": this.show ? "Hide password" : "Show password", onclick: () => { this.show = !this.show; this.update(); } }, icon(this.show ? "eyeoff" : "eye"))),
         helpEl("password", "At least 8 characters, with at least one number.")),
       this.err ? h("div.help.bad.mt12", { role: "alert" }, this.err) : null,
-      h("button.btn.accent.mt24", { disabled: !ok, onclick: () => this.submit() }, this.busy ? "Saving…" : "Save account"),
+      h("button.btn.accent.mt24" + (ok ? "" : ".soft"), { disabled: this.busy, onclick: () => this.trySubmit() }, this.busy ? "Saving…" : "Save account"),
       h("div.bottom-space"))));
   }
   async submit() {
@@ -300,6 +475,6 @@ function guestNote(compact) {
   if (a.pendingEmail) return h("div.card.block.guestnote", { style: { margin: compact ? "8px 16px 0" : "12px 16px 0" } },
     h("p.small", `Open the link we sent to ${a.pendingEmail} to finish saving your account.`));
   return h("div.card.block.guestnote" + (compact ? "" : ".mt12"), { style: { margin: compact ? "8px 16px 0" : "12px 16px 0" } },
-    h("p.small", "You're trying Margin as a guest. Save your account to keep your reading."),
+    h("p.small", "This is a demo account with six weeks of sample reading. Save it to keep it, or log out and sign up to start fresh."),
     h("button.btn.sm.primary.mt8", { onclick: () => Nav.push(new SaveAccountScreen()) }, "Save your account"));
 }
