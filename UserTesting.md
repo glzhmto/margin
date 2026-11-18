@@ -101,7 +101,42 @@ Result: our hypothesis was not supported. 3 of 6 got A wrong (T1, T3, T4) and no
 | Asking for the page was answered wrongly more often than asking for the pages read (A/B) | T1, T3, T4 (3 of 6) | Kept version A (see the A/B section) and the app shows the pages read ("+18 pages") as you type, so you can check the number. |
 | Password requirements not understandable | T5 (1 of 6) | Next to the bars the app now says the strength in words ("Okay") and what would make it stronger ("Add a number"). |
 
-Before and after screenshots: ___
+## Before and after screenshots:
+
+### 1. Calendar (Task 2)
+**Before:**
+![Calendar before](screenshots/calendar_before.png)
+
+**After:**
+![Calendar after](screenshots/calendar_after.png)
+
+### 2. Changing the Goal (Task 6)
+**Before:**
+![Goal change before](screenshots/goalchange_before.png)
+
+**After:**
+![Goal change after](screenshots/goalchange_affter.png)
+
+### 3. Invite a Friend (Task 7)
+**Before:**
+![Invite before](screenshots/invite_before.png)
+
+**After:**
+![Invite after](screenshots/invite_after.png)
+
+### 4. Quiz Popup (Task 3)
+**Before:**
+![Quiz before](screenshots/quiz_before.png)
+
+**After:**
+![Quiz after](screenshots/quiz_after.png)
+
+### 5. Password Requirements (Task 1)
+**Before:**
+![Password before](screenshots/password_before.png)
+
+**After:**
+![Password after](screenshots/password_after.png)
 
 ## Limits
 - Only 6 testers, so percentages would mean little and we report counts.
