@@ -1,5 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Margin.App.Services;
+using Margin.Core;
 using Margin.App.Web.Screens;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -77,7 +81,7 @@ namespace Margin.App.Web
             _guestBusy = true;
             if (scr is WelcomeScreen w) { w.Busy = true; w.Err = null; Nav.Refresh(); }
             Services.AuthOutcome r;
-            try { r = await Net.SignInGuest(); }
+            try { r = await Net.SignInGuest("Demo reader"); }
             catch (Exception) { r = new Services.AuthOutcome { Error = "Couldn't reach Margin. Check your connection and try again." }; }
             _guestBusy = false;
             if (scr is WelcomeScreen w2) w2.Busy = false;
@@ -87,11 +91,42 @@ namespace Margin.App.Web
                 else Toast(r.Error);
                 return;
             }
+            SeedDemo();
             AfterSignIn();
             Start();
+            Toast("You're in a demo account. Everything works, try anything");
         }
 
         static bool _guestBusy;
+
+        /// <summary>
+        /// The demo account: the guest session gets six weeks of reading (Core DemoData) plus the web-only parts
+        /// (want to read, a list, Focus sessions), like DemoData.seed and DemoData.extras in preview/js/core.js.
+        /// </summary>
+        static void SeedDemo()
+        {
+            var acc = Accounts.Current;
+            if (acc == null) return;
+            var s = Data.State; var x = Data.X; var today = Clock.Today;
+            s.profile.name = "Demo reader";
+            var finished = DemoData.Seed(s, Data.Catalog, today);
+            foreach (var kv in finished) x.For(kv.Key).finishedOn = D.Key(kv.Value);
+            x.yearGoal = 12;
+            x.want = new List<string> { "klara-and-the-sun", "hurricane-season", "the-great-gatsby" };
+            x.lists = new List<WebList>
+            {
+                new WebList { id = "demo-short", owner = acc.Username, title = "Short books for exam weeks", description = "Under 150 pages, one sitting each.",
+                    books = new List<string> { "the-little-prince", "animal-farm", "the-metamorphosis", "aura" }, created = D.Key(today.AddDays(-20)) },
+            };
+            x.focusSessions = s.logs.Where((l, i) => i % 2 == 0).Select(l => new FocusSession { date = D.Key(l.date), minutes = 25 }).ToList();
+            if (x.focusSessions.Count > 9) x.focusSessions = x.focusSessions.Skip(x.focusSessions.Count - 9).ToList();
+            x.notifications = new List<WebNotification>
+            {
+                new WebNotification { at = D.Stamp(Clock.Now), kind = "welcome", text = "This is a demo account with six weeks of reading. Log a page, take a quiz or start Focus mode." },
+            };
+            Net.Log("joined");
+            Data.Save();
+        }
 
         /// <summary>Starts the social refresh after any sign in (the web's Social.start()).</summary>
         public static void AfterSignIn()

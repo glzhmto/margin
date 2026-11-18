@@ -14,7 +14,7 @@
 .app {
     --paper: #F4EFE6; --paper-2: #ECE5D8; --card: #FBF8F2; --ink: #1C1A17; --ink-2: #5B554C; --ink-3: #716C63;
     --rule: #DDD4C4; --accent: #C23E29; --accent-soft: #F3DCD3; --on-accent: #FFFFFF; --star: #B97C10; --ok: #2F6B47; --ok-soft: #DCEBDF;
-    --error: #9E2A1A; --error-soft: #F6DDD6; --link: #2E4A6B;
+    --error: #9E2A1A; --error-soft: #F6DDD6; --link: #1C1A17;
 
     --sans400: resource("Fonts/inter-400-normal");
     --sans500: resource("Fonts/inter-500-normal");
@@ -43,7 +43,7 @@
 .theme-dark {
     --paper: #14120F; --paper-2: #2B2722; --card: #1D1A16; --ink: #EDE6D8; --ink-2: #B7AE9F; --ink-3: #8C8376; --rule: #34302A;
     --accent: #E0674F; --accent-soft: #3A221B; --on-accent: #14120F; --star: #E0A83A; --ok: #7FC29A; --ok-soft: #1E3326;
-    --error: #F08A75; --error-soft: #3B231C; --link: #9DB7D5;
+    --error: #F08A75; --error-soft: #3B231C; --link: #EDE6D8;
     --unity-cursor-color: #EDE6D8;
     --unity-selection-color: rgba(224, 103, 79, 0.3);
     color: var(--ink); --fg: var(--ink);
@@ -125,7 +125,7 @@
     padding-left: 10px; padding-right: 10px; height: 44px; -unity-text-align: middle-center;
 }
 .textbtn:disabled { opacity: 0.35; }
-.sheet-cancel { color: var(--link); --fg: var(--link); }
+.sheet-cancel { color: var(--ink-2); --fg: var(--ink-2); }
 
 /* Tab bar: a sibling after the scroll area (never over it). Height 54 + safe bottom (Safe.Apply). Each tab is the full tab width by 54 px. */
 .tabbar {
@@ -291,6 +291,7 @@
 .split > .split-main { flex-grow: 1; }
 .split > .split-more { width: 44px; border-left-width: 1px; border-left-color: rgba(255, 255, 255, 0.18); }
 .split.done > .t-button { background-color: var(--ok); color: #FFFFFF; --fg: #FFFFFF; }
+.split.start > .t-button { background-color: var(--accent); color: var(--on-accent); --fg: var(--on-accent); }
 .split .i { width: 18px; height: 18px; }
 
 /* Segmented control */
@@ -644,3 +645,21 @@
 .text-large .scroll .btn { font-size: 18.2px; }
 .text-large .scroll .btn.sm, .text-large .sbody .btn.sm { font-size: 16px; }
 .text-large .scroll .review .body { font-size: 19.4px; }
+
+/* Sign up: the submit button looks dimmed until the form is complete, but can still be tapped. */
+.btn.soft { opacity: 0.45; }
+
+/* ---------- Matches: spotlight, compact list, "Finding your match" ---------- */
+.spot { flex-direction: column; align-items: center; width: 100%; padding-top: 8px; -unity-text-align: upper-center; }
+.spotq { margin-top: 16px; padding: 14px 16px; border-radius: 12px; background-color: var(--card); border-width: 1px; border-color: var(--rule); align-self: stretch; -unity-text-align: upper-left; }
+.list .item .cover { margin-right: 12px; }
+.finding { flex-grow: 1; align-items: center; justify-content: center; -unity-text-align: upper-center; }
+.finding .dots { flex-direction: row; margin-bottom: 12px; }
+.finding .dot { width: 10px; height: 10px; border-radius: 5px; margin: 0 4px; background-color: var(--accent); opacity: 0.25; transition-property: opacity, scale; transition-duration: 0.5s, 0.5s; scale: 0.8 0.8; }
+.finding .dots.on .dot { opacity: 1; scale: 1.1 1.1; }
+
+/* Starting a book (StartBookScreen) and achievements unlocked when one is finished (FinishedScreen). */
+.startbook { align-items: center; padding: 36px 24px 0 24px; }
+.startbook .plan { align-self: stretch; margin-top: 24px; }
+.unlock { flex-direction: row; align-items: center; align-self: stretch; padding: 14px 16px; margin-top: 10px; border-radius: 14px; background-color: var(--card); border-width: 1px; border-color: var(--rule); }
+.unlock .medal { width: 48px; height: 48px; flex-shrink: 0; margin-right: 14px; border-radius: 24px; align-items: center; justify-content: center; background-color: var(--ink); color: var(--paper); --fg: var(--paper); font-size: 20px; -unity-font-definition: var(--serif600); }

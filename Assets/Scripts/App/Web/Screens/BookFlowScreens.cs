@@ -1,6 +1,5 @@
 // Port of preview/js/screens-book.js (book page, reviews, lists) and preview/js/screens-flow.js
-// (log sheet, quiz, reflection, finished, closing, Focus mode, app picker).
-// Owner: porter 3.
+// (log sheet, quiz, reflection, finished, start a book, end of session, Focus mode, app picker).
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -21,6 +20,8 @@ namespace Margin.App.Web.Screens
         public CheckInResult R;
         public Book Book;
         public MomentumSnapshot Before;
+        /// <summary>Achievements before the check-in, so FinishedScreen can show the ones it unlocked.</summary>
+        public List<Achievement> AchBefore;
         /// <summary>Quiz opened from the book page (not after a check-in).</summary>
         public bool Standalone;
     }
@@ -28,11 +29,29 @@ namespace Margin.App.Web.Screens
     /// <summary>Helpers of screens-book.js used by other screens too.</summary>
     public static class BookUI
     {
+        /// <summary>webCreatorCard(c): a real book creator's review from the web: who, a short quote, the book, the link.</summary>
+        public static VisualElement WebCreatorCard(WebCreator c, bool full = false)
+        {
+            var b = Data.Book(c.bookId);
+            string link = c.platform == "YouTube" ? "Watch the review ›" : c.platform == "TikTok" || c.platform == "Instagram" ? $"See it on {c.platform} ›" : "Read the review ›";
+            var card = Btn("button.card.block", () => App.OpenUrl(c.reviewUrl),
+                El("div.row.gap10", Avatar(new AvatarUser(c.name, c.color ?? "#3E5C76"), 36),
+                    El("div.grow", El("div.strong.small", c.name), El("div.xs.muted", $"{c.handle} · {c.platform}"))),
+                El("div.mt12", $"“{c.quote}”").Font(serif: true).FontSize(17).Fg("ink"),
+                !string.IsNullOrEmpty(c.quoteEn) ? El("div.xs.muted.mt8", $"In English: “{c.quoteEn}”") : null,
+                El("div.grow"),
+                full || b == null ? null : El("div.row.gap8.mt12", Cover(b, 44), El("div.xs.muted.clamp2.grow", $"On {b.title}")),
+                El("div.xs.mt12", link).Font(serif: false, weight: 600).Fg("accent")).TextLeft();
+            if (full) card.M(8, 16, 0).AlignSelf(Align.Stretch);
+            else card.W(272).FlexNone();
+            return card;
+        }
+
         public static readonly string[] REVIEWER_COLORS = { "#3E5C76", "#8A5A44", "#2F6B47", "#6B4E71", "#7A3B3B", "#4A6B5D", "#B5893B", "#5B554C" };
         public static readonly Dictionary<string, string> LANG_NAMES = new Dictionary<string, string> { ["es"] = "Spanish", ["en"] = "English" };
 
         /// <summary>reviewLang(r): the language the reviewer wrote in.</summary>
-        public static string ReviewLang(GoodreadsReview r) => r.originalLang ?? r.lang ?? "en";
+        public static string ReviewLang(ReaderReview r) => r.originalLang ?? r.lang ?? "en";
 
         /// <summary>The web's hash(str) (data.js, FNV-1a 32-bit), so reviewer colors match the web.</summary>
         public static uint Hash(string s)
@@ -43,7 +62,7 @@ namespace Margin.App.Web.Screens
         }
 
         /// <summary>reviewer(r): avatar of a Goodreads reviewer.</summary>
-        static AvatarUser Reviewer(GoodreadsReview r) => new AvatarUser(r.author, REVIEWER_COLORS[Hash(r.author) % (uint)REVIEWER_COLORS.Length]);
+        static AvatarUser Reviewer(ReaderReview r) => new AvatarUser(r.author, REVIEWER_COLORS[Hash(r.author) % (uint)REVIEWER_COLORS.Length]);
 
         /// <summary>A server time shown in the phone's time zone (the web's new Date(iso)).</summary>
         internal static DateTime Local(DateTime d) => d.Kind == DateTimeKind.Utc ? d.ToLocalTime() : d;
@@ -51,14 +70,14 @@ namespace Margin.App.Web.Screens
         internal static int Words(string t) => (t ?? "").Split((char[])null, StringSplitOptions.RemoveEmptyEntries).Length;
 
         /// <summary>reviewCard(r, { full }): a Goodreads review.</summary>
-        public static VisualElement ReviewCard(GoodreadsReview r, bool full = false)
+        public static VisualElement ReviewCard(ReaderReview r, bool full = false)
         {
             bool own = r.own;
             var lang = ReviewLang(r);
             string when;
             if (own) when = string.IsNullOrEmpty(r.date) ? "" : F.Date(r.date);
-            else if (string.IsNullOrEmpty(r.date)) when = r.source ?? "";
-            else { var d = D.Parse(r.date); when = $"{r.source}, {F.MES[d.Month - 1]} {d.Year}"; }
+            else if (string.IsNullOrEmpty(r.date)) when = "";
+            else { var d = D.Parse(r.date); when = $"{F.MES[d.Month - 1]} {d.Year}"; }
             double rating = r.ratingScale == 5 || r.ratingScale == 0 ? r.rating : r.rating / r.ratingScale * 5;
             var meta = El("div.meta",
                 own ? Avatar(Data.Me(), 28) : Avatar(Reviewer(r), 28),
@@ -139,7 +158,12 @@ namespace Margin.App.Web.Screens
         int readingNow;
         List<Post> lists;
 
+        // Onboarding: a first-time reader choosing a book sees one "Read this" button (onPick) instead of the status split.
+        readonly bool onboarding;
+        readonly Action onPick;
+
         public BookScreen(string id) { this.id = id; }
+        public BookScreen(string id, bool onboarding, Action onPick) { this.id = id; this.onboarding = onboarding; this.onPick = onPick; }
 
         public override void OnShow() => ScreenLoad(async () =>
         {
@@ -178,7 +202,9 @@ namespace Margin.App.Web.Screens
             bool isCur = s.profile.currentBookId == b.id;
             bool want = Data.X.want.Contains(b.id), dnf = Data.X.dnf.Contains(b.id);
             bool finished = p != null && p.finished;
-            string status = finished ? "Read" : isCur ? $"Reading · p. {(p != null ? p.currentPage : 0)}" : dnf ? "You dropped it" : want ? "On your want-to-read list" : "Want to read";
+            // Nothing being read: the main action is to start this one (accent, like every main action).
+            bool canStart = string.IsNullOrEmpty(s.profile.currentBookId) && !finished;
+            string status = finished ? "Read" : isCur ? $"Reading · p. {(p != null ? p.currentPage : 0)}" : canStart ? "Start reading" : dnf ? "You dropped it" : want ? "On your want-to-read list" : "Want to read";
             double myRating = Data.Rating(b.id);
             int pages = s.PagesFor(b);
 
@@ -200,8 +226,8 @@ namespace Margin.App.Web.Screens
                 El("div.mt4", b.author),
                 El("div.small.muted.mt2.num", Year(b), El("span.dotsep"), $"{pages} pp.", El("span.dotsep"), Parts(b))));
 
-            var actions = El("div.pad.mt16",
-                El("div.split" + (finished ? ".done" : ""),
+            var actions = onboarding ? El("div.pad.mt16", Btn("button.btn.accent", () => onPick(), "Read this")) : El("div.pad.mt16",
+                El("div.split" + (finished ? ".done" : canStart ? ".start" : ""),
                     Btn("button", Primary, finished ? new object[] { Icon("check"), " Read" } : new object[] { status }),
                     Btn("button", StatusSheet, Aria("Change status"), Icon("down"))),
                 El("div.row.mt12", Css(x => x.justifyContent = Justify.SpaceBetween),
@@ -253,10 +279,17 @@ namespace Margin.App.Web.Screens
             };
             if (grReviews.Count > 0)
             {
-                revSect.Add(El("div.sect", El("span.caps", "From Goodreads"), El("span.more.num", F.N(grReviews.Count))));
+                revSect.Add(El("div.sect", El("span.caps", "Reviews"), El("span.more.num", F.N(grReviews.Count))));
                 revSect.Add(grReviews.Take(3).Select(r => BookUI.ReviewCard(r)));
-                if (grReviews.Count > 3) revSect.Add(El("div.pad.mt8", Btn("button.btn.sm.secondary", () => Nav.Push(new ReviewsScreen(b.id)), $"See all {grReviews.Count} Goodreads reviews").W("100%")));
-                revSect.Add(El("p.pad.xs.faint.mt8", "Reader reviews posted on Goodreads, quoted with their author. Margin doesn't summarize them or rewrite them with AI."));
+                if (grReviews.Count > 3) revSect.Add(El("div.pad.mt8", Btn("button.btn.sm.secondary", () => Nav.Push(new ReviewsScreen(b.id)), $"See all {grReviews.Count} reviews").W("100%")));
+                revSect.Add(El("p.pad.xs.faint.mt8", "Real reader reviews, quoted with their author. Margin doesn't summarize them or rewrite them with AI."));
+            }
+            var webCreators = Data.CreatorsFor(b.id);
+            if (webCreators.Count > 0)
+            {
+                revSect.Add(El("div.sect", El("span.caps", "From book creators")));
+                revSect.Add(webCreators.Select(c => BookUI.WebCreatorCard(c, full: true)));
+                revSect.Add(El("p.pad.xs.faint.mt8", "Quoted with a link to the original review."));
             }
 
             // Chapter bounds follow the reader's edition (Core Edition), the same estimate the check-in uses.
@@ -299,7 +332,7 @@ namespace Margin.App.Web.Screens
             var nav = El("div.navbar.transparent",
                 Btn("button.iconbtn.round", () => { if (Nav.Count > 1) Nav.Back(); else Nav.Reset(new ExploreScreen(), "explore"); }, Aria("Back"), Icon("back")),
                 El("div.title", b.title),
-                Btn("button.iconbtn.round", StatusSheet, Aria("More options"), Icon("more")));
+                onboarding ? El("div").W(44) : Btn("button.iconbtn.round", StatusSheet, Aria("More options"), Icon("more")));
             if (scroller is ScrollView sv) sv.verticalScroller.valueChanged += v => nav.EnableInClassList("solid", v > 190);
             return El("div", scroller, nav);
         }
@@ -340,7 +373,9 @@ namespace Margin.App.Web.Screens
         {
             var s = Data.State;
             var p = s.progress.Find(x => x.bookId == id);
-            if (s.profile.currentBookId == id && !(p != null && p.finished)) LogSheet.Open();
+            bool finished = p != null && p.finished;
+            if (s.profile.currentBookId == id && !finished) LogSheet.Open();
+            else if (string.IsNullOrEmpty(s.profile.currentBookId) && !finished) Nav.Push(new StartBookScreen(id));
             else StatusSheet();
         }
 
@@ -358,7 +393,7 @@ namespace Margin.App.Web.Screens
             Sheet.Open(b.title, El("div.list", Css(st => { st.marginLeft = 0; st.marginRight = 0; st.marginTop = 0; st.marginBottom = 0; }),
                 Opt("Want to read", "We save it to your want-to-read list", () => { Clear(); x.want.Add(id); Toast("Added to Want to read"); }, x.want.Contains(id)),
                 Opt("Reading now", !string.IsNullOrEmpty(cur) && cur != id ? $"Replaces {Data.Book(cur)?.title} as your current book" : null,
-                    () => { Clear(); ReadingService.SetCurrentBook(s, id); Toast($"Now reading {b.title}."); }, cur == id),
+                    () => { if (cur != id) Nav.Push(new StartBookScreen(id)); }, cur == id),
                 Opt("Read", "Mark it as finished", () =>
                 {
                     Clear();
@@ -425,15 +460,15 @@ namespace Margin.App.Web.Screens
             return El("div", Navbar(Data.Book(id)?.title ?? ""),
                 El("div.row.gap6.pad", Css(x => x.paddingBottom = 8), pills.Select(k => (object)Btn("button.pillbtn" + (lang == k.Item1 ? ".on" : ""), () => { lang = k.Item1; Nav.Refresh(); }, k.Item2))),
                 El("div.scroll.under-nav", list.Select(r => BookUI.ReviewCard(r)),
-                    El("p.pad.xs.faint", "Source: public Goodreads pages. Tap a review to see the original link.").P(16)).BorderTop(1, "rule"));
+                    El("p.pad.xs.faint", "Tap a review to see where it was first posted.").P(16)).BorderTop(1, "rule"));
         }
     }
 
     public class ReviewScreen : WebScreen
     {
-        public GoodreadsReview r;
+        public ReaderReview r;
 
-        public ReviewScreen(GoodreadsReview r) { this.r = r; }
+        public ReviewScreen(ReaderReview r) { this.r = r; }
 
         public override VisualElement Build()
         {
@@ -444,7 +479,7 @@ namespace Margin.App.Web.Screens
                     .W("100%").TextLeft().Pb(12).BorderBottom(1, "rule") : null,
                 BookUI.ReviewCard(r, true),
                 r.own ? null : El("div.pad.mt8",
-                    Btn("button.btn.secondary", () => App.OpenUrl(r.pageUrl ?? r.url), Icon("link"), "See original on Goodreads"),
+                    Btn("button.btn.secondary", () => App.OpenUrl(r.pageUrl ?? r.url), Icon("link"), "See the original"),
                     lang != "en" ? El("p.xs.faint.mt8", $"Translated from {(BookUI.LANG_NAMES.TryGetValue(lang, out var ln) ? ln : lang.ToUpperInvariant())}. The link above has the reader's words exactly as they wrote them.") : null)));
         }
     }
@@ -586,7 +621,7 @@ namespace Margin.App.Web.Screens
             var s = Data.State;
             if (bookId != null) ReadingService.SetCurrentBook(s, bookId);
             var book = Data.Book(s.profile.currentBookId);
-            if (book == null) { Toast("Pick a book to start."); Nav.Reset(new ExploreScreen(), "explore"); return; }
+            if (book == null) { Toast("You're not reading a book yet. Pick one to start."); return; }
             var p = s.ProgressFor(book.id);
             int from = p.currentPage;
             int pages = s.PagesFor(book); // the reader's edition (the same total ReadingService checks)
@@ -595,7 +630,7 @@ namespace Margin.App.Web.Screens
 
             TextField input = null;
             Label delta = Text("div.serif.center.mt12", " "), info = Text("div.small.muted.center.mt4", " "), err = Text("div.help.bad.center", "");
-            var save = Btn("button.textbtn", () => Submit(page, when), "Log it").Fg("link").Font(false, 600).Hgt(44).P(0, 10);
+            var save = Btn("button.textbtn", () => Submit(page, when), "Log it").Fg("ink").Font(false, 600).Hgt(44).P(0, 10);
 
             void Render()
             {
@@ -604,15 +639,13 @@ namespace Margin.App.Web.Screens
                 input.EnableInClassList("bad", !ok);
                 err.text = ReadingService.ErrorMessage(e) ?? "";
                 delta.text = ok ? $"+{F.Pages(page - from)}" : " ";
-                var ch = Edition.ChapterAt(book, page, pages);
                 var closed = book.chapters.Where(c => { int end = Edition.ChapterEnd(book, c, pages); return end > from && end <= page; }).ToList();
                 string txt = " ";
                 if (ok)
                 {
                     if (page >= pages) txt = "You finish the book";
-                    else if (closed.Count > 0) { var last = closed[closed.Count - 1]; txt = $"Finishing “{last.title}”{(last.HasQuiz ? ". It has a quiz." : "")}"; }
-                    else if (ch != null && page == Edition.ChapterEnd(book, ch, pages)) txt = $"Finishing “{ch.title}”";
-                    else if (ch != null) txt = $"You're in “{ch.title}” · {Edition.ChapterEnd(book, ch, pages) - page} to go";
+                    else if (closed.Any(c => c.HasQuiz)) txt = "You finish a chapter. Its quiz is ready.";
+                    else txt = $"{F.N(pages - page)} pages left";
                 }
                 info.text = txt;
                 save.SetEnabled(ok);
@@ -690,6 +723,7 @@ namespace Margin.App.Web.Screens
             var before = HabitEngine.Compute(s, Clock.Today);
             var book = Data.Book(s.profile.currentBookId);
             var day = when == "yesterday" ? Clock.Today.AddDays(-1) : Clock.Today;
+            var achBefore = Data.Achievements(s);
             var r = ReadingService.CheckIn(s, Data.Catalog, page, day);
             if (!r.Ok) return;
             if (Clock.Now.Hour >= 23) Data.X.nightLogs++;
@@ -699,7 +733,7 @@ namespace Margin.App.Web.Screens
             // If they already read today, today's reminder is canceled (as the earlier Unity check-in did).
             MarginApp.Instance.RescheduleReminders();
             Sheet.Close();
-            var outcome = new Outcome { R = r, Book = book, Before = before };
+            var outcome = new Outcome { R = r, Book = book, Before = before, AchBefore = achBefore };
             if (r.PendingQuiz != null) QuizFlow.Start(book, r.PendingQuiz, outcome);
             else if (r.FinishedBook) Nav.Push(new FinishedScreen(outcome));
             else Nav.Push(new ClosingScreen(outcome));
@@ -840,32 +874,94 @@ namespace Margin.App.Web.Screens
         }
     }
 
+    /// <summary>
+    /// Finishing a book: the achievements it unlocked, a rating, and ways to tell people (a public review, a share).
+    /// Friends already see "finished" in their feed unless activity is set to "Only me".
+    /// </summary>
     public class FinishedScreen : WebScreen
     {
         public Outcome o;
 
         public FinishedScreen(Outcome o) { this.o = o; }
 
+        static VisualElement Unlock(string mark, string title, string name, string detail) =>
+            El("div.unlock", El("span.medal", mark), El("div.grow", El("div.caps", title), El("div.strong.mt2", name), El("div.xs.muted.mt2", detail)));
+
         public override VisualElement Build()
         {
             var b = o.Book;
             var s = Data.State;
             int y = Clock.Today.Year, n = Data.BooksInYear(s, y);
+            var had = new HashSet<string>((o.AchBefore ?? new List<Achievement>()).Where(a => a.Got).Select(a => a.Id));
+            var fresh = Data.Achievements(s).Where(a => a.Got && !had.Contains(a.Id)).Select(a => Unlock(MainUI.ACH_MARK.TryGetValue(a.Id, out var m) ? m : a.Name.Substring(0, 1), "Achievement unlocked", a.Name, a.Detail));
+            bool seen = Data.Settings?.ActivityVisibility != "Only me";
             return El("div", El("div.scroll", El("div.pad.col", Css(x => x.alignItems = Align.Center), Cover(b, 128),
                     El("div.h1.mt20", $"You finished {b.title}.").TextCenter(),
                     El("p.muted.mt6.num", $"It's book {n} of {y} for you. Your goal is {Data.X.yearGoal}.").TextCenter(),
-                    El("div.mt20.small.muted", "How would you rate it?"),
+                    Unlock(n.ToString(), "Book finished", $"Book {n} of {y}", $"{F.N(s.PagesFor(b))} pages, read by you, on paper."),
+                    fresh,
+                    El("div.mt24.small.muted", "How would you rate it?"),
                     El("div.mt8", BookUI.RateInput(Data.Rating(b.id), v => { Data.SetRating(b.id, v); Data.Save(); Nav.Refresh(); })),
-                    Btn("button.btn.secondary.mt24", () => ReviewSheet.Open(b.id), "Write a review"),
-                    // The web pretends to save an image; iOS sharing needs a native plugin, so we copy a share line instead.
-                    Btn("button.btn.secondary.mt8", () => SocialUI.CopyText($"I just finished {b.title} by {b.author} on Margin. https://marginreads.vercel.app", "Copied. Paste it anywhere."), Icon("share"), "Share"))
+                    Btn("button.btn.accent.mt24", () => ReviewSheet.Open(b.id), "Post a review"),
+                    // The web opens the share sheet; iOS sharing needs a native plugin, so we copy a share line instead.
+                    Btn("button.btn.secondary.mt8", () => SocialUI.CopyText($"I just finished {b.title} by {b.author}. Book {n} of my {y} on Margin. https://marginreads.vercel.app", "Copied. Paste it anywhere."), Icon("share"), "Share it"),
+                    El("p.xs.faint.mt12", seen ? "Your friends will see that you finished it." : "Your activity is set to Only me, so friends won't see it."))
                     .Pt(30).TextCenter()),
-                El("div.pad", Btn("button.btn.primary", () =>
+                El("div.pad", Btn("button.btn.secondary", () =>
                 {
                     s.profile.currentBookId = null;
                     Data.Save();
                     Nav.Reset(new HomeScreen(), "home");
                 }, "Done")).P(12, 16, 40));
+        }
+    }
+
+    /// <summary>
+    /// Starting a book is a real decision, so it gets its own moment: the book, how long it will take at the
+    /// reader's pace, and one clear button. Every way of starting a book comes through here.
+    /// </summary>
+    public class StartBookScreen : WebScreen
+    {
+        readonly string id;
+
+        public StartBookScreen(string id) { this.id = id; }
+
+        public override VisualElement Build()
+        {
+            var b = Data.Book(id);
+            if (b == null) return El("div", Navbar(""));
+            var s = Data.State;
+            var g = s.profile.goals;
+            int pages = s.PagesFor(b);
+            int perWeek = Math.Max(1, g.dailyPages * Math.Max(1, g.readingDays.Count));
+            int weeks = Math.Max(1, (pages + perWeek - 1) / perWeek);
+            var curId = s.profile.currentBookId;
+            var cur = !string.IsNullOrEmpty(curId) && curId != id ? Data.Book(curId) : null;
+            VisualElement Line(string k, string v, string cls = "div.row.mt8") => El(cls, El("span.grow.small.muted", k), El("span.strong.num", v));
+            return El("div", Navbar(""), El("div.scroll.under-nav", El("div.startbook",
+                    El("div.caps", "A new book"), El("div.mt16", Cover(b, 128)),
+                    El("div.h1.mt20", b.title).TextCenter(), El("div.muted.mt4", b.author).TextCenter(),
+                    El("div.card.block.plan",
+                        Line("Length", $"{F.N(pages)} pages", "div.row"),
+                        Line("At your pace", $"about {weeks} {(weeks == 1 ? "week" : "weeks")}"),
+                        Line("Today", $"{g.dailyPages} pages{(string.IsNullOrEmpty(g.intention) ? "" : ", " + g.intention)}")),
+                    El("p.serif-l.mt24", "Every book starts on page one.").TextCenter(),
+                    cur != null ? El("p.xs.faint.mt8", $"It replaces {cur.title} as your current book. Your progress there is kept.").TextCenter() : null)),
+                El("div.pad", Btn("button.btn.accent", Begin, "Start reading")).P(12, 16, 40));
+        }
+
+        /// <summary>Confirming is the moment: confetti, then Home with the book set, where they log their reading.</summary>
+        void Begin()
+        {
+            var b = Data.Book(id);
+            if (b == null) return;
+            Data.X.want.RemoveAll(q => q == id);
+            Data.X.dnf.RemoveAll(q => q == id);
+            ReadingService.SetCurrentBook(Data.State, id);
+            Data.Save();
+            Celebrate();
+            App.GoHome();
+            Toast($"Now reading {b.title}. Enjoy it.");
         }
     }
 
@@ -893,8 +989,8 @@ namespace Margin.App.Web.Screens
                         changed ? El("p.small.mt6", $"You moved up from {Copy.LevelName(o.Before.Level)} to {Copy.LevelName(after.Level)}.") : null,
                         El("div.row.small.mt8.num", El("span.grow", $"{w.PagesRead} of {w.Target} pages this week")),
                         El("div.mt6", Bar(w.Target > 0 ? w.PagesRead / (double)w.Target : 0, "ink"))),
-                    El("p.serif-l.mt24", "Now close the app and go read.")).Pt(40)),
-                El("div.pad", Btn("button.btn.primary", () => Nav.Reset(new HomeScreen(), "home"), "Done"), Btn("button.btn.ghost.mt4", () => Nav.Replace(new FocusScreen()), "Keep reading in Focus mode")).P(12, 16, 40));
+)).Pt(40)),
+                El("div.pad", Btn("button.btn.primary", () => Nav.Reset(new HomeScreen(), "home"), "Done")).P(12, 16, 40));
         }
     }
 

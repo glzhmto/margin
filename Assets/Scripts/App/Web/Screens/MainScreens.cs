@@ -1,6 +1,5 @@
-// Port of preview/js/screens-main.js (Home, Explore, Diary, Profile, Activity, Notifications)
+// Port of preview/js/screens-main.js (Home, Explore, Library, Profile, Activity, Notifications)
 // and preview/js/commerce.js (Shop: Gandhi prices and stores; Fil: the FIL 2026 banner).
-// Owner: porter 2.
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -183,13 +182,15 @@ namespace Margin.App.Web.Screens
             if (book != null)
             {
                 var p = s.progress.Find(x => x.bookId == book.id) ?? new BookProgress { bookId = book.id };
-                var ch = book.ChapterAt(Math.Max(1, p.currentPage + 1));
-                int toEnd = ch != null ? ch.endPage - p.currentPage : 0;
+                // The reader's edition (Edition), like LogSheet and the book page.
+                int pages = s.PagesFor(book);
+                var ch = Edition.ChapterAt(book, Math.Max(1, p.currentPage + 1), pages);
+                int toEnd = ch != null ? Edition.ChapterEnd(book, ch, pages) - p.currentPage : 0;
                 reading = El("div.card.block.mt12",
                     El("div.row.top.gap12", Cover(book, 72, () => Nav.Push(new BookScreen(book.id))),
                         El("div.grow", El("div.caps", "Reading"), El("div.h3.mt4", book.title), El("div.small.muted", book.author),
-                            El("div.mt8", Bar(p.currentPage / (double)book.pages)),
-                            El("div.xs.muted.mt6.num", $"Page {p.currentPage} of {book.pages}", ch != null ? El("span.dotsep") : null,
+                            El("div.mt8", Bar(p.currentPage / (double)Math.Max(1, pages))),
+                            El("div.xs.muted.mt6.num", $"Page {p.currentPage} of {pages}", ch != null ? El("span.dotsep") : null,
                                 ch != null ? $"{toEnd} to finish “{ch.title}”" : null))),
                     El("div.row.gap8.mt12",
                         Btn("button.btn.sm.accent", () => LogSheet.Open(), "Log reading").Flex1(),
@@ -198,11 +199,22 @@ namespace Margin.App.Web.Screens
             }
             else
             {
-                reading = El("div.card.block.mt12.empty",
-                    El("div.h3", "You haven't picked a book yet."),
-                    El("p.small", "Pick a book to start logging pages."),
-                    Btn("button.btn.sm.primary.mt12", () => Nav.Reset(new ExploreScreen(), "explore"), "Find a book").AlignSelf(Align.Center))
-                    .M(12, 16, 0);
+                // No current book. First book: the onboarding taste quiz (saved answers open on the matches).
+                // Later books: "Find your next book", which also learns from what they read (the same quiz as in Explore).
+                // It goes above the momentum card, so it's the first thing on Home.
+                bool first = Data.Finished(s).Count == 0;
+                bool matched = Data.X?.tastes != null && !TasteQuiz.IsEmpty(Data.X.tastes);
+                reading = El("div.card.block",
+                    El("div.row.top.gap12",
+                        El("span.iconbtn", Icon("bookopen")).Bg("accent").Fg("#fff").Size(44, 44).Radius(22).FlexNone(),
+                        El("div.grow", El("div.h3", first ? "Choose your first book" : "Choose your next book"),
+                            El("p.small.muted.mt4", !first ? "Five questions, matched to what you've read."
+                                : matched ? "We matched books from the catalog to your answers."
+                                : "Answer a few questions and we'll match you with a book."))),
+                    El("div.row.gap8.mt12",
+                        Btn("button.btn.sm.accent", () => Nav.Push(first ? new TasteQuizScreen() : (WebScreen)new NextBookScreen()), first && matched ? "See my matches" : "Find my book").Flex1(),
+                        Btn("button.btn.sm.secondary", () => Nav.Reset(new ExploreScreen(), "explore"), "Browse")))
+                    .M(8, 16, 0);
             }
 
             // Shared pacts
@@ -235,7 +247,8 @@ namespace Margin.App.Web.Screens
             };
 
             // For you
-            var recs = Recommender.Recommend(Data.Catalog, s, m.Level, 6);
+            // The quiz answers nudge the reading-based picks (TasteQuiz.Boost); without answers this is the plain list.
+            var recs = TasteQuiz.Boost(Recommender.Recommend(Data.Catalog, s, m.Level, Data.Books.Count), Data.Catalog, Data.X?.tastes, 6);
             var forYou = new object[]
             {
                 Sect("For you"),
@@ -249,7 +262,7 @@ namespace Margin.App.Web.Screens
                 : null;
 
             return El("div",
-                El("div.scroll", head, AuthUI.GuestNote(true), mom, reading, Fil.Banner(), together, friendsRow, act, forYou, quote, El("div.bottom-space")),
+                El("div.scroll", head, AuthUI.GuestNote(true), book != null ? new object[] { mom, reading } : new object[] { reading, mom }, Fil.Banner(), together, friendsRow, act, forYou, quote, El("div.bottom-space")),
                 Tabbar("home"));
         }
     }
@@ -323,13 +336,22 @@ namespace Margin.App.Web.Screens
         VisualElement results;
         int _searchSeq;
 
-        public ExploreScreen() { Tab = "explore"; }
+        /// <summary>The last data loaded. A new Explore starts from it and refreshes in the background, so switching
+        /// tabs doesn't show a half-built page that then jumps as sections arrive. Cleared on sign out.</summary>
+        public static (Dictionary<string, int> counts, int readers, List<Profile> creators, List<Post> posts)? Last;
+
+        public ExploreScreen()
+        {
+            Tab = "explore";
+            if (Last is { } l) { counts = l.counts; readers = l.readers; creators = l.creators; posts = l.posts; }
+        }
 
         public override void OnShow() => ScreenLoad(async () =>
         {
             var c = Social.BookCounts(); var r = Social.ReaderCount(); var cr = Social.Creators(); var p = Social.Posts(limit: 8);
             await Task.WhenAll(c, r, cr, p);
             counts = c.Result; readers = r.Result; creators = cr.Result; posts = p.Result;
+            Last = (counts, readers, creators, posts);
         });
 
         public override VisualElement Build()
@@ -367,7 +389,7 @@ namespace Margin.App.Web.Screens
         {
             try
             {
-                await Task.Delay(250);
+                await UnityEngine.Awaitable.WaitForSecondsAsync(0.25f); // runs on the main loop, also in WebGL (no threads)
                 if (seq != _searchSeq || !IsCurrent) return;
                 var u = await Social.Search(query);
                 if (q.Trim() == query && IsCurrent) { users = u; RenderResults(); }
@@ -396,7 +418,7 @@ namespace Margin.App.Web.Screens
                     r.Lists.Count > 0 ? new object[] { Sect("Your lists"), r.Lists.Select(MainUI.ListRow) } : null);
                 return;
             }
-            bool d = Loaded && Err == null && counts != null;
+            bool d = counts != null && (Loaded ? Err == null : Last != null);
             var trending = d ? Data.Books.Where(b => counts.TryGetValue(b.id, out var n) && n > 0).OrderByDescending(b => counts[b.id]).Take(10).ToList() : new List<Book>();
             var shelves = Data.Shelves.Select(sh =>
             {
@@ -414,15 +436,20 @@ namespace Margin.App.Web.Screens
                     El("span.iconbtn", Icon("users")).Bg("accent").Fg("#fff").Size(40, 40).Radius(20),
                     El("div.grow", El("div.strong", "Find friends"), El("div.small.muted", "Search by @username or share your invite link")),
                     Icon("chev", "chev")).W("100%").TextLeft()),
+                El("div.pad.mt8", Btn("button.card.block.row.gap12", () => Nav.Push(new NextBookScreen()),
+                    El("span.iconbtn", Icon("bookopen")).Bg("ink").Fg("paper").Size(40, 40).Radius(20),
+                    El("div.grow", El("div.strong", "Find your next book"), El("div.small.muted", "Five questions, matched to what you've read")),
+                    Icon("chev", "chev")).W("100%").TextLeft()),
                 trending.Count > 0 ? new object[]
                 {
                     Sect("Being read on Margin"),
                     El("div.hscroll", trending.Select((b, i) => Btn("button.col", () => Nav.Push(new BookScreen(b.id)),
                         Cover(b, 96, null, i + 1), El("div.xs.muted.mt6.num", $"{F.N(counts[b.id])} reading now")).W(96).TextLeft())),
                 } : null,
-                Sect("Creators"),
-                !d ? El("p.pad.small.faint", Err ?? "Loading…")
-                    : crs.Count > 0 ? El("div.hscroll", crs.Select(p => SocialUI.CreatorCard(p)))
+                // Nothing from the server yet: one quiet line instead of empty sections that would move when data arrives.
+                !d ? El("p.pad.small.faint.mt16", Err ?? "Loading…") : Sect("Creators"),
+                !d ? null
+                    : crs.Count > 0 || Data.Creators.Count > 0 ? El("div.hscroll", crs.Select(p => SocialUI.CreatorCard(p)), Data.Creators.Select(c => BookUI.WebCreatorCard(c)))
                     : El("p.pad.small.muted", "No creators yet. Anyone can become one in Settings › Profile and publish lists, notes and videos about books."),
                 d && posts != null && posts.Count > 0 ? new object[] { Sect("Latest from creators"), posts.Select(p => SocialUI.PostRow(p)) } : null,
                 shelves,
@@ -432,21 +459,46 @@ namespace Margin.App.Web.Screens
 
     public class DiaryScreen : WebScreen
     {
-        /// <summary>"diary", "stats" or "goals" (other screens open a tab directly: new DiaryScreen { Mode = "goals" }).</summary>
-        public string Mode = "diary";
+        /// <summary>"library", "diary", "stats" or "goals" (other screens open a tab directly: new DiaryScreen { Mode = "goals" }).</summary>
+        public string Mode = "library";
         public int Year;
 
         public DiaryScreen() { Tab = "diary"; Year = Clock.Today.Year; }
 
         public override VisualElement Build()
         {
-            var modes = new[] { ("diary", "Diary"), ("stats", "Stats"), ("goals", "Goals") };
+            var modes = new[] { ("library", "Books"), ("diary", "Diary"), ("stats", "Stats"), ("goals", "Goals") };
             var top = El("div",
-                El("div.row.pad", El("div.h1.grow", "Diary")).Pt(6),
+                El("div.row.pad", El("div.h1.grow", "Library")).Pt(6),
                 El("div.pad.mt12", El("div.seg", modes.Select(t => Btn("button" + (Mode == t.Item1 ? ".on" : ""), () => { Mode = t.Item1; Nav.Refresh(); }, t.Item2)))).Pb(10))
                 .Pt(Safe.Top);
-            object body = Mode == "diary" ? DiaryBody() : Mode == "stats" ? Stats() : Goals();
+            object body = Mode == "library" ? LibraryBody() : Mode == "diary" ? DiaryBody() : Mode == "stats" ? Stats() : Goals();
             return El("div", top, El("div.scroll.under-nav", body), Tabbar("diary"));
+        }
+
+        /// <summary>
+        /// The reader's own library: reading now, want to read, and every book read, including the ones read before
+        /// Margin, which they add by hand (they count as finished books, not as logged pages).
+        /// </summary>
+        object LibraryBody()
+        {
+            var s = Data.State;
+            var cur = Data.Book(s.profile.currentBookId);
+            var read = Data.Finished(s);
+            VisualElement Shelf(IEnumerable<(Book b, string sub)> list) => El("div.grid3.pad.mt8", list.Where(x => x.b != null).Select(x =>
+                Btn("button.col.gap4", () => Nav.Push(new BookScreen(x.b.id)), Cover(x.b, 110).W("100%"), El("div.xs.strong.clamp2", x.b.title), x.sub != null ? El("div.xs.faint", x.sub) : null).TextLeft()));
+            string Sub(FinishedBook p) => string.Join(" · ", new[] { p.Rating > 0 ? new string('★', (int)Math.Round(p.Rating)) : null, p.FinishedOn?.Substring(0, 4) }.Where(t => !string.IsNullOrEmpty(t)));
+            return new object[]
+            {
+                El("div.pad.mt4", Btn("button.btn.accent", LibraryAdd.Open, Icon("plus"), "Add books you've read")),
+                El("p.pad.xs.faint.mt6", "Books you read before Margin count too. Add them so your library and recommendations know you."),
+                cur != null ? new object[] { Sect("Reading now"), Shelf(new[] { (cur, $"Page {s.ProgressFor(cur.id).currentPage} of {s.PagesFor(cur)}") }) } : null,
+                Data.X.want.Count > 0 ? new object[] { Sect("Want to read", F.N(Data.X.want.Count)), Shelf(Data.X.want.Select(id => (Data.Book(id), (string)null))) } : null,
+                Sect("Read", F.N(read.Count)),
+                read.Count > 0 ? (object)Shelf(read.Select(p => (Data.Book(p.BookId), Sub(p))))
+                    : El("p.pad.small.muted", "Nothing here yet. Finish a book, or add the ones you've already read."),
+                El("div.bottom-space"),
+            };
         }
 
         static DateTime Created(AppState s) => s.profile.createdOn != DateTime.MinValue ? s.profile.createdOn : Clock.Today;
@@ -681,7 +733,7 @@ namespace Margin.App.Web.Screens
                 El("div.ach", achs.Select(a => Btn("button.a" + (a.Got ? ".got" : ""),
                     () => IosAlert(a.Name, a.Detail + (a.Got ? "" : " You don't have it yet."), Act("Close", bold: true)),
                     El("div.medal", MainUI.ACH_MARK.TryGetValue(a.Id, out var mark) ? mark : a.Name.Substring(0, 1)), El("span.clamp2", a.Name)))),
-                Sect("Finished", "Diary", () => Nav.Reset(new DiaryScreen(), "diary")),
+                Sect("Finished", "Library", () => Nav.Reset(new DiaryScreen(), "diary")),
                 read.Count > 0
                     ? El("div.hscroll", read.Take(12).Select(p =>
                     {

@@ -1,6 +1,5 @@
 // Port of preview/js/screens-settings.js (Settings and subscreens) and preview/js/screens-social.js
 // (friends, invite link and QR, reader profiles, shared pacts, creators and posts).
-// Owner: porter 4.
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -391,7 +390,7 @@ namespace Margin.App.Web.Screens
             return El("div", Navbar("Settings"), El("div.scroll.under-nav",
                 Btn("button.row.gap12.list", () => Nav.Push(new SettingsDetail("account")),
                     Avatar(Data.Me(), 44), El("div.grow", El("div.strong", a.Name), El("div.small.muted", !string.IsNullOrEmpty(a.Email) ? $"@{a.Username} · {a.Email}" : $"@{a.Username} · guest")), Icon("chev", "chev"))
-                    .P(12, 14).TextLeft().Mt(8),
+                    .P(12, 14).TextLeft().Mt(8).AlignSelf(Align.Stretch),
                 a.IsGuest ? SettingsUI.Group("", new[] { Row("Save your account", ic: "user", color: "#C8402A", sub: "Add an email and password to keep your reading", onClick: () => Nav.Push(new SaveAccountScreen())) },
                     "You're trying Margin as a guest. If you log out before saving, this reading is lost.") : null,
                 SettingsUI.Group("", new[]
@@ -813,8 +812,7 @@ namespace Margin.App.Web.Screens
                     Social.Incoming.Count > 0 ? new object[] { Sect("Requests", F.N(Social.Incoming.Count)), Social.Incoming.Select(SocialUI.RequestRow) } : null,
                     Sect("Your friends", Social.Friends.Count > 0 ? F.N(Social.Friends.Count) : null),
                     !Social.Loaded ? El("p.pad.small.faint", "Loading…")
-                        : Social.Friends.Count > 0 ? (object)Social.Friends.Select(x => SocialUI.PersonRow(x.Person, noButton: true)).ToList()
-                        : El("p.pad.small.muted", "No friends yet — invite someone. Reading is easier when someone asks you how it's going."),
+                        : Social.Friends.Count > 0 ? (object)Social.Friends.Select(x => SocialUI.PersonRow(x.Person, noButton: true)).ToList() : null,
                     invite,
                     Social.Outgoing.Count > 0 ? new object[] { Sect("Sent"), Social.Outgoing.Select(x => SocialUI.PersonRow(x.Person)) } : null,
                     acc != null && !string.IsNullOrEmpty(acc.University) ? El("div.pad.mt16", Btn("button.btn.secondary", () => Nav.Push(new FindFriendsScreen()), $"People from {acc.University}")) : null,
@@ -855,7 +853,7 @@ namespace Margin.App.Web.Screens
             int my = ++seq; // clearTimeout
             if (CleanQuery(query).TrimStart('@').Length < 2) { res = null; busy = false; Draw(); return; }
             busy = true; Draw();
-            await Task.Delay(250);
+            await UnityEngine.Awaitable.WaitForSecondsAsync(0.25f); // runs on the main loop, also in WebGL (no threads)
             if (my != seq) return;
             try
             {

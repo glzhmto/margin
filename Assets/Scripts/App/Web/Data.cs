@@ -12,7 +12,7 @@ namespace Margin.App.Web
 {
     /// <summary>A reader review from Goodreads (Resources/Data/reviews.json), quoted with author and link.</summary>
     [Serializable]
-    public class GoodreadsReview
+    public class ReaderReview
     {
         public string bookId;
         public string text;
@@ -31,7 +31,17 @@ namespace Margin.App.Web
     }
 
     [Serializable]
-    class ReviewFile { public List<GoodreadsReview> reviews = new List<GoodreadsReview>(); }
+    class ReviewFile { public List<ReaderReview> reviews = new List<ReaderReview>(); }
+
+    /// <summary>A real book creator (BookTube, blog) and a short quote from their review of a catalog book (Resources/Data/creators.json).</summary>
+    [Serializable]
+    public class WebCreator
+    {
+        public string name, handle, platform, profileUrl, color;
+        public string bookId, reviewUrl, quote, quoteEn, lang;
+    }
+
+    class CreatorFile { public List<WebCreator> creators = new List<WebCreator>(); }
 
     /// <summary>data.js Data.me(): the signed-in reader as profile screens show it.</summary>
     public class MeInfo
@@ -43,6 +53,7 @@ namespace Margin.App.Web
         public string Name;
         public string Bio;
         public string Color;
+        public string Avatar;
         /// <summary>"yyyy-MM-dd".</summary>
         public string Joined;
         public bool IsMe = true;
@@ -100,7 +111,8 @@ namespace Margin.App.Web
         };
 
         static MarginApp Host => MarginApp.Instance;
-        static List<GoodreadsReview> _reviews;
+        static List<ReaderReview> _reviews;
+        static List<WebCreator> _creators;
         static readonly Dictionary<string, Texture2D> _covers = new Dictionary<string, Texture2D>();
         static readonly HashSet<string> _noCover = new HashSet<string>();
 
@@ -124,17 +136,33 @@ namespace Margin.App.Web
         }
 
         /// <summary>Real reviews from Goodreads readers for a book.</summary>
-        public static List<GoodreadsReview> ReviewsFor(string id)
+        public static List<ReaderReview> ReviewsFor(string id)
         {
             if (_reviews == null)
             {
                 var asset = Resources.Load<TextAsset>("Data/reviews");
                 try { _reviews = asset != null ? JsonConvert.DeserializeObject<ReviewFile>(asset.text)?.reviews : null; }
                 catch (Exception e) { Debug.LogWarning("[Margin] reviews.json: " + e.Message); }
-                if (_reviews == null) _reviews = new List<GoodreadsReview>();
+                if (_reviews == null) _reviews = new List<ReaderReview>();
             }
             return _reviews.Where(r => r.bookId == id).ToList();
         }
+
+        /// <summary>Real book creators from the web with their review quotes (only books in the catalog).</summary>
+        public static List<WebCreator> Creators
+        {
+            get
+            {
+                if (_creators != null) return _creators;
+                var asset = Resources.Load<TextAsset>("Data/creators");
+                try { _creators = asset != null ? JsonConvert.DeserializeObject<CreatorFile>(asset.text)?.creators : null; }
+                catch (Exception e) { Debug.LogWarning("[Margin] creators.json: " + e.Message); }
+                _creators = (_creators ?? new List<WebCreator>()).Where(c => Book(c.bookId) != null).ToList();
+                return _creators;
+            }
+        }
+
+        public static List<WebCreator> CreatorsFor(string id) => Creators.Where(c => c.bookId == id).ToList();
 
         public static Quote QuoteOfDay(DateTime d) => Host.Content.QuoteOfTheDay(d);
 
@@ -159,7 +187,7 @@ namespace Margin.App.Web
             var s = State;
             return new MeInfo
             {
-                Id = a.Username, Uid = a.Id, Name = !string.IsNullOrWhiteSpace(a.Name) ? a.Name : a.Username, Bio = a.Bio, Color = a.Color,
+                Id = a.Username, Uid = a.Id, Name = !string.IsNullOrWhiteSpace(a.Name) ? a.Name : a.Username, Bio = a.Bio, Color = a.Color, Avatar = a.Avatar,
                 Joined = s.profile.createdOn != DateTime.MinValue ? D.Key(s.profile.createdOn) : a.Created,
                 Read = s.progress.Where(p => p.finished).Select(p => p.bookId).ToList(),
                 Favorites = X.favorites.ToList(),
@@ -281,7 +309,8 @@ namespace Margin.App.Web
             return r;
         }
 
-        static string Norm(string s)
+        /// <summary>Lowercase without accents, for search ("Pedro Páramo" matches "pedro paramo").</summary>
+        public static string Norm(string s)
         {
             var d = (s ?? "").ToLowerInvariant().Normalize(NormalizationForm.FormD);
             var sb = new StringBuilder(d.Length);
@@ -302,6 +331,7 @@ namespace Margin.App.Web
         public string Email => S.Email;
         public string Bio => S.Me?.bio ?? "";
         public string Color => S.Me?.color;
+        public string Avatar => S.Me?.avatar;
         public string University => S.Me?.university ?? "";
         public bool IsCreator => S.IsCreator;
         public bool IsGuest => S.IsGuest;

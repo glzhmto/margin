@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Margin.Core;
 using Newtonsoft.Json.Linq;
 
 namespace Margin.App.Services
@@ -80,6 +81,8 @@ namespace Margin.App.Services
         public int nightLogs;
         /// <summary>Stamp of the last time the notifications were opened ("" = never).</summary>
         public string notificationsSeen;
+        /// <summary>Taste quiz answers (state.tastes); null until the quiz is taken. Old accounts have none.</summary>
+        public Tastes tastes;
         /// <summary>finishedOn and half-star ratings, by book id.</summary>
         public Dictionary<string, ProgressExtra> progress = new Dictionary<string, ProgressExtra>();
 
@@ -107,6 +110,7 @@ namespace Margin.App.Services
             x.notifications = Read(state["notifications"], x.notifications);
             x.nightLogs = state["nightLogs"] != null && state["nightLogs"].Type == JTokenType.Integer ? (int)state["nightLogs"] : 0;
             x.notificationsSeen = state["notificationsSeen"]?.Type == JTokenType.String ? (string)state["notificationsSeen"] : null;
+            x.tastes = state["tastes"] is JObject tj ? TasteQuiz.Clean(Read<Tastes>(tj, null)) : null;
             if (state["progress"] is JArray pa)
                 foreach (var t in pa.OfType<JObject>())
                 {
@@ -137,6 +141,8 @@ namespace Margin.App.Services
             state["notifications"] = JArray.FromObject(notifications ?? new List<WebNotification>(), NoNulls);
             state["nightLogs"] = nightLogs;
             if (notificationsSeen != null) state["notificationsSeen"] = notificationsSeen;
+            // Same shape as the web (TasteQuiz.clean): field, level, life, feel, screen, pace, length, era, region, liked (null fields included, like JSON.stringify).
+            if (tastes != null) state["tastes"] = JObject.FromObject(TasteQuiz.Clean(tastes));
             if (state["progress"] is JArray pa)
                 foreach (var t in pa.OfType<JObject>())
                 {
