@@ -989,8 +989,9 @@ namespace Margin.App.Web.Screens
                         changed ? El("p.small.mt6", $"You moved up from {Copy.LevelName(o.Before.Level)} to {Copy.LevelName(after.Level)}.") : null,
                         El("div.row.small.mt8.num", El("span.grow", $"{w.PagesRead} of {w.Target} pages this week")),
                         El("div.mt6", Bar(w.Target > 0 ? w.PagesRead / (double)w.Target : 0, "ink"))),
-)).Pt(40)),
-                El("div.pad", Btn("button.btn.primary", () => Nav.Reset(new HomeScreen(), "home"), "Done")).P(12, 16, 40));
+                    // Under the summary so it is always visible
+                    Btn("button.btn.primary.mt20", () => Nav.Reset(new HomeScreen(), "home"), "Done")
+)).Pt(40)));
         }
     }
 

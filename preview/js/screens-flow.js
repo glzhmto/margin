@@ -190,8 +190,9 @@ class ClosingScreen extends Screen {
       h("div.card.block.mt20", h("div.row", h("span.caps.grow", "Reading momentum"), h("span.strong", Copy.levelName(after.level))),
         changed ? h("p.small.mt6", `You moved up from ${Copy.levelName(this.o.before.level)} to ${Copy.levelName(after.level)}.`) : null,
         h("div.row.small.mt8.num", h("span.grow", `${w.pagesRead} of ${w.target} pages this week`)), h("div.mt6", bar(w.pagesRead / w.target, "ink"))),
-      )),
-      h("div.footbar", h("button.btn.primary", { onclick: () => Nav.reset(new HomeScreen(), "home") }, "Done")));
+      // Under the summary so it is always visible
+      h("button.btn.primary.mt20", { onclick: () => Nav.reset(new HomeScreen(), "home") }, "Done"),
+      )));
   }
 }
 

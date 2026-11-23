@@ -84,7 +84,7 @@ What the interviews showed:
 | Start | Downloads it and sets a goal | "I would use an app like that" (P4) | Motivated | Onboarding | Little time, goals that are too high | Small suggested goal (5 to 15 pages) | 5 of 6 want to read more, 4 of 6 lack time, P4 |
 | Get the book | Looks for a printed copy of the book | "Finding good prices for thicker books is pretty annoying" (P1) | Annoyed (P1) | Book page, "Buy it", online stores such as Amazon (P3) | Finding a good price | "Buy it" with real printed prices and an edition page count | P1 (survey and interview), P3 |
 | Read | Reads the paper book | "I just leave my phone near me in case I get a message" (P1) | Absorbed (P4), distracted but finishes (P3) | Book, Focus mode | Messages and social media | Focus mode, you pick which apps to silence | 5 of 6 check the phone in the survey, P1, P3, P5 in interviews |
-| Check in | Notes the page | "Make it quick" | Satisfied | Check-in screen | Opening the app and staying in it | 10 s check-in and "Now close the app" | Assumption, tested in UserTesting.md |
+| Check in | Notes the page | "Make it quick" | Satisfied | Check-in screen | Opening the app and staying in it | 10 s check-in and a short summary with just "Done" | Assumption, tested in UserTesting.md |
 | Quiz | Answers the chapter quiz | "Did I get it?" | Challenged, or frustrated if wrong | Quiz | Feeling it is an exam | Optional and with an explanation | Assumption, supported by Roediger and Karpicke |
 | Relapse | Doesn't read for several days | "It turned me down for a while" (P2, about the gym) | Discouraged (P2) | Notifications | Streak back to zero, nagging messages | Momentum that drops only a little, at most 4 reminders per week | P2. 1 of 6 feels guilty and stops in the survey, 5 of 6 resume the next day |
 | Come back | Checks in again | "Now I'm back" (P2) | Relief (assumption) | Home | Embarrassed to come back | Momentum keeps what they already earned | P2 returned after weeks off. The feeling is an assumption |
@@ -95,7 +95,7 @@ The "I already ruined it" thought we first wrote for the Relapse stage did not c
 | Decision | Based on | Type of evidence | Where in the app |
 |---|---|---|---|
 | Reading momentum instead of a streak | Missing a day doesn't break a habit (Lally). Survey: 5 of 6 resume the next day. Interview: P2 was discouraged after weeks off | Theory, with support from our survey and one interview | `HabitEngine.cs` |
-| The app asks you to close it, and Focus mode with the apps you choose | Survey: 5 of 6 check the phone while reading. Interviews: P1, P3 and P5, with messages as the trigger for P1 and P5 | Our survey and interviews | `ClosingScreen`, Focus mode |
+| A short end of session, and Focus mode with the apps you choose | Survey: 5 of 6 check the phone while reading. Interviews: P1, P3 and P5, with messages as the trigger for P1 and P5 | Our survey and interviews | `ClosingScreen`, Focus mode |
 | Small goal and a 10 s check-in | Lack of time is the top barrier (4 of 6, and P4) | Our survey and interviews | `SetupScreen`, `LogSheet` |
 | Try it without an account | P1 would try it but isn't sure they would stick to it | Our interviews (one participant) and Fogg | `WelcomeScreen`, `AccountService.cs` |
 | "Buy it" with real prices for printed books | P1 finds good prices for thick books annoying (and chose cost or access in the survey), P3 orders online, 4 of 6 prefer paper | Our survey and interviews | `Shop` in `MainScreens.cs` |

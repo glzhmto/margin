@@ -2,11 +2,11 @@
 
 The rule we used to decide almost everything: does this bring the user closer to the book, or keep them longer on the phone? The app is made to be used very little.
 
-Screenshots are from the final app (the same screens on the iPhone and the web version).
+Screenshots are from the app (the same screens on the iPhone and the web version). Some were taken before the changes from user testing; the new screens are in UserTesting.md.
 
 ## 1. Cognitive load (cognition)
 Working memory is limited, so we try to ask for one thing at a time.
-- Onboarding asks for one thing per screen ("Step 3 of 7") instead of a long form.
+- Onboarding asks for one thing per screen, with a progress bar on top, instead of a long form.
 - In the check-in you type the page you are on, not how many you read. You see that number in the book and you don't have to subtract; the app works out the "+18 pages".
 - Quick buttons for "+10", "+20" and "Finished the chapter".
 - The quiz shows one question at a time.
@@ -74,7 +74,7 @@ We didn't want guilt or aggressive notifications.
 - Buttons from 44 to 56 pt, as Apple's guidelines ask.
 - It respects the notch and the bottom bar (safe area).
 - Tab bar at the bottom and a "‹" button to go back, like in native apps.
-- Number keyboard for pages and swiping in the manifesto.
+- Number keyboard for pages.
 - In Focus mode you pick the apps to silence by their real name and icon (WhatsApp, Instagram, TikTok and others), so you recognize them instead of reading a list.
 - Local notifications.
 - Large text option in Settings and dark mode in Focus mode.
@@ -141,7 +141,7 @@ Starting a book is a big decision, so we gave it its own moment instead of a sma
 |---|---|---|
 | Momentum instead of a streak | Lally: missing a day doesn't break the habit | `HabitEngine.cs` |
 | Small goal and "When ___, I will read" | Fogg, Gollwitzer | `SetupScreen` in `AuthScreens.cs` |
-| Log the page, not the amount | Cognitive load (tested with the A/B) | `LogSheet` in `BookFlowScreens.cs` |
+| Log the page, not the amount | Cognitive load. The A/B did not support it, but we kept it because in the app you only copy the page number (see UserTesting.md) | `LogSheet` in `BookFlowScreens.cs` |
 | Page validation | Error prevention | `ReadingService.cs` |
 | Optional quiz with explanation | Testing effect, feedback | `QuizScreen` in `BookFlowScreens.cs` |
 | At most 4 reminders | Ethical design | `ReminderPlanner.cs` |
