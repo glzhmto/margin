@@ -70,6 +70,6 @@ For the demo: Settings › Simulate next day moves the app's clock one day ahead
 - Website: https://marginreads.vercel.app/
 - Web app: https://marginreads.vercel.app/app/
 - Build: https://github.com/glzhmto/margin/releases/tag/v1.0.0-Windows 
-- Commercial: PENDING
+- Commercial: https://github.com/glzhmto/margin/releases/download/v1.0.0-Windows/Margin_commercial.mp4
 
 Other documents: [TECHNICAL.md](TECHNICAL.md), [DesignJustification.md](DesignJustification.md), [UserResearch.md](UserResearch.md), [UserTesting.md](UserTesting.md), [AIUsage.md](AIUsage.md).
