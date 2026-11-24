@@ -69,7 +69,7 @@ For the demo: Settings › Simulate next day moves the app's clock one day ahead
 - Figma: https://www.figma.com/design/xRbcsTimzkKMhNWUL2aVYl (page "Lo-fi flow" › Present; the older high-fidelity version is on page "Main flow")
 - Website: https://marginreads.vercel.app/
 - Web app: https://marginreads.vercel.app/app/
-- Build: PENDING
+- Build: https://github.com/glzhmto/margin/releases/tag/v1.0.0-Windows 
 - Commercial: PENDING
 
 Other documents: [TECHNICAL.md](TECHNICAL.md), [DesignJustification.md](DesignJustification.md), [UserResearch.md](UserResearch.md), [UserTesting.md](UserTesting.md), [AIUsage.md](AIUsage.md).
