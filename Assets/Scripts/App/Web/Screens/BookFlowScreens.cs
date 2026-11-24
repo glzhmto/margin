@@ -991,7 +991,7 @@ namespace Margin.App.Web.Screens
                         El("div.mt6", Bar(w.Target > 0 ? w.PagesRead / (double)w.Target : 0, "ink"))),
                     // Under the summary so it is always visible
                     Btn("button.btn.primary.mt20", () => Nav.Reset(new HomeScreen(), "home"), "Done")
-)).Pt(40)));
+)).Pt(40));
         }
     }
 
